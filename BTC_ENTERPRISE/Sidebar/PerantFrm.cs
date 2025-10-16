@@ -201,6 +201,9 @@ namespace BTC_ENTERPRISE.SideBar
                 //    get_user_info(rfid);
                 //};
                 //login.ShowDialog();
+
+
+
                 using var CheckProcessForm = new CheckFrm(_mainDashboard, _mainDashboard.lbl_operatorlogin.Text, false);
                 var _oparatorName = "";
                 CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist, islogin) =>
