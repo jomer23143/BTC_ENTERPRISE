@@ -26,7 +26,7 @@ namespace BTC_ENTERPRISE.Modal
                 String data = registry.Read(Frameworks.Utilities.Registry.Def.REGKEY_SUB);
                 if (data == null)
                 {
-                    data += String.Format($"BTC_ENTERPRISE<limiter>DEFualSection<limiter>DefualtCode<limiter>");
+                    data += String.Format($"BTC_ENTERPRISE<limiter>192.168.20.15<limiter>sa<limiter>MISys_SBM1<limiter>BROADBAND<limiter>Warehouse Kitting<limiter>101<limiter1>");
                     registry.Write(Frameworks.Utilities.Registry.Def.REGKEY_SUB, data);
                 }
                 String[] programs = data.Split(new String[] { "<limiter1>" }, StringSplitOptions.RemoveEmptyEntries);
@@ -36,8 +36,8 @@ namespace BTC_ENTERPRISE.Modal
                     //setup_grid.Rows.Add(records);
                     if (records.Length >= 3)
                     {
-                        cmb_name.Text = records[0].Trim();
-                        lbl_code.Text = records[1].Trim();
+                        cmb_name.Text = records[5].Trim();
+                        lbl_code.Text = records[6].Trim();
 
                     }
                     else
@@ -68,13 +68,13 @@ namespace BTC_ENTERPRISE.Modal
 
             String sectname = cmb_name.Text.Trim();
             String sectCode = lbl_code.Text.Trim();
-            String projectName = "BTC_ENTERPRISE";
+            //String projectName = "BTC_ENTERPRISE";
             if (sectname.Length == 0 || sectCode.Length == 0)
             {
                 MessageBox.Show("Please enter a valid section name and code.");
                 return;
             }
-            data += String.Format("{0}<limiter>{1}<limiter>{2}<limiter>", sectname, sectCode, projectName);
+            data += String.Format($"BTC_ENTERPRISE<limiter>192.168.20.15<limiter>sa<limiter>MISys_SBM1<limiter>BROADBAND<limiter>{sectname}<limiter>{sectCode}<limiter1>");
 
             Utility.ModifyRegistry.RegistrySupport registry = new Utility.ModifyRegistry.RegistrySupport();
             if (registry.Write(Frameworks.Utilities.Registry.Def.REGKEY_SUB, data))

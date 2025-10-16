@@ -152,26 +152,26 @@
             public int kit_list_item_id { get; set; }
             public int short_quantity { get; set; }
             public int kit_quantity { get; set; }
-            public string comment { get; set; }
+            public string? comment { get; set; }
             public int kit_list_item_status_id {get; set; }
-            public List<serial_number> kit_list_item_serial { get; set; }
+            public List<serial_number>? kit_list_item_serial { get; set; }
         }
 
         public class serial_number
         {
             public int kit_list_item_id { get; set; }
-            public string kit_list_part_serial_number { get; set; }
+            public string? kit_list_part_serial_number { get; set; }
         }
         public class kitted_quantity
         {
             public int id { get; set; }
-            public string kitted { get; set; }
-            public string comment { get; set; }
+            public string? kitted { get; set; }
+            public string? comment { get; set; }
             public int kit_list_item_status_id { get; set; }
         }
         public class add_serial_number
         {
-            public List<serial_number> kit_list_item_serial { get; set; }
+            public List<serial_number>? kit_list_item_serial { get; set; }
         }
         public class update_kitting_quantity
         {
@@ -183,16 +183,16 @@
         {
             public int kit_list_type_id { get; set; }
             public int kit_list_status_id { get; set; }
-            public string mo_id { get; set; }
-            public string pcn_number { get; set; }
-            public string description { get; set; }
-            public string location { get; set; }
-            public string bom_item { get; set; }
-            public string bom_revision_number { get; set; }
-            public string order_quantity { get; set; }
-            public string order_date { get; set; }
-            public string updated_at { get; set; }
-            public string created_at { get; set; }
+            public string? mo_id { get; set; }
+            public string? pcn_number { get; set; }
+            public string? description { get; set; }
+            public string? location { get; set; }
+            public string? bom_item { get; set; }
+            public string? bom_revision_number { get; set; }
+            public string? order_quantity { get; set; }
+            public string? order_date { get; set; }
+            public string? updated_at { get; set; }
+            public string? created_at { get; set; }
             public int id { get; set; }
         }
         public class get_serial
@@ -200,21 +200,21 @@
             public int id { get; set; }
             public int kit_list_item_id { get; set; }
             public int kit_list_item_serial_number_status_id { get; set; }
-            public string kit_list_part_serial_number { get; set; }
+            public string? kit_list_part_serial_number { get; set; }
             public int is_scan { get; set; }
-            public string created_at { get; set; }
-            public string updated_at { get; set; }
-            public kit_list_item kit_list_item { get; set; }
+            public string? created_at { get; set; }
+            public string? updated_at { get; set; }
+            public kit_list_item? kit_list_item { get; set; }
         }
         public class kit_list_item
         {
             public int id { get; set; }
-            public string ipn { get; set; }
-            public string mo_id { get; set; }
+            public string? ipn { get; set; }
+            public string? mo_id { get; set; }
         }
         public class scan_serial
         {
-            public List<serial_details> kit_list_item_serial { get; set; }
+            public List<serial_details>? kit_list_item_serial { get; set; }
         }
         public class serial_details
         {
@@ -224,8 +224,8 @@
 
         public class ApiError
         {
-            public string message { get; set; }
-            public Dictionary<string, List<string>> errors { get; set; }
+            public string? message { get; set; }
+            public Dictionary<string, List<string>>? errors { get; set; }
             public int id { get; set; }
             public int kit_list_status_id { get; set; }
         }

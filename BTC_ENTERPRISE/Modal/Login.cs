@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BTC_ENTERPRISE.Model;
+using Frameworks.Utilities.ApiUtilities;
 
 namespace BTC_ENTERPRISE
 {
@@ -29,7 +30,7 @@ namespace BTC_ENTERPRISE
                 {
                     { "rfid_no", textBox1.Text.Trim() }
                 };
-                var json_token = await Frameworks.Utilities.ApiUtilities.ApiHelper.PostJsonAsync(apiUrl, data);
+                var json_token = await ApiHelper.PostJsonAsync(apiUrl, data);
                 var json_object = json_token?.ToObject<LoginToken.Root>();
 
                 // Ensure json_object is not null before accessing its properties
@@ -55,6 +56,7 @@ namespace BTC_ENTERPRISE
                     }
                     Global.dt_license = dt_license;
                    DialogResult = DialogResult.OK;
+                  
                 }
                 else
                 {

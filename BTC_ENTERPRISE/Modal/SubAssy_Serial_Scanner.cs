@@ -5,6 +5,7 @@ using BTC_ENTERPRISE;
 using BTC_ENTERPRISE.YaoUI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Frameworks.Utilities.ApiUtilities;
 
 
 namespace BTC_ENTERPRISE.Modal
@@ -61,7 +62,7 @@ namespace BTC_ENTERPRISE.Modal
                 String data = registry.Read(Frameworks.Utilities.Registry.Def.REGKEY_SUB);
                 if (data == null)
                 {
-                    data += String.Format($"BTC_ENTERPRISE<limiter>DEFualSection<limiter>DefualtCode<limiter>");
+                    data += String.Format($"BTC_ENTERPRISE<limiter>192.168.20.15<limiter>sa<limiter>MISys_SBM1<limiter>BROADBAND<limiter>Warehouse Kitting<limiter>101<limiter1>");
                     registry.Write(Frameworks.Utilities.Registry.Def.REGKEY_SUB, data);
                 }
                 String[] programs = data.Split(new String[] { "<limiter1>" }, StringSplitOptions.RemoveEmptyEntries);
@@ -71,8 +72,8 @@ namespace BTC_ENTERPRISE.Modal
                     //setup_grid.Rows.Add(records);
                     if (records.Length >= 3)
                     {
-                        segmentname = records[0].Trim();
-                        processType = records[1].Trim();
+                        segmentname = records[5].Trim();
+                        processType = records[6].Trim();
 
                     }
                     else
@@ -159,7 +160,7 @@ namespace BTC_ENTERPRISE.Modal
                     { "serial_number", serial.Trim() } ,
                     {  "sequence_number",seq}
                 };
-                var json = await Frameworks.Utilities.ApiUtilities.WebRequestApi.PostRequest(Scan_api, JsonConvert.SerializeObject(postData));
+                var json = await WebRequestApi.PostRequest(Scan_api, JsonConvert.SerializeObject(postData));
 
                 if (!IsValidJson(json))
                 {
@@ -374,7 +375,7 @@ namespace BTC_ENTERPRISE.Modal
                 sequence = seq,
             };
             string json = JsonConvert.SerializeObject(postData);
-            string jsonResponse = await Frameworks.Utilities.ApiUtilities.WebRequestApi.PostRequest(Scan_api, json);
+            string jsonResponse = await WebRequestApi.PostRequest(Scan_api, json);
 
             if (!IsValidJson(jsonResponse))
             {

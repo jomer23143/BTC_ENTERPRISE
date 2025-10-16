@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubAssy_Serial_Scanner));
             button1 = new Button();
             label1 = new Label();
             txt_serialnumber = new TextBox();
@@ -45,7 +44,6 @@
             // button1
             // 
             button1.BackColor = Color.Transparent;
-            button1.BackgroundImage = (Image)resources.GetObject("button1.BackgroundImage");
             button1.BackgroundImageLayout = ImageLayout.Stretch;
             button1.Cursor = Cursors.Hand;
             button1.FlatAppearance.BorderSize = 0;
@@ -87,7 +85,7 @@
             // 
             // pbimage
             // 
-            pbimage.Image = (Image)resources.GetObject("pbimage.Image");
+            pbimage.Image = Properties.Resources.qrcode;
             pbimage.Location = new Point(135, 22);
             pbimage.Margin = new Padding(3, 2, 3, 2);
             pbimage.Name = "pbimage";
@@ -111,10 +109,10 @@
             // 
             // btn_close2
             // 
-            btn_close2.BackgroundImage = (Image)resources.GetObject("btn_close2.BackgroundImage");
             btn_close2.BackgroundImageLayout = ImageLayout.Center;
             btn_close2.FlatAppearance.BorderSize = 0;
             btn_close2.FlatStyle = FlatStyle.Flat;
+            btn_close2.Image = Properties.Resources.close__1_;
             btn_close2.Location = new Point(332, 0);
             btn_close2.Margin = new Padding(3, 2, 3, 2);
             btn_close2.Name = "btn_close2";
@@ -125,7 +123,6 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(46, 22);
             pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";

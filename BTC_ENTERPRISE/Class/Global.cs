@@ -9,6 +9,7 @@ namespace BTC_ENTERPRISE.Class
 {
      public class Global
     {
+        
         public static string UserToken = "";
         public static List<license>? dt_license { get; set; }
         public class license
@@ -22,5 +23,7 @@ namespace BTC_ENTERPRISE.Class
             public string? license_type_name { get; set; }
 
         }
+        public static string process_name { get; set; }
+        public static int process_id { get; set; }
     }
 }

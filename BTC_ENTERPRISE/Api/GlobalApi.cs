@@ -24,6 +24,7 @@
         public static readonly string kitlistRecievingUpdateHeader = $"{BaseUrl}kit-list-received/process";
         public static readonly string kitlistRecievingItem = $"{BaseUrl}kit-list-received/received";
         public static readonly string Login = $"{BaseUrl}employee-access";
+        public static readonly string OperatorLogin = $"{BaseUrl}employee-access";
 
         public static string GetScanSerialUrl()
         {
@@ -104,6 +105,10 @@
         public static string GetLogin()
         {
             return Login;
+        }
+        public static string GetOperatorLoginUrl()
+        {
+            return OperatorLogin;
         }
     }
 }

@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BTC_ENTERPRISE.Model;
 using BTC_ENTERPRISE.Class;
+using Frameworks.Utilities.ApiUtilities;
+using BTC_ENTERPRISE.Modal;
 
 namespace BTC_ENTERPRISE.Forms
 {
@@ -83,7 +85,7 @@ namespace BTC_ENTERPRISE.Forms
         }
         private void Warehouse_Kitting_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void txtmo_number_KeyDown(object sender, KeyEventArgs e)
@@ -226,7 +228,7 @@ namespace BTC_ENTERPRISE.Forms
         {
             var apiUrl = GlobalApi.GetMo();
             string data = $"?mo_id ={mo_no}&per_row=9999";
-            var json_response = await Frameworks.Utilities.ApiUtilities.WebRequestApi.GetData_httpclient(string.Format("{0}{1}", apiUrl,data));
+            var json_response = await WebRequestApi.GetData_httpclient(string.Format("{0}{1}", apiUrl,data));
             var json_token = JToken.Parse(json_response);
             return json_token?.ToObject<WarehouseKitting.GetData>();
 
@@ -292,7 +294,7 @@ namespace BTC_ENTERPRISE.Forms
                 dict.Add(item.Name, item.GetValue(list) ?? "");
             }
             string res = JsonConvert.SerializeObject(list);
-            var api_response = await Frameworks.Utilities.ApiUtilities.ApiHelper.PostJsonAsync(GlobalApi.GetKitlistItemScanBulkUrl(), dict, Global.UserToken);
+            var api_response = await ApiHelper.PostJsonAsync(GlobalApi.GetKitlistItemScanBulkUrl(), dict, Global.UserToken);
             var json_obj = api_response?.ToObject<JObject>();
             bunifuloading.Hide();
             MessageBox.Show("Saved Kitted Quantity");
@@ -347,8 +349,8 @@ namespace BTC_ENTERPRISE.Forms
                     string pick_quantity = sfDataGrid1.View.GetPropertyAccessProvider().GetValue(e.DataRow.RowData, "pick_quantity")?.ToString() ?? string.Empty;
 
                     string url = $@"https://app.btcp-enterprise.com/api/serial/view-serial?kit_list_item_id={kit_list_item_id}";
-                    string responseData = await Frameworks.Utilities.ApiUtilities.WebRequestApi.GetData_httpclient(url);
-                    var serials = JsonConvert.DeserializeObject<List<Model.WarehouseKitting.get_serial>>(responseData) ?? new List<Model.WarehouseKitting.get_serial>();
+                    string responseData = await WebRequestApi.GetData_httpclient(url);
+                    var serials = JsonConvert.DeserializeObject<List<WarehouseKitting.get_serial>>(responseData) ?? new List<WarehouseKitting.get_serial>();
                     foreach (var item in serials)
                     {
                         string[] data1 = new string[]
@@ -367,8 +369,8 @@ namespace BTC_ENTERPRISE.Forms
                     {
                         list_serial = rows.CopyToDataTable<System.Data.DataRow>();//Copying the rows into the DataTable as DataRow
                     }
-                    //AddSerialNumber addSerialnumber = new AddSerialNumber(list_serial, pick_quantity, kit_list_item_id, row_index, ipn);
-                    //addSerialnumber.Show();
+                    AddSerialNumber  addSerialnumber = new AddSerialNumber(list_serial, pick_quantity, kit_list_item_id, row_index, ipn);
+                    addSerialnumber.Show();
                 }
             }
             catch (Exception)

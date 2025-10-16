@@ -43,8 +43,8 @@
             panel4 = new Panel();
             panel5 = new Panel();
             panel_display_holder = new Panel();
-            panel_chart = new Panel();
             pictureBox1 = new PictureBox();
+            panel_chart = new Panel();
             panel_sidebarHolder.SuspendLayout();
             panel2.SuspendLayout();
             panel_display_holder.SuspendLayout();
@@ -71,11 +71,12 @@
             // 
             // btn_logout
             // 
-            btn_logout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btn_logout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btn_logout.FlatAppearance.BorderSize = 0;
             btn_logout.FlatStyle = FlatStyle.Flat;
             btn_logout.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_logout.ForeColor = Color.SpringGreen;
+            btn_logout.Image = Properties.Resources._switch;
             btn_logout.ImageAlign = ContentAlignment.MiddleLeft;
             btn_logout.Location = new Point(6, 520);
             btn_logout.Margin = new Padding(3, 2, 3, 2);
@@ -88,6 +89,7 @@
             // 
             // button6
             // 
+            button6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button6.FlatAppearance.BorderSize = 0;
             button6.FlatStyle = FlatStyle.Flat;
             button6.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -103,10 +105,12 @@
             // 
             // button5
             // 
+            button5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button5.FlatAppearance.BorderSize = 0;
             button5.FlatStyle = FlatStyle.Flat;
             button5.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button5.ForeColor = Color.White;
+            button5.Image = Properties.Resources.combo_32;
             button5.ImageAlign = ContentAlignment.MiddleLeft;
             button5.Location = new Point(6, 237);
             button5.Margin = new Padding(3, 2, 3, 2);
@@ -118,10 +122,12 @@
             // 
             // button4
             // 
+            button4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button4.FlatAppearance.BorderSize = 0;
             button4.FlatStyle = FlatStyle.Flat;
             button4.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button4.ForeColor = Color.White;
+            button4.Image = Properties.Resources.icons8_edit_3d_model_24;
             button4.ImageAlign = ContentAlignment.MiddleLeft;
             button4.Location = new Point(6, 188);
             button4.Margin = new Padding(3, 2, 3, 2);
@@ -134,10 +140,12 @@
             // 
             // button3
             // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button3.FlatAppearance.BorderSize = 0;
             button3.FlatStyle = FlatStyle.Flat;
             button3.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button3.ForeColor = Color.White;
+            button3.Image = Properties.Resources.warehouse__3_;
             button3.ImageAlign = ContentAlignment.MiddleLeft;
             button3.Location = new Point(6, 140);
             button3.Margin = new Padding(3, 2, 3, 2);
@@ -150,10 +158,12 @@
             // 
             // btn_printqr
             // 
+            btn_printqr.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             btn_printqr.FlatAppearance.BorderSize = 0;
             btn_printqr.FlatStyle = FlatStyle.Flat;
             btn_printqr.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_printqr.ForeColor = Color.White;
+            btn_printqr.Image = Properties.Resources.qr_code__1_;
             btn_printqr.ImageAlign = ContentAlignment.MiddleLeft;
             btn_printqr.Location = new Point(6, 91);
             btn_printqr.Margin = new Padding(3, 2, 3, 2);
@@ -166,10 +176,12 @@
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             button1.FlatAppearance.BorderSize = 0;
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button1.ForeColor = Color.White;
+            button1.Image = Properties.Resources.home_button__2_;
             button1.ImageAlign = ContentAlignment.MiddleLeft;
             button1.Location = new Point(6, 42);
             button1.Margin = new Padding(3, 2, 3, 2);
@@ -197,7 +209,7 @@
             btn_toggle_right.Cursor = Cursors.Hand;
             btn_toggle_right.FlatAppearance.BorderSize = 0;
             btn_toggle_right.FlatStyle = FlatStyle.Flat;
-            btn_toggle_right.Location = new Point(214, 4);
+            btn_toggle_right.Location = new Point(209, 4);
             btn_toggle_right.Margin = new Padding(3, 2, 3, 2);
             btn_toggle_right.Name = "btn_toggle_right";
             btn_toggle_right.Size = new Size(38, 28);
@@ -244,16 +256,6 @@
             panel_display_holder.Size = new Size(980, 558);
             panel_display_holder.TabIndex = 5;
             // 
-            // panel_chart
-            // 
-            panel_chart.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel_chart.BackColor = Color.White;
-            panel_chart.Location = new Point(94, 146);
-            panel_chart.Margin = new Padding(3, 2, 3, 2);
-            panel_chart.Name = "panel_chart";
-            panel_chart.Size = new Size(811, 375);
-            panel_chart.TabIndex = 1;
-            // 
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -265,6 +267,16 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
+            // 
+            // panel_chart
+            // 
+            panel_chart.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel_chart.BackColor = Color.White;
+            panel_chart.Location = new Point(94, 146);
+            panel_chart.Margin = new Padding(3, 2, 3, 2);
+            panel_chart.Name = "panel_chart";
+            panel_chart.Size = new Size(811, 375);
+            panel_chart.TabIndex = 1;
             // 
             // PerantFrm
             // 
@@ -305,7 +317,7 @@
         private Button button6;
         private Button btn_toggle_right;
         private Panel panel_chart;
-        private Button btn_logout;
         private PictureBox pictureBox1;
+        public Button btn_logout;
     }
 }

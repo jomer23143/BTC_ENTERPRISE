@@ -29,17 +29,22 @@ namespace BTC_ENTERPRISE.Modal
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
-            DialogResult = DialogResult.Yes;
+            DialogResult = DialogResult.Cancel;
         }
 
         private void txt_rfid_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
+                DialogResult = DialogResult.OK;
                 rfidScaned?.Invoke(txt_rfid.Text);
-
                 this.Close();
             }
+        }
+
+        private void EndProcessScanner_Load(object sender, EventArgs e)
+        {
+            txt_rfid.Focus();
         }
     }
 }

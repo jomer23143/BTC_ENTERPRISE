@@ -51,7 +51,7 @@
         {
             try
             {
-                if (AForm != null) AForm.Close();
+                if (AForm != null) this.AForm.Close();
                 ActivateButton(btnSender);
                 AForm = childForm;
                 childForm.TopLevel = false;

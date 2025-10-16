@@ -10,7 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="31.1.19" />
+    <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="29.1.33" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="29.1.33" />
   </ItemGroup>
 
   <ItemGroup>
