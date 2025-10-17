@@ -14,6 +14,7 @@ using Syncfusion.WinForms.DataGrid.Styles;
 using Timer = System.Windows.Forms.Timer;
 using Frameworks.Utilities.ApiUtilities;
 using Frameworks;
+using static BTC_ENTERPRISE.Model.Sub_Asy_Process_Model;
 
 namespace BTC_ENTERPRISE
 {
@@ -194,7 +195,10 @@ namespace BTC_ENTERPRISE
                 .Select(group => new
                 {
                     ProcessId = group.Key,
-                    AllDurationRows = group.OrderBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue).ToList()
+                    //AllDurationRows = group.OrderBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue).ToList()
+                    AllDurationRows = group.OrderBy(r => r.Field<string>("end_time") == null).ThenBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue) .ToList()
+                    
+
                 })
                 .ToList();
 
@@ -244,10 +248,10 @@ namespace BTC_ENTERPRISE
                     string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
                     string theStatus = durationRow["status"]?.ToString() ?? "";
 
-                    if (string.IsNullOrEmpty(childEndTime))
-                    {
-                        continue;
-                    }
+                    //if (string.IsNullOrEmpty(childEndTime))
+                    //{
+                    //    continue;
+                    //}
 
                     string childdurationDisplay = "0 Days : 00 : 00 : 00";
                     DateTime childparsedStart;
@@ -308,8 +312,40 @@ namespace BTC_ENTERPRISE
 
                     SubProcesses = childProcesses
                 });
-            }
+                var record = new ViewModel.ProcessViewModel
+                {
+                    Index = index++,
+                    expandIcon = "+",
+                    ProcessId = processId,
+                    Name = processName,
 
+                    StartTime = startTimeDisplay,
+                    EndTime = endTimeDisplay,
+
+                    Duration = finalTotalDurationDisplay,
+
+                    Status = statusName,
+                    Color = statusColor,
+                    CycleTime = cycleTime,
+
+                    StartButton = "▶",
+                    EndButton = "⏹",
+                    HoldButton = "⏸",
+
+                    SubProcesses = childProcesses
+                };
+                if (statusName == "Processing")
+                {
+                    record.AccumulatedDuration += totalDuration;
+                    DateTime startTime = DateTime.Now;
+                    activeProcesses[Convert.ToInt32(processId)] = startTime;
+                    _storedDuration = record.Duration;
+                   // record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
+                    StartProcessTimers(record);
+                }
+              
+            }
+          
             sfDataGrid1.DataSource = viewModels;
             sfDataGrid1.DetailsViewDefinitions.Clear();
             sfDataGrid1.DetailsViewDefinitions.Add(GetChildViewDefinition());
@@ -697,7 +733,7 @@ namespace BTC_ENTERPRISE
                     record.StartTime = $"Time: {startTime:HH:mm:ss} Date: {startTime:MM-dd-yyyy}";
 
                     _storedDuration = record.Duration;
-                    record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
+                    //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
 
                     StartProcessTimers(record);
 
@@ -742,6 +778,7 @@ namespace BTC_ENTERPRISE
                         {
                             segmentDuration = segmentEndTime - segmentStartTime;
                             activeProcesses.Remove(processid);
+                            //record.AccumulatedDuration =  TimeSpan.FromTicks(Convert.ToDateTime(record.Duration).Ticks);
                             record.AccumulatedDuration += segmentDuration;
                         }
                         StopProcessTimersIfInactive();
@@ -756,7 +793,8 @@ namespace BTC_ENTERPRISE
                             timeEndString,
                             segmentDuration
                         );
-                        record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
+                        //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
+      
                         record.StartTime = timeEndString;
                         UpdateStatus(record, true, true, true, "Pause");
                     }
@@ -829,7 +867,7 @@ namespace BTC_ENTERPRISE
                     break;
             }
 
-            sfDataGrid1.View.Refresh();
+            sfDataGrid1.Refresh();
         }
 
 
@@ -879,10 +917,10 @@ namespace BTC_ENTERPRISE
 
             if (lastSubProcess != null && string.IsNullOrEmpty(lastSubProcess.TimeEnd))
             {
-
+                var res = Convert.ToDateTime(timeEnd) - Convert.ToDateTime(lastSubProcess.TimeStart);
                 lastSubProcess.TimeEnd = timeEnd;
                 lastSubProcess.Remarks = remarks;
-                lastSubProcess.Duration = timeFormat.FormatDuration(duration);
+                lastSubProcess.Duration = timeFormat.FormatDuration(res);
             }
             else
             {
