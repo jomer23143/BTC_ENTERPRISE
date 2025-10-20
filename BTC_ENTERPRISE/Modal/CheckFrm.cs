@@ -1,17 +1,15 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using BTC_ENTERPRISE.Class;
-using BTC_ENTERPRISE.Model;
-using Frameworks.Utilities;
 using BTC_ENTERPRISE.Forms;
+using BTC_ENTERPRISE.Model;
 using BTC_ENTERPRISE.YaoUI;
+using Frameworks.Utilities.ApiUtilities;
+using Frameworks.Utilities.Registry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using static BTC_ENTERPRISE.Model.OperatorModel;
-using BTC_ENTERPRISE.SideBar;
-using Frameworks.Utilities.Registry;
 using Utility.ModifyRegistry;
-using Frameworks.Utilities.ApiUtilities;
+using static BTC_ENTERPRISE.Model.OperatorModel;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -38,7 +36,7 @@ namespace BTC_ENTERPRISE.Modal
 
         private MainDashboard maindash = new MainDashboard();
 
-        public delegate void checkHandler(string moid, int segmentid, string segment, string processname, string serialnumber, string operatorname, string operatortoken, DataTable process_list, DataTable subprocess_list ,bool islogin);
+        public delegate void checkHandler(string moid, int segmentid, string segment, string processname, string serialnumber, string operatorname, string operatortoken, DataTable process_list, DataTable subprocess_list, bool islogin);
         public event checkHandler AfterScanned;
 
         public CheckFrm(MainDashboard main, string _isloginOperator, bool _islogin)
@@ -138,7 +136,7 @@ namespace BTC_ENTERPRISE.Modal
                 string rifd = txt_scan.Text.Trim();
                 Myrequest(loginApiUrl, rifd);
                 txt_scangeneratedserial.Select();
-               
+
             }
 
         }
@@ -154,17 +152,32 @@ namespace BTC_ENTERPRISE.Modal
 
                 var licenses = SessionData.TempDataLicense.AsEnumerable();
 
-                //  Check if the operator has the license for this process
-                var licenseRow = licenses.FirstOrDefault(row => row.Field<int>("id") == _Prcess_license_Id && row.Field<string>("expiry_date") != "N/A");
+
+                var licenseRow = licenses
+                    .Where(row => row.Field<int>("id") == _Prcess_license_Id)
+                    .Where(row =>
+                    {
+                        var expiryStr = row.Field<string>("expiry_date");
+
+                        if (DateTime.TryParse(expiryStr, out DateTime expiryDate))
+                        {
+                            return expiryDate >= DateTime.Now.Date;
+                        }
+                        return false;
+                    })
+                    .FirstOrDefault();
 
                 if (licenseRow == null)
                 {
-                    MessageBox.Show("You are not registered for this process.",
+                    MessageBox.Show("You are not registered or your license has expired.",
                                     "Access Denied",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning);
                     return;
                 }
+
+
+
 
                 // Check if the license is expired
                 if (DateTime.TryParse(licenseRow.Field<string>("expiry_date"), out DateTime expiryDate))
@@ -181,7 +194,7 @@ namespace BTC_ENTERPRISE.Modal
 
                 // All checks passed
                 AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                     operatorName, OperatorToken, tbl_process, tbl_subprocess,false);
+                                     operatorName, OperatorToken, tbl_process, tbl_subprocess, false);
 
                 e.Handled = true;
                 this.Close();
@@ -206,7 +219,7 @@ namespace BTC_ENTERPRISE.Modal
                 }
 
                 var response = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
-                
+
 
                 if (response?.user?.employee == null)
                 {
@@ -256,7 +269,7 @@ namespace BTC_ENTERPRISE.Modal
                 if (Global.process_name.ToUpper() == "WAREHOUSE KITTING")
                 {
                     AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                   operatorName, OperatorToken, tbl_process, tbl_subprocess,false);
+                                   operatorName, OperatorToken, tbl_process, tbl_subprocess, false);
                     DialogResult = DialogResult.OK;
                     this.Close();
                 }

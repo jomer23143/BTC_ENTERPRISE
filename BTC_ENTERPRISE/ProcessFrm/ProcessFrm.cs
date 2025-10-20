@@ -4,17 +4,15 @@ using System.Diagnostics;
 using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Modal;
 using BTC_ENTERPRISE.Model;
-using Frameworks.Utilities;
 using BTC_ENTERPRISE.YaoUI;
+using Frameworks;
+using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json.Linq;
 using Syncfusion.Data.Extensions;
 using Syncfusion.WinForms.DataGrid;
 using Syncfusion.WinForms.DataGrid.Enums;
 using Syncfusion.WinForms.DataGrid.Styles;
 using Timer = System.Windows.Forms.Timer;
-using Frameworks.Utilities.ApiUtilities;
-using Frameworks;
-using static BTC_ENTERPRISE.Model.Sub_Asy_Process_Model;
 
 namespace BTC_ENTERPRISE
 {
@@ -195,9 +193,7 @@ namespace BTC_ENTERPRISE
                 .Select(group => new
                 {
                     ProcessId = group.Key,
-                    //AllDurationRows = group.OrderBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue).ToList()
-                    AllDurationRows = group.OrderBy(r => r.Field<string>("end_time") == null).ThenBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue) .ToList()
-                    
+                    AllDurationRows = group.OrderBy(r => r.Field<string>("end_time") == null).ThenBy(r => DateTime.TryParse(r.Field<string>("end_time"), out var dt) ? dt : DateTime.MinValue).ToList()
 
                 })
                 .ToList();
@@ -205,6 +201,7 @@ namespace BTC_ENTERPRISE
 
             var viewModels = new List<ViewModel.ProcessViewModel>();
             int index = 1;
+            var childrowStartime = "";
 
             foreach (var group in groupedProcesses)
             {
@@ -242,37 +239,77 @@ namespace BTC_ENTERPRISE
 
                 var childProcesses = new BindingList<ViewModel.ChildProcessViewModel>();
 
-                foreach (System.Data.DataRow durationRow in group.AllDurationRows)
+                var startedRows = group.AllDurationRows
+                    .Where(r => !string.IsNullOrEmpty(r["start_time"]?.ToString()))
+                    .ToList();
+
+                //foreach (System.Data.DataRow durationRow in startedRows)
+                //{
+                //    string childStartTime = durationRow["start_time"]?.ToString() ?? "-";
+                //    string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
+                //    string status = durationRow["status"]?.ToString() ?? "";
+
+                //    string childDurationDisplay = "0 Days : 00 : 00 : 00";
+                //    DateTime childParsedStart, childParsedEnd;
+                //    TimeSpan currentDuration = TimeSpan.Zero;
+
+                //    if (DateTime.TryParse(childStartTime, out childParsedStart))
+                //    {
+                //        if (DateTime.TryParse(childEndTime, out childParsedEnd))
+                //        {
+                //            currentDuration = childParsedEnd - childParsedStart;
+                //            childDurationDisplay = timeFormat.FormatDuration(currentDuration);
+                //        }
+                //        else
+                //        {
+                //            currentDuration = DateTime.Now - childParsedStart;
+                //            childDurationDisplay = timeFormat.FormatDuration(currentDuration);
+                //        }
+
+                //        totalDuration = totalDuration.Add(currentDuration);
+                //    }
+
+                //    childProcesses.Add(new ViewModel.ChildProcessViewModel
+                //    {
+                //        Id = Convert.ToInt32(durationRow["id"]),
+                //        ProcessId = processId,
+                //        TimeStart = childStartTime,
+                //        TimeEnd = childEndTime,
+                //        Duration = childDurationDisplay,
+                //        Remarks = durationRow["remark"]?.ToString() ?? "",
+                //        StatusName = status
+                //    });
+
+                //}
+
+                DateTime? activeChildStartTime = null;
+                int? activeChildId = null;
+
+                foreach (System.Data.DataRow durationRow in startedRows)
                 {
                     string childStartTime = durationRow["start_time"]?.ToString() ?? "-";
                     string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
-                    string theStatus = durationRow["status"]?.ToString() ?? "";
+                    string status = durationRow["status"]?.ToString() ?? "";
 
-                    //if (string.IsNullOrEmpty(childEndTime))
-                    //{
-                    //    continue;
-                    //}
-
-                    string childdurationDisplay = "0 Days : 00 : 00 : 00";
-                    DateTime childparsedStart;
-                    DateTime childparsedEnd;
+                    string childDurationDisplay = "0 Days : 00 : 00 : 00";
+                    DateTime childParsedStart, childParsedEnd;
                     TimeSpan currentDuration = TimeSpan.Zero;
 
-                    if (DateTime.TryParse(childStartTime, out childparsedStart))
+                    if (DateTime.TryParse(childStartTime, out childParsedStart))
                     {
-                        if (DateTime.TryParse(childEndTime, out childparsedEnd))
+                        if (DateTime.TryParse(childEndTime, out childParsedEnd))
                         {
-
-                            currentDuration = childparsedEnd - childparsedStart;
-                            childdurationDisplay = timeFormat.FormatDuration(currentDuration);
+                            currentDuration = childParsedEnd - childParsedStart;
                         }
                         else
                         {
-
-                            currentDuration = DateTime.Now - childparsedStart;
-                            childdurationDisplay = timeFormat.FormatDuration(currentDuration);
+                            // Active (no end time)
+                            currentDuration = DateTime.Now - childParsedStart;
+                            activeChildStartTime = childParsedStart;
+                            activeChildId = Convert.ToInt32(durationRow["id"]);
                         }
 
+                        childDurationDisplay = timeFormat.FormatDuration(currentDuration);
                         totalDuration = totalDuration.Add(currentDuration);
                     }
 
@@ -282,11 +319,12 @@ namespace BTC_ENTERPRISE
                         ProcessId = processId,
                         TimeStart = childStartTime,
                         TimeEnd = childEndTime,
-                        Duration = childdurationDisplay,
+                        Duration = childDurationDisplay,
                         Remarks = durationRow["remark"]?.ToString() ?? "",
-                        StatusName = durationRow["status"]?.ToString() ?? "Unknown"
+                        StatusName = status
                     });
                 }
+
 
                 string finalTotalDurationDisplay = timeFormat.FormatDuration(totalDuration);
 
@@ -340,12 +378,12 @@ namespace BTC_ENTERPRISE
                     DateTime startTime = DateTime.Now;
                     activeProcesses[Convert.ToInt32(processId)] = startTime;
                     _storedDuration = record.Duration;
-                   // record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
                     StartProcessTimers(record);
+                    // StartProcessTimers(record, activeChildStartTime, activeChildId);
                 }
-              
+
             }
-          
+
             sfDataGrid1.DataSource = viewModels;
             sfDataGrid1.DetailsViewDefinitions.Clear();
             sfDataGrid1.DetailsViewDefinitions.Add(GetChildViewDefinition());
@@ -749,6 +787,8 @@ namespace BTC_ENTERPRISE
                             TimeSpan.Zero
                         );
                     }
+                    var childlastSubProcess = record.SubProcesses.LastOrDefault();
+                    UpdateChildStatus(childlastSubProcess, "Processing");
                     record.IsOnHold = false;
                     record.IsEnded = false;
 
@@ -765,10 +805,11 @@ namespace BTC_ENTERPRISE
                         return;
                     }
                     TabFrm tabFrm = new TabFrm(this, processid, processName, lbl_mo.Text, lbl_generatedSerial.Text);
-
+                    var _lastSubProcess = record.SubProcesses.LastOrDefault();
                     if (tabFrm.ShowDialog() == DialogResult.Yes)
                     {
                         UpdateStatus(record, true, false, false, "Cancelled");
+                        UpdateChildStatus(_lastSubProcess, "Cancel");
                         activeProcesses.Remove(processid);
                     }
 
@@ -793,8 +834,9 @@ namespace BTC_ENTERPRISE
                             timeEndString,
                             segmentDuration
                         );
+                        UpdateChildStatus(lastSubProcess, "Paused");
                         //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
-      
+
                         record.StartTime = timeEndString;
                         UpdateStatus(record, true, true, true, "Pause");
                     }
@@ -834,11 +876,12 @@ namespace BTC_ENTERPRISE
                         }
 
                         LogSubProcess(record, lastSubProcess: null, "Process Completed", record.StartTime, timeEndString, segmentDuration);
-
+                        var ChildlastSubProcess = record.SubProcesses.LastOrDefault();
                         TimeSpan totalAccumulatedDuration = TimeFormat.ParseCustomDuration(record.Duration);
                         record.Duration = timeFormat.FormatDuration(totalAccumulatedDuration);
                         record.EndTime = $"Time: {segmentEndTime:HH:mm:ss} Date: {segmentEndTime:MM-dd-yyyy}";
                         UpdateStatus(record, true, false, true, "Completed");
+                        UpdateChildStatus(ChildlastSubProcess, "Completed");
                         await PostProcessWithDictionary(processid, "Process Completed", status, Token);
                         StopProcessTimersIfInactive();
                     }
@@ -880,7 +923,10 @@ namespace BTC_ENTERPRISE
             processstatus = statusText;
         }
 
-
+        private void UpdateChildStatus(ViewModel.ChildProcessViewModel record, string newstatus)
+        {
+            record.StatusName = newstatus;
+        }
 
         private void StartProcessTimers(ViewModel.ProcessViewModel record)
         {
@@ -896,6 +942,30 @@ namespace BTC_ENTERPRISE
                 process_duration_timer.Start();
             }
         }
+        //private void StartProcessTimers(ViewModel.ProcessViewModel record)
+        //{
+        //    if (!processTimer.Enabled)
+        //    {
+        //        processTimer.Start();
+        //        isRunning = true;
+        //    }
+
+        //    // Start duration timer based on cycle time
+        //    if (record.CycleTime != "N/A" && int.TryParse(record.CycleTime, out int timer_duration))
+        //    {
+        //        process_duration_timer.Interval = timer_duration;
+        //        process_duration_timer.Start();
+        //    }
+
+        //    //// ✅ Track active child for duration updates
+        //    //if (activeChildId.HasValue && activeChildStartTime.HasValue)
+        //    //{
+        //    //    if (!activeProcesses.ContainsKey(activeChildId.Value))
+        //    //        activeProcesses[activeChildId.Value] = activeChildStartTime.Value;
+        //    //}
+        //}
+
+
 
         private void StopProcessTimersIfInactive()
         {
@@ -1377,8 +1447,20 @@ namespace BTC_ENTERPRISE
                     TimeSpan totalRunningDuration = accumulatedTimeBase + currentSegmentDuration;
 
 
+
                     string durationDisplay = timeFormat.FormatDuration(totalRunningDuration);
                     record.Duration = durationDisplay;
+
+                    foreach (var child in record.SubProcesses)
+                    {
+                        if (child.StatusName == "Processing")
+                        {
+                            TimeSpan childtDuration = DateTime.Now - Convert.ToDateTime(child.TimeStart);
+                            child.Duration = timeFormat.FormatDuration(childtDuration);
+                        }
+                    }
+
+
                     durationUpdated = true;
                 }
             }
