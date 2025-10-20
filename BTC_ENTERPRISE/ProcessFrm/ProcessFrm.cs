@@ -243,44 +243,6 @@ namespace BTC_ENTERPRISE
                     .Where(r => !string.IsNullOrEmpty(r["start_time"]?.ToString()))
                     .ToList();
 
-                //foreach (System.Data.DataRow durationRow in startedRows)
-                //{
-                //    string childStartTime = durationRow["start_time"]?.ToString() ?? "-";
-                //    string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
-                //    string status = durationRow["status"]?.ToString() ?? "";
-
-                //    string childDurationDisplay = "0 Days : 00 : 00 : 00";
-                //    DateTime childParsedStart, childParsedEnd;
-                //    TimeSpan currentDuration = TimeSpan.Zero;
-
-                //    if (DateTime.TryParse(childStartTime, out childParsedStart))
-                //    {
-                //        if (DateTime.TryParse(childEndTime, out childParsedEnd))
-                //        {
-                //            currentDuration = childParsedEnd - childParsedStart;
-                //            childDurationDisplay = timeFormat.FormatDuration(currentDuration);
-                //        }
-                //        else
-                //        {
-                //            currentDuration = DateTime.Now - childParsedStart;
-                //            childDurationDisplay = timeFormat.FormatDuration(currentDuration);
-                //        }
-
-                //        totalDuration = totalDuration.Add(currentDuration);
-                //    }
-
-                //    childProcesses.Add(new ViewModel.ChildProcessViewModel
-                //    {
-                //        Id = Convert.ToInt32(durationRow["id"]),
-                //        ProcessId = processId,
-                //        TimeStart = childStartTime,
-                //        TimeEnd = childEndTime,
-                //        Duration = childDurationDisplay,
-                //        Remarks = durationRow["remark"]?.ToString() ?? "",
-                //        StatusName = status
-                //    });
-
-                //}
 
                 DateTime? activeChildStartTime = null;
                 int? activeChildId = null;
@@ -352,7 +314,7 @@ namespace BTC_ENTERPRISE
                 });
                 var record = new ViewModel.ProcessViewModel
                 {
-                    Index = index++,
+                    Index = index,
                     expandIcon = "+",
                     ProcessId = processId,
                     Name = processName,
@@ -874,9 +836,9 @@ namespace BTC_ENTERPRISE
                             record.AccumulatedDuration += segmentDuration;
                             activeProcesses.Remove(processid);
                         }
-
-                        LogSubProcess(record, lastSubProcess: null, "Process Completed", record.StartTime, timeEndString, segmentDuration);
                         var ChildlastSubProcess = record.SubProcesses.LastOrDefault();
+                        LogSubProcess(record, ChildlastSubProcess, "Process Completed", record.StartTime, timeEndString, segmentDuration);
+
                         TimeSpan totalAccumulatedDuration = TimeFormat.ParseCustomDuration(record.Duration);
                         record.Duration = timeFormat.FormatDuration(totalAccumulatedDuration);
                         record.EndTime = $"Time: {segmentEndTime:HH:mm:ss} Date: {segmentEndTime:MM-dd-yyyy}";
@@ -912,6 +874,7 @@ namespace BTC_ENTERPRISE
 
             sfDataGrid1.Refresh();
         }
+
 
 
         private void UpdateStatus(ViewModel.ProcessViewModel record, bool isStarted, bool isOnHold, bool isEnded, string statusText)
