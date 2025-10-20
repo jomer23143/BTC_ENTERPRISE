@@ -5,6 +5,7 @@ using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Modal;
 using BTC_ENTERPRISE.Model;
 using BTC_ENTERPRISE.YaoUI;
+using BTC_EnterpriseV2.Modal;
 using Frameworks;
 using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json.Linq;
@@ -43,6 +44,7 @@ namespace BTC_ENTERPRISE
         private bool _started = false;
         private int _processStrtID;
         private bool IsScanItem = true;
+        private bool _IsScanChemical = true;
         private bool _IscanOK = false;
         private FormManager formManager;
         private System.Windows.Forms.Timer fadeTimer;
@@ -1126,6 +1128,8 @@ namespace BTC_ENTERPRISE
                 return;
             }
 
+
+
             if (IsScanItem == true && processstatus == "Processing" && record.Serial_count == "1")
             {
                 if (record.IsSerialized == 0)
@@ -1216,8 +1220,37 @@ namespace BTC_ENTERPRISE
 
                 }
 
+            }
+
+
+            if (IsScanItem == false && processstatus == "Processing")
+            {
+                if (record.IsChemical == "0")
+                {
+                    formManager.closeAForm();
+                    lbl_subprocessInfo.Text = "";
+                    return;
+                }
+                else
+                {
+                    //var scanner = new ScanChemical();
+                    //formManager.OpenChildForm(scanner, sender);
+                    //scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
+
+                    //scanner.ItemScanSuccess += async (serial, processid) =>
+                    //{
+                    //    UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), 0);
+                    //    await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                    //};
+                    var scanner = new ScanChemical();
+                    scanner.ShowDialog();
+                }
+
 
             }
+
+
+
 
         }
 
@@ -1266,8 +1299,6 @@ namespace BTC_ENTERPRISE
             //    //    lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
             //    //    return;
             //    //}
-
-
 
 
             //    if (IsScanItem == true && processstatus == "Completed")
