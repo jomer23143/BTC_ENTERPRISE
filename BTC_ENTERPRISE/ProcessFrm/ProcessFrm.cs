@@ -82,11 +82,14 @@ namespace BTC_ENTERPRISE
             this.Token = thetoken;
             formManager = new FormManager(panel_top, panel_parent_tab_subprocess);
             YUI yaoui = new YUI();
-            yaoui.RoundedButton(btn_material, 8, Color.FromArgb(27, 86, 253));
-            yaoui.RoundedButton(btn_torque, 8, Color.FromArgb(7, 222, 151));
-            yaoui.RoundedButton(btn_chemical, 8, Color.FromArgb(255, 128, 0));
+            //yaoui.RoundedButton(btn_material, 8, Color.FromArgb(27, 86, 253));
+            //yaoui.RoundedButton(btn_torque, 8, Color.FromArgb(7, 222, 151));
+            //yaoui.RoundedButton(btn_chemical, 8, Color.FromArgb(255, 128, 0));
+            yaoui.RoundedPanelDocker(panel_material, 8);
+            yaoui.RoundedPanelDocker(panel_torque, 8);
+            yaoui.RoundedPanelDocker(panel_chemical, 8);
             yaoui.RoundedButton(btn_qcChecklist, 8, Color.Tomato);
-            checkBoxAdv2.Checked = true;
+            // checkBoxAdv2.Checked = true;
 
             // Timers
             processTimer = new Timer();
@@ -1079,33 +1082,70 @@ namespace BTC_ENTERPRISE
             var bufftcount = Convert.ToString(tcount);
 
 
+            Color CheckColor = Color.Green;
+            Color UncheckColor = Color.Gray;
+            string CheckMark = "✔";
+            string EmptyMark = "";
 
-            if (record.IsTorque == 0 && record.IsSerialized == 1)
+            if (record.IsSerialized == 1 && record.Serial_count == "1")
             {
                 IsScanItem = true;
-                checkBoxAdv1.Checked = false;
-                checkBoxAdv2.Checked = true;
+
+                chkIndicator1.Text = CheckMark;
+                chkIndicator1.ForeColor = CheckColor;
+
+                chkIndicator2.Text = EmptyMark;
+                chkIndicator3.Text = EmptyMark;
+
+                label_scanserialized.ForeColor = Color.FromArgb(27, 86, 253);
+                panel_material.BackColor = Color.White;
+
+                label_scan_torque.ForeColor = Color.White;
+                panel_torque.BackColor = Color.Transparent;
+
+                label_scan_chemical.ForeColor = Color.White;
+                panel_chemical.BackColor = Color.Transparent;
             }
-            else if (record.IsTorque == 1 && record.IsSerialized == 0)
+            else if (record.IsTorque == 1 && record.Torque_value == "0.00")
             {
                 IsScanItem = false;
-                checkBoxAdv1.Checked = true;
-                checkBoxAdv2.Checked = false;
+
+                chkIndicator1.Text = EmptyMark;
+
+                chkIndicator2.Text = CheckMark;
+                chkIndicator2.ForeColor = CheckColor;
+
+                chkIndicator3.Text = EmptyMark;
+
+                label_scanserialized.ForeColor = Color.White;
+                panel_material.BackColor = Color.Transparent;
+
+                label_scan_torque.ForeColor = Color.FromArgb(7, 222, 151);
+                panel_torque.BackColor = Color.White;
+
+                label_scan_chemical.ForeColor = Color.White;
+                panel_chemical.BackColor = Color.Transparent;
             }
-            else if (record.IsTorque == 1 && record.IsSerialized == 1)
+            else if ((record.IsChemical == "1" && record.Chemical_name == string.Empty))
             {
-                if (IsScanItem == true)
-                {
-                    IsScanItem = true;
-                    checkBoxAdv1.Checked = false;
-                    checkBoxAdv2.Checked = true;
-                }
-                else
-                {
-                    IsScanItem = false;
-                    checkBoxAdv1.Checked = true;
-                    checkBoxAdv2.Checked = false;
-                }
+                _IsScanChemical = true;
+
+                chkIndicator2.Text = EmptyMark;
+
+                chkIndicator3.Text = CheckMark;
+                chkIndicator3.ForeColor = CheckColor;
+
+
+                chkIndicator1.Text = EmptyMark;
+
+                label_scanserialized.ForeColor = Color.White;
+                panel_material.BackColor = Color.Transparent;
+
+                label_scan_torque.ForeColor = Color.White;
+                panel_torque.BackColor = Color.Transparent;
+
+                label_scan_chemical.ForeColor = Color.FromArgb(255, 128, 0);
+                panel_chemical.BackColor = Color.White;
             }
             else
             {
@@ -1113,6 +1153,9 @@ namespace BTC_ENTERPRISE
                 lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
                 return;
             }
+
+
+
             if (processstatus == "Pause")
             {
                 string messageType = IsScanItem ? "item" : "torque/chemical";
@@ -1192,7 +1235,7 @@ namespace BTC_ENTERPRISE
             //Chemical
             if (record.IsChemical == "1" && string.IsNullOrEmpty(record.Chemical_name))
             {
-                var Chemicalscanner = new ScanChemical(this, rowindex, processid, tbl_subprocess);
+                var Chemicalscanner = new ScanChemical(this, rowindex, processid, selectedName, tbl_subprocess);
                 formManager.OpenChildForm(Chemicalscanner, sender);
                 Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Focus();
 
@@ -1215,21 +1258,7 @@ namespace BTC_ENTERPRISE
         {
         }
 
-        private void btn_torque_Click(object sender, EventArgs e)
-        {
-            checkBoxAdv1.Checked = true;
-            checkBoxAdv2.Checked = false;
-            IsScanItem = false;
-            _IsScanChemical = false;
-        }
 
-        private void btn_material_Click(object sender, EventArgs e)
-        {
-            checkBoxAdv1.Checked = false;
-            checkBoxAdv2.Checked = true;
-            IsScanItem = true;
-            _IsScanChemical = false;
-        }
         private void btn_chemical_Click(object sender, EventArgs e)
         {
             _IsScanChemical = true;

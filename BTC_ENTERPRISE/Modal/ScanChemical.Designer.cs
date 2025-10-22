@@ -38,17 +38,19 @@
             lbl_msg = new Label();
             txt_chemical = new TextBox();
             pictureBox1 = new PictureBox();
+            panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // lbl_processname
             // 
-            lbl_processname.Dock = DockStyle.Top;
+            lbl_processname.Dock = DockStyle.Fill;
             lbl_processname.Font = new Font("Segoe UI Semibold", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_processname.Location = new Point(0, 0);
             lbl_processname.Name = "lbl_processname";
-            lbl_processname.Size = new Size(671, 42);
+            lbl_processname.Size = new Size(626, 27);
             lbl_processname.TabIndex = 1;
             lbl_processname.Text = "Material Name";
             lbl_processname.TextAlign = ContentAlignment.MiddleCenter;
@@ -136,7 +138,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(277, 44);
+            pictureBox1.Location = new Point(277, 43);
             pictureBox1.Margin = new Padding(3, 2, 3, 2);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(130, 74);
@@ -144,19 +146,28 @@
             pictureBox1.TabIndex = 12;
             pictureBox1.TabStop = false;
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.White;
+            panel1.Controls.Add(lbl_processname);
+            panel1.Location = new Point(23, 8);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(626, 27);
+            panel1.TabIndex = 16;
+            // 
             // ScanChemical
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LemonChiffon;
             ClientSize = new Size(671, 305);
+            Controls.Add(panel1);
             Controls.Add(dataGridView1);
             Controls.Add(label2);
             Controls.Add(lbl_scancount);
             Controls.Add(pictureBox1);
             Controls.Add(lbl_msg);
             Controls.Add(txt_chemical);
-            Controls.Add(lbl_processname);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 2, 3, 2);
             Name = "ScanChemical";
@@ -164,6 +175,7 @@
             Load += ScanChemical_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -177,5 +189,6 @@
         private Label lbl_msg;
         public TextBox txt_chemical;
         private PictureBox pictureBox1;
+        private Panel panel1;
     }
 }

@@ -2,6 +2,7 @@
 using BTC_ENTERPRISE;
 using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Model;
+using BTC_ENTERPRISE.YaoUI;
 using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,12 +22,16 @@ namespace BTC_EnterpriseV2.Modal
         private string cexp;
 
         public event Action<string, string, string> ChemicalScanSuccess;
-        public ScanChemical(ProcessFrm processFrm, int rowindex, string materialid, DataTable dtserials)
+        public ScanChemical(ProcessFrm processFrm, int rowindex, string materialid, string processname, DataTable dtserials)
         {
             InitializeComponent();
+            YUI yUI = new YUI();
+            yUI.RoundedTextBox(txt_chemical, 6, Color.White);
+            yUI.RoundedPanelDocker(panel1, 6);
             this.dataserials = dtserials;
             this.rowindex = rowindex;
             this._MaterialID = materialid;
+            lbl_processname.Text = processname;
             lbl_msg.Text = "Please scan the QR of the Chemical to processed.";
         }
         private void ScanChemical_Load(object sender, EventArgs e)
