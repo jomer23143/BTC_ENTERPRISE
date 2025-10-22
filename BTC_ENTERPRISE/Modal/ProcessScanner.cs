@@ -1,12 +1,10 @@
 ﻿using System.Data;
 using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Model;
-using Frameworks.Utilities;
 using BTC_ENTERPRISE.YaoUI;
+using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using BTC_ENTERPRISE;
-using Frameworks.Utilities.ApiUtilities;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -25,10 +23,13 @@ namespace BTC_ENTERPRISE.Modal
         private const string ApiUrl = "https://app.btcp-enterprise.com/api/scan-serial";
         private string PostMaterial = GlobalApi.GetPostMaterialAssignSerialUrl();
         private int is_kit_list = 0;
+        private string _Orderid;
+        private string _ScannedSerial;
         private DataTable dataserials;
         private ProcessFrm _processfrm;
-        public event Action<string, string> ItemScanSuccess;
-        public ProcessScanner(ProcessFrm processFrm, int rowindex, string processid, string processname, string generatedseril, string qty, string count, int iskitlist, DataTable table_serials)
+
+        public event Action<string, string, string> ItemScanSuccess;
+        public ProcessScanner(ProcessFrm processFrm, int rowindex, string processid, string manufacturingorderid, string processname, string generatedseril, string qty, string count, int iskitlist, DataTable table_serials)
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -45,6 +46,7 @@ namespace BTC_ENTERPRISE.Modal
             this.is_kit_list = iskitlist;
             this.dataserials = table_serials;
             this._processfrm = processFrm;
+            this._Orderid = manufacturingorderid;
             lbl_msg.Text = "Please scan the serial number of the item to be processed.";
         }
 
@@ -69,9 +71,9 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-                if (processId == serial[1].ToString())
+                if (_Orderid == serial[1].ToString())
                 {
-                    dataGridView1.Rows.Add(index++, serial[2]);
+                    dataGridView1.Rows.Add(index++, serial[4]);
                 }
             }
         }
@@ -93,30 +95,11 @@ namespace BTC_ENTERPRISE.Modal
                         processId
                     );
 
-                    txt_serialnumber.Clear();
+
 
                     lbl_scancount.Text = $"{tempcount} out of {tempqty}";
 
 
-                    if (tempcount == tempqty)
-                    {
-                        //string viewImagePath = Path.Combine(Application.StartupPath, "Assets", "viewsacn.png");
-                        //Image viewImage = Image.FromFile(viewImagePath);
-                        //Image resizedImage2 = ResizeImage(viewImage, 60, 60);
-
-                        //Sub_AssyFrm.instance.dgv1.Rows[rowindex].Cells["ScanItemSerial"].Value = resizedImage2;
-
-                        //Image ResizeImage(Image img, int width, int height)
-                        //{
-                        //    Bitmap bmp = new Bitmap(width, height);
-                        //    using (Graphics g = Graphics.FromImage(bmp))
-                        //    {
-                        //        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                        //        g.DrawImage(img, 0, 0, width, height);
-                        //    }
-                        //    return bmp;
-                    }
-                    //   Sub_AssyFrm.dtserials = dataserials;
                 }
                 else
                 {
@@ -232,7 +215,8 @@ namespace BTC_ENTERPRISE.Modal
                 }
                 else
                 {
-                    ItemScanSuccess?.Invoke(serial, processid);
+                    _ScannedSerial = txt_serialnumber.Text;
+                    ItemScanSuccess?.Invoke(serial, processid, _ScannedSerial);
 
                     bool exists = dataGridView1.Rows
                       .Cast<DataGridViewRow>()
@@ -249,6 +233,7 @@ namespace BTC_ENTERPRISE.Modal
 
                     ShowMessage($"Scanned Successfully!.", Color.Green);
 
+                    txt_serialnumber.Clear();
                 }
             }
             catch (JsonReaderException ex)
@@ -343,7 +328,7 @@ namespace BTC_ENTERPRISE.Modal
 
                         int index = 0;
                         dataserials.Rows.Add(index++, processId, txt_serialnumber.Text.Trim());
-                       // Sub_AssyFrm.instance.dgv1.Rows[rowindex].Cells["serial_count"].Value = tempcount;
+                        // Sub_AssyFrm.instance.dgv1.Rows[rowindex].Cells["serial_count"].Value = tempcount;
 
                         //ShowMessage("Kitlist Part Number is Available.", Color.Green);
                     }

@@ -70,12 +70,12 @@ namespace BTC_ENTERPRISE.YaoUI
             obj.Region = new Region(path);
             obj.BackColor = color;
         }
-        public void RoundedPicturebox(PictureBox obj)
+        public void RoundedPicturebox(PictureBox obj, Color bgcolor)
         {
             GraphicsPath path = new GraphicsPath();
             path.AddEllipse(0, 0, obj.Width, obj.Height);
             obj.Region = new Region(path);
-            obj.BackColor = Color.White;
+            obj.BackColor = bgcolor;
         }
 
     }

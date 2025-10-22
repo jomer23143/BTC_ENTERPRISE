@@ -70,6 +70,8 @@
         {
             public int id { get; set; }
             public int manufacturing_order_process_id { get; set; }
+            public string? ipn { get; set; }
+            public string? name { get; set; }
             public string? serial_number { get; set; }
         }
 
@@ -95,27 +97,46 @@
             public int manufacturing_order_station_id { get; set; }
             public int manufacturing_order_process_id { get; set; }
             public int manufacturing_order_process_status_id { get; set; }
-            public string? name { get; set; }
-            public string? ipn_number { get; set; }
-            public int? serial_quantity { get; set; }
-            public int? serial_count { get; set; }
-            public int is_kit_list { get; set; }
+            public int serial_quantity { get; set; }
+            public int serial_count { get; set; }
             public int is_serial { get; set; }
+            public int is_kit_list { get; set; }
+            public object sub_assembly_serial { get; set; }
             public int is_torque { get; set; }
             public object invoice_serial_number { get; set; }
             public object harness_serial_number { get; set; }
-            public object machine_tool_torque_range { get; set; }
-            public object machine_tool_torque_name { get; set; }
-            public object machine_tool_torque_value { get; set; }
             public int is_chemical { get; set; }
-            public string? chemical_name { get; set; }
-            public string? chemical_expiration { get; set; }
+            public object chemical_name { get; set; }
+            public object chemical_expiration { get; set; }
             public DateTime created_at { get; set; }
             public DateTime updated_at { get; set; }
-            public List<object> serial { get; set; }
+            public List<Serial> serial { get; set; }
+            public List<Torque> torque { get; set; }
+            public List<InternalPartNumber> internal_part_number { get; set; }
         }
 
-
-
+        public class Torque
+        {
+            public int id { get; set; }
+            public int manufacturing_order_sub_process_id { get; set; }
+            public int product_segment_sub_process_id { get; set; }
+            public string torque_name { get; set; }
+            public string min { get; set; }
+            public string max { get; set; }
+            public string value { get; set; }
+            public DateTime created_at { get; set; }
+            public DateTime updated_at { get; set; }
+        }
+        public class InternalPartNumber
+        {
+            public int id { get; set; }
+            public int manufacturing_order_sub_process_id { get; set; }
+            public int product_segment_sub_process_id { get; set; }
+            public string ipn_number { get; set; }
+            public string description { get; set; }
+            public int is_used { get; set; }
+            public DateTime created_at { get; set; }
+            public DateTime updated_at { get; set; }
+        }
     }
 }

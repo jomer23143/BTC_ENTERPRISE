@@ -424,8 +424,9 @@ namespace BTC_ENTERPRISE
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "IsTorque", HeaderText = "IsTorque", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Torque_count", HeaderText = "tc", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "IsChemical", HeaderText = "ischemical", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
-
-            // --- Map Processes to ViewModel ---
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "manufacturing_order_id", HeaderText = "id", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Torque_value", HeaderText = "Tvalue", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Chemical_name", HeaderText = "Cname", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
 
             // --- Filter rows by processID ---
             var filteredRows = subprocess.AsEnumerable()
@@ -439,24 +440,28 @@ namespace BTC_ENTERPRISE
             {
                 viewModels.Add(new ViewModel.SubProcessView
                 {
-                    Torque_count = !string.IsNullOrEmpty(row.Field<string>("machine_tool_torque_value")) ? "1" : "0",
-
+                    //  Torque_count = !string.IsNullOrEmpty(row.Field<string>("value")) ? "1" : "0",
+                    Torque_count = row.Field<string>("torque_count"),
                     Serial_count = row.Field<int>("is_serial") == 1 ? row["serial_count"]?.ToString() ?? "0" : "0",
 
+                    Chemical_count = row["chemical_count"].ToString(),
 
                     Index = index++,
                     MaterialID = row.Field<int>("id"),
-                    Name = row["name"]?.ToString() ?? "N/A",
+                    Name = row["description"]?.ToString() ?? "N/A",
                     Ipn = row["ipn_number"]?.ToString() ?? "N/A",
 
                     Torque = string.Format("({0}) {1}",
-                             string.IsNullOrEmpty(row["machine_tool_torque_name"]?.ToString()) ? "N/A" : row["machine_tool_torque_name"].ToString(),
-                             string.IsNullOrEmpty(row["machine_tool_torque_value"]?.ToString()) ? "N/A" : row["machine_tool_torque_value"].ToString()),
+                             string.IsNullOrEmpty(row["torque_name"]?.ToString()) ? "N/A" : row["torque_name"].ToString(),
+                             string.IsNullOrEmpty(row["value"]?.ToString()) ? "N/A" : row["value"].ToString()),
 
                     Serial_qty = row["serial_quantity"]?.ToString() ?? "0",
                     IsSerialized = row.Field<int>("is_serial"),
                     IsTorque = row.Field<int>("is_torque"),
                     IsChemical = row.Field<string>("is_chemical"),
+                    manufacturing_order_id = row.Field<int>("manufacturing_order_process_id"),
+                    Torque_value = row.Field<string>("value").ToString(),
+                    Chemical_name = row.Field<string>("chemical_name").ToString(),
 
                 });
             }
@@ -693,9 +698,6 @@ namespace BTC_ENTERPRISE
         }
 
 
-
-
-
         private async void sfDataGrid1_CellButtonClick_1(object sender, Syncfusion.WinForms.DataGrid.Events.CellButtonClickEventArgs e)
         {
             // --- Initial Checks ---
@@ -907,30 +909,6 @@ namespace BTC_ENTERPRISE
                 process_duration_timer.Start();
             }
         }
-        //private void StartProcessTimers(ViewModel.ProcessViewModel record)
-        //{
-        //    if (!processTimer.Enabled)
-        //    {
-        //        processTimer.Start();
-        //        isRunning = true;
-        //    }
-
-        //    // Start duration timer based on cycle time
-        //    if (record.CycleTime != "N/A" && int.TryParse(record.CycleTime, out int timer_duration))
-        //    {
-        //        process_duration_timer.Interval = timer_duration;
-        //        process_duration_timer.Start();
-        //    }
-
-        //    //// ✅ Track active child for duration updates
-        //    //if (activeChildId.HasValue && activeChildStartTime.HasValue)
-        //    //{
-        //    //    if (!activeProcesses.ContainsKey(activeChildId.Value))
-        //    //        activeProcesses[activeChildId.Value] = activeChildStartTime.Value;
-        //    //}
-        //}
-
-
 
         private void StopProcessTimersIfInactive()
         {
@@ -1023,9 +1001,10 @@ namespace BTC_ENTERPRISE
                 return false;
             }
         }
-        //SubProcvess
+
         private void sfDataGrid2_QueryCellStyle(object sender, Syncfusion.WinForms.DataGrid.Events.QueryCellStyleEventArgs e)
         {
+            // --- Pre-checks (Keep these as-is) ---
             if (e.Column == null) return;
 
             int recordIndex = sfDataGrid2.TableControl.ResolveToRecordIndex(e.RowIndex);
@@ -1034,44 +1013,50 @@ namespace BTC_ENTERPRISE
             var record = sfDataGrid2.View.Records.GetItemAt(recordIndex) as ViewModel.SubProcessView;
             if (record == null) return;
 
+            // --- Default Style ---
 
             Color newTextColor = Color.Black;
             FontStyle newFontStyle = FontStyle.Regular;
 
-
-            if (record.IsSerialized == 1 && record.Serial_count == "0")
+            if (record.IsSerialized == 1 && record.Serial_count == "0" &&
+                record.IsTorque == 0 && record.IsChemical == "0")
             {
+                // BLUE (27, 86, 253)
                 newTextColor = Color.FromArgb(27, 86, 253);
             }
 
-            else if (record.IsTorque == 1 && record.Torque_count == "0")
+            else if (record.IsTorque == 1 && record.Torque_count == "0" &&
+                     record.IsSerialized == 0 && record.IsChemical == "0")
             {
+                // CYAN (7, 222, 151)
                 newTextColor = Color.FromArgb(7, 222, 151);
-
             }
 
-            else if (record.IsChemical == "1")
+            else if (record.IsChemical == "1" && record.Chemical_count == "0" &&
+                     record.IsTorque == 0 && record.IsSerialized == 0)
             {
+
                 newTextColor = Color.FromArgb(255, 128, 0);
             }
 
+            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&  // Serialized Complete
+                     record.IsTorque == 1 && record.Torque_count == "1" &&    // Torque Complete
+                     record.IsChemical == "1" && record.Chemical_count == "0") // Chemical Incomplete
+            {
+                newTextColor = Color.Teal;
+            }
 
-            else if (record.IsSerialized == 1 && record.Serial_count == "1")
+            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&
+                     record.IsTorque == 1 && record.Torque_count == "1" &&
+                     record.IsChemical == "1" && record.Chemical_count != "0")
             {
                 newTextColor = Color.Green;
             }
-
-            else if (record.IsTorque == 1 && record.Torque_count == "1")
-            {
-                newTextColor = Color.Green;
-            }
-
 
             e.Style.TextColor = newTextColor;
             e.Style.Font = new GridFontInfo(new Font("Segoe UI", 10, newFontStyle));
-
-
         }
+
 
         private async void sfDataGrid2_CellClick(object sender, Syncfusion.WinForms.DataGrid.Events.CellClickEventArgs e)
         {
@@ -1080,10 +1065,11 @@ namespace BTC_ENTERPRISE
 
             var record = e.DataRow.RowData as ViewModel.SubProcessView;
             if (record == null) return;
-
+            Global global_DTtable = new Global();
             string selectedName = record.Name;
             var rowindex = 0;
             var processid = Convert.ToString(record.MaterialID);
+            var manufacturingOrderID = Convert.ToString(record.manufacturing_order_id);
             var qty = record.Serial_qty;
             var tqty = record.Torque_count;
             var count = Convert.ToInt32(record.Serial_count) > 0 ? 0 : 1;
@@ -1127,217 +1113,106 @@ namespace BTC_ENTERPRISE
                 lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
                 return;
             }
+            if (processstatus == "Pause")
+            {
+                string messageType = IsScanItem ? "item" : "torque/chemical";
+                lbl_subprocessInfo.Text = $"Process is on Hold, cannot scan {messageType}. Please start the process and scan it again.";
+                formManager.closeAForm();
+                return;
+            }
+
+            if (processstatus == "Completed")
+            {
+                string messageType = IsScanItem ? "item" : "torque/chemical";
+                lbl_subprocessInfo.Text = $"Process is Completed, cannot scan {messageType}.";
+                formManager.closeAForm();
+                return;
+            }
+
+            if (processstatus == "Open")
+            {
+                string messageType = IsScanItem ? "Item" : "torque/chemical";
+                lbl_subprocessInfo.Text = $"Process is not started, cannot scan {messageType}.";
+                formManager.closeAForm();
+                return;
+            }
 
 
-
-            if (IsScanItem == true && processstatus == "Processing" && record.Serial_count == "1")
+            //Serialize Material
+            if (IsScanItem)
             {
                 if (record.IsSerialized == 0)
                 {
-                    formManager.closeAForm();
                     lbl_subprocessInfo.Text = "This material is not serialized, cannot scan item.";
+                    formManager.closeAForm();
                     return;
                 }
-                else
+
+                if (record.Serial_count != "0")
                 {
-                    var scanner = new ProcessScanner(this, rowindex, processid, selectedName, lbl_generatedSerial.Text, qty, buffcount, iskitlist, tbl_subprocess);
+                    var scanner = new ProcessScanner(this, rowindex, processid, manufacturingOrderID, selectedName, lbl_generatedSerial.Text, qty, buffcount, iskitlist, tbl_subprocess);
                     formManager.OpenChildForm(scanner, sender);
                     scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
 
-                    scanner.ItemScanSuccess += async (serial, processid) =>
+                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
                     {
-                        UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), 0);
+                        global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
-
+                    return; // Exit after opening scanner
                 }
 
+                lbl_subprocessInfo.Text = "The item was already fully scanned.";
+                formManager.closeAForm();
 
             }
-            else if (IsScanItem == true && processstatus == "Processing" && record.Serial_count == "0")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "The item was already scanned successfully. Please do not scan it again.";
-            }
 
-            else if (IsScanItem == true && processstatus == "Pause")
+            //Torque
+            if (record.IsTorque == 1)
             {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is on Hold, cannot scan item.";
-            }
-            else if (IsScanItem == true && processstatus == "Completed")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is Completed, cannot scan item.";
-            }
-            else if (IsScanItem == true && processstatus == "Open")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is not started, cannot scan Item.";
-            }
-            else if (IsScanItem == false && processstatus == "Pause")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is on Hold, cannot scan torque.";
-            }
-            else if (IsScanItem == false && processstatus == "Completed")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is Completed, cannot scan torque.";
-
-            }
-            else if (IsScanItem == false && processstatus == "Open")
-
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "Process is not started, cannot scan torque.";
-            }
-            else if (IsScanItem == false && processstatus == "Processing" && record.Torque_count == "1")
-            {
-                formManager.closeAForm();
-                lbl_subprocessInfo.Text = "You have already Scan Torque for this Material, cannot scan torque.";
-            }
-            else if (IsScanItem == false && processstatus == "Processing")
-            {
-                if (record.IsTorque == 0)
-                {
-                    formManager.closeAForm();
-                    lbl_subprocessInfo.Text = "This is not have Torque, cannot scan Torque.";
-                    return;
-                }
-                else
+                if (record.Torque_value == "0.00")
                 {
                     var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount);
                     formManager.OpenChildForm(Tscanner, sender);
                     Tscanner.Shown += (s, args) => Tscanner.txt_torque.Focus();
-                    // Subscribe to event
-                    Tscanner.TorqueScanSuccess += async (torqueName, torqueValue) =>
+
+                    Tscanner.TorqueScanSuccess += async (torqueName, torqueValue, torquemin, torquemax) =>
                     {
                         _IscanOK = true;
-                        UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
+                        global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
-
+                    return; // Exit after opening scanner
                 }
 
+                lbl_subprocessInfo.Text = "You have already scanned Torque for this Material.";
+                formManager.closeAForm();
+
             }
-
-
-            if (IsScanItem == false && processstatus == "Processing")
+            //Chemical
+            if (record.IsChemical == "1" && string.IsNullOrEmpty(record.Chemical_name))
             {
-                if (record.IsChemical == "0")
+                var Chemicalscanner = new ScanChemical(this, rowindex, processid, tbl_subprocess);
+                formManager.OpenChildForm(Chemicalscanner, sender);
+                Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Focus();
+
+                Chemicalscanner.ChemicalScanSuccess += async (materialID, Cname, expiryx) =>
                 {
-                    formManager.closeAForm();
-                    lbl_subprocessInfo.Text = "";
-                    return;
-                }
-                else
-                {
-                    //var scanner = new ScanChemical();
-                    //formManager.OpenChildForm(scanner, sender);
-                    //scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
-
-                    //scanner.ItemScanSuccess += async (serial, processid) =>
-                    //{
-                    //    UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), 0);
-                    //    await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
-                    //};
-                    var scanner = new ScanChemical();
-                    scanner.ShowDialog();
-                }
-
-
+                    _IscanOK = true;
+                    global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
+                    await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                };
+                return; // Exit after opening scanner
             }
 
-
+            lbl_subprocessInfo.Text = "All required scans for this material are complete or the material requires no scanning.";
+            formManager.closeAForm();
 
 
         }
 
         private void sfDataGrid2_SelectionChanged(object sender, Syncfusion.WinForms.DataGrid.Events.SelectionChangedEventArgs e)
         {
-            //if (sfDataGrid2.SelectedItem is ViewModel.SubProcessView record)
-            //{
-            //    string selectedName = record.Name;
-            //    var rowindex = 0;
-            //    var processid = Convert.ToString(record.MaterialID);
-            //    var qty = record.Serial_qty;
-            //    var count = Convert.ToInt32(record.Serial_count) > 0 ? 0 : 1;
-            //    var iskitlist = 0;
-            //    var buffcount = Convert.ToString(count);
-
-            //    //if (record.IsTorque == 0 && record.IsSerialized == 1)
-            //    //{
-            //    //    IsScanItem = true;
-            //    //    checkBoxAdv1.Checked = false;
-            //    //    checkBoxAdv2.Checked = true;
-            //    //}
-            //    //else if (record.IsTorque == 1 && record.IsSerialized == 0)
-            //    //{
-            //    //    IsScanItem = false;
-            //    //    checkBoxAdv1.Checked = true;
-            //    //    checkBoxAdv2.Checked = false;
-            //    //}
-            //    //else if (record.IsTorque == 1 && record.IsSerialized == 1)
-            //    //{
-            //    //    // both torque and serial
-            //    //    if (IsScanItem == true)
-            //    //    {
-            //    //        IsScanItem = true;
-            //    //        checkBoxAdv1.Checked = false;
-            //    //        checkBoxAdv2.Checked = true;
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        IsScanItem = false;
-            //    //        checkBoxAdv1.Checked = true;
-            //    //        checkBoxAdv2.Checked = false;
-            //    //    }
-            //    //}
-            //    //else
-            //    //{
-            //    //    lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
-            //    //    return;
-            //    //}
-
-
-            //    if (IsScanItem == true && processstatus == "Completed")
-            //    {
-            //        formManager.OpenChildForm(new ProcessScanner(rowindex, processid, selectedName, lbl_generatedSerial.Text, qty, buffcount, iskitlist, dtserials), sender);
-            //    }
-            //    else if (IsScanItem == true && processstatus == "Pause")
-            //    {
-            //        lbl_subprocessInfo.Text = "Process is on Hold, cannot scan item.";
-            //    }
-            //    else if (IsScanItem == true && processstatus == "Completed")
-            //    {
-
-            //        lbl_subprocessInfo.Text = "Process is Completed, cannot scan item.";
-            //    }
-            //    else if (IsScanItem == true && processstatus == "Open")
-            //    {
-            //        lbl_subprocessInfo.Text = "Process is not started, cannot scan Item.";
-            //    }
-            //    else if (IsScanItem == false && processstatus == "Pause")
-            //    {
-            //        lbl_subprocessInfo.Text = "Process is on Hold, cannot scan torque.";
-            //    }
-            //    else if (IsScanItem == false && processstatus == "Completed")
-            //    {
-            //        lbl_subprocessInfo.Text = "Process is Completed, cannot scan torque.";
-            //    }
-            //    else if (IsScanItem == false && processstatus == "Open")
-            //    {
-            //        lbl_subprocessInfo.Text = "Process is not started, cannot scan torque.";
-            //    }
-            //    else if (IsScanItem == false && processstatus == "Completed")
-            //    {
-            //        formManager.OpenChildForm(new scantorque(processid, selectedName), sender);
-            //    }
-
-
-            //}
-
         }
 
         private void btn_torque_Click(object sender, EventArgs e)
@@ -1345,6 +1220,7 @@ namespace BTC_ENTERPRISE
             checkBoxAdv1.Checked = true;
             checkBoxAdv2.Checked = false;
             IsScanItem = false;
+            _IsScanChemical = false;
         }
 
         private void btn_material_Click(object sender, EventArgs e)
@@ -1352,11 +1228,11 @@ namespace BTC_ENTERPRISE
             checkBoxAdv1.Checked = false;
             checkBoxAdv2.Checked = true;
             IsScanItem = true;
-
+            _IsScanChemical = false;
         }
         private void btn_chemical_Click(object sender, EventArgs e)
         {
-
+            _IsScanChemical = true;
         }
         private async void ProcessFrm_Shown(object sender, EventArgs e)
         {
@@ -1378,31 +1254,7 @@ namespace BTC_ENTERPRISE
             }
         }
 
-        private void UpdateSerialQuantity(DataTable subprocess, int materialID, int newQuantity)
-        {
 
-            foreach (System.Data.DataRow row in subprocess.Rows)
-            {
-                if (Convert.ToInt32(row["id"]) == materialID)
-                {
-                    row["serial_count"] = newQuantity;
-                    break;
-                }
-            }
-        }
-        private void UpdateTorqueQuantity(DataTable subprocess, int materialID, int newQuantity, string Tname, string Tvalue)
-        {
-            foreach (System.Data.DataRow row in subprocess.Rows)
-            {
-                if (Convert.ToInt32(row["id"]) == materialID)
-                {
-                    row["torque_count"] = newQuantity;
-                    row["machine_tool_torque_name"] = Tname;
-                    row["machine_tool_torque_value"] = Tvalue;
-                    break;
-                }
-            }
-        }
 
         private void process_duration_timer_Tick(object sender, EventArgs e)
         {

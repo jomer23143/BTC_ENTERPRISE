@@ -51,15 +51,13 @@ namespace BTC_ENTERPRISE.Modal
                           ControlStyles.OptimizedDoubleBuffer, true);
             this.UpdateStyles();
             this.StartPosition = FormStartPosition.CenterParent;
-            //panel_rfid.Visible = true;
-            //panel_scangeneratedserial.Visible = false;
+            yui.RoundedPicturebox(pictureBox1, Color.FromArgb(123, 123, 123));
             yui.RoundedFormsDocker(this, 8);
             yui.RoundedPanelModuleName(panel_idholder);
             yui.RoundedPanelModuleName(panel_nameHolder);
             yui.RoundedPanelModuleName(panel_positionHolder);
-            yui.RoundedPanelModuleName(panel_rfidtextholder);
             yui.RoundedPanelModuleName(panel_generatedcodeform);
-            yui.RoundedTextBox(txt_scan, 10, Color.White);
+            yui.RoundedTextBox(txt_scan, 10, Color.FromArgb(32, 59, 73));
             yui.RoundedTextBox(txt_scangeneratedserial, 10, Color.White);
             yui.RoundedPanelDocker(panel_rfid, 8);
             yui.RoundedButton(btn_viewlicense, 18, Color.SlateBlue);
@@ -91,10 +89,8 @@ namespace BTC_ENTERPRISE.Modal
                 panel_scangeneratedserial.Visible = true;
                 txt_scangeneratedserial.Select();
             }
-
             LoadRegistryAsync();
-            //for test only
-            //  Myrequest(loginApiUrl, "87139969");
+
         }
 
         private void LoadRegistryAsync()
@@ -135,7 +131,7 @@ namespace BTC_ENTERPRISE.Modal
             {
                 string rifd = txt_scan.Text.Trim();
                 Myrequest(loginApiUrl, rifd);
-                txt_scangeneratedserial.Select();
+                txt_scangeneratedserial.Focus();
 
             }
 
@@ -266,6 +262,7 @@ namespace BTC_ENTERPRISE.Modal
                 await Task.Delay(100);
 
                 panel_scangeneratedserial.Visible = true;
+                txt_scangeneratedserial.Select();
                 if (Global.process_name.ToUpper() == "WAREHOUSE KITTING")
                 {
                     AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
@@ -374,33 +371,89 @@ namespace BTC_ENTERPRISE.Modal
                     }
 
 
+
                     foreach (var process in data.process ?? new List<Sub_Asy_Process_Model.Process>())
                     {
                         if (process.sub_process != null)
                         {
                             foreach (var sub in process.sub_process)
                             {
-                                tbl_subprocess.Rows.Add(
-                                    sub.id,
-                                    sub.manufacturing_order_process_id,
-                                    sub.name ?? "N/A",
-                                    sub.ipn_number ?? "",
-                                    sub.serial_quantity ?? 0,
-                                    sub.serial_count ?? 0,
-                                    sub.is_kit_list,
-                                    sub.is_serial,
-                                    sub.is_torque,
-                                    0,
-                                    sub.machine_tool_torque_range?.ToString() ?? "",
-                                    sub.machine_tool_torque_name?.ToString() ?? "",
-                                    sub.machine_tool_torque_value?.ToString() ?? "",
-                                    sub.is_chemical,
-                                    sub.chemical_name?.ToString() ?? "",
-                                    sub.chemical_expiration?.ToString() ?? ""
-                                );
+                                // dinhi ta kuhaon ang list sa IPN ug Torque
+                                var ipns = sub.internal_part_number ?? new List<Sub_Asy_Process_Model.InternalPartNumber>();
+                                var torques = sub.torque ?? new List<Sub_Asy_Process_Model.Torque>();
+                                var serials = sub.serial ?? new List<Sub_Asy_Process_Model.Serial>();
+                                // Find the maximum number of items to iterate over
+                                // para ma segurado nga ang tanan mga IPN ug Torque maapil, bisan ug ang usa ka listahan mas mubo o walay sulod.
+                                int maxRows = Math.Max(ipns.Count, torques.Count);
+
+                                // kung diin ang duha ka list kay walay sulod (one default row for the sub-process)
+                                if (maxRows == 0)
+                                {
+                                    tbl_subprocess.Rows.Add(
+                                        sub.id,
+                                        sub.manufacturing_order_process_id,
+                                        "N/A",
+                                        "",
+                                        "",
+                                        sub.serial_quantity,
+                                        sub.serial_count,
+                                        sub.is_kit_list,
+                                        sub.is_serial,
+                                        sub.is_torque,
+                                        0,
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        sub.is_chemical,
+                                        sub.chemical_name?.ToString() ?? "",
+                                        0,
+                                        sub.chemical_expiration?.ToString() ?? ""
+                                    );
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < maxRows; i++)
+                                    {
+                                        var ser = i < serials.Count ? serials[i] : null;
+                                        var ipn = i < ipns.Count ? ipns[i] : null;
+                                        var torque = i < torques.Count ? torques[i] : null;
+
+                                        tbl_subprocess.Rows.Add(
+                                            sub.id,
+                                            sub.manufacturing_order_process_id,
+
+                                            ipn?.description ?? "N/A",
+                                            ipn?.ipn_number ?? "",
+                                            ser?.serial_number ?? "",
+                                            // SubProcess Details 
+                                            sub.serial_quantity,
+                                            sub.serial_count,
+                                            sub.is_kit_list,
+                                            sub.is_serial,
+                                            sub.is_torque,
+                                            0,
+
+                                            // Torque Details
+                                            torque?.min ?? "",
+                                            torque?.max ?? "",
+                                            torque?.value ?? "",
+                                            torque?.torque_name ?? "",
+
+                                            // Chemical Details
+                                            sub.is_chemical,
+                                            sub.chemical_name?.ToString() ?? "",
+                                            0,
+                                            sub.chemical_expiration?.ToString() ?? ""
+                                        );
+                                    }
+                                }
                             }
                         }
                     }
+
+
+
 
                     bool anyIsKitList = data.process.Any(p => p.is_kit_list == 1);
 
@@ -453,7 +506,6 @@ namespace BTC_ENTERPRISE.Modal
                 tbl_process.Columns.Add("color", typeof(string));
                 tbl_process.Columns.Add("remark", typeof(string));
 
-                // ⭐ NEW COLUMN: Stores the collection of duration records
                 tbl_process.Columns.Add("DurationRecords", typeof(List<Sub_Asy_Process_Model.Duration>));
             }
 
@@ -461,25 +513,25 @@ namespace BTC_ENTERPRISE.Modal
             {
                 tbl_subprocess.Columns.Add("id", typeof(int));
                 tbl_subprocess.Columns.Add("manufacturing_order_process_id", typeof(int));
-                tbl_subprocess.Columns.Add("name", typeof(string));
+                tbl_subprocess.Columns.Add("description", typeof(string));
                 tbl_subprocess.Columns.Add("ipn_number", typeof(string));
+                tbl_subprocess.Columns.Add("serial_number", typeof(string));
                 tbl_subprocess.Columns.Add("serial_quantity", typeof(int));
                 tbl_subprocess.Columns.Add("serial_count", typeof(int));
                 tbl_subprocess.Columns.Add("is_kit_list", typeof(int));
                 tbl_subprocess.Columns.Add("is_serial", typeof(int));
                 tbl_subprocess.Columns.Add("is_torque", typeof(int));
                 tbl_subprocess.Columns.Add("torque_count", typeof(string));
-                tbl_subprocess.Columns.Add("machine_tool_torque_range", typeof(string));
-                tbl_subprocess.Columns.Add("machine_tool_torque_name", typeof(string));
-                tbl_subprocess.Columns.Add("machine_tool_torque_value", typeof(string));
+                tbl_subprocess.Columns.Add("min", typeof(string));
+                tbl_subprocess.Columns.Add("max", typeof(string));
+                tbl_subprocess.Columns.Add("value", typeof(string));
+                tbl_subprocess.Columns.Add("torque_name", typeof(string));
                 tbl_subprocess.Columns.Add("is_chemical", typeof(string));
                 tbl_subprocess.Columns.Add("chemical_name", typeof(string));
+                tbl_subprocess.Columns.Add("chemical_count", typeof(string));
                 tbl_subprocess.Columns.Add("chemical_expiration", typeof(string));
             }
         }
-
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {

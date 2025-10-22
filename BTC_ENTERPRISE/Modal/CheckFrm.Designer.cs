@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CheckFrm));
             panel1 = new Panel();
             btn_close = new Button();
             panel2 = new Panel();
@@ -37,10 +38,8 @@
             pictureBox2 = new PictureBox();
             label_scaninfo = new Label();
             panel_rfid = new Panel();
-            pictureBox1 = new PictureBox();
-            panel_rfidtextholder = new Panel();
             txt_scan = new TextBox();
-            label2 = new Label();
+            pictureBox1 = new PictureBox();
             label1 = new Label();
             panel3 = new Panel();
             groupBox1 = new GroupBox();
@@ -59,7 +58,6 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel_rfid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            panel_rfidtextholder.SuspendLayout();
             panel3.SuspendLayout();
             groupBox1.SuspendLayout();
             panel_positionHolder.SuspendLayout();
@@ -109,10 +107,10 @@
             panel_scangeneratedserial.Controls.Add(panel_generatedcodeform);
             panel_scangeneratedserial.Controls.Add(pictureBox2);
             panel_scangeneratedserial.Controls.Add(label_scaninfo);
-            panel_scangeneratedserial.Location = new Point(426, 14);
+            panel_scangeneratedserial.Location = new Point(424, 14);
             panel_scangeneratedserial.Margin = new Padding(3, 2, 3, 2);
             panel_scangeneratedserial.Name = "panel_scangeneratedserial";
-            panel_scangeneratedserial.Size = new Size(300, 376);
+            panel_scangeneratedserial.Size = new Size(303, 376);
             panel_scangeneratedserial.TabIndex = 4;
             // 
             // panel_generatedcodeform
@@ -162,11 +160,10 @@
             // panel_rfid
             // 
             panel_rfid.BackColor = Color.FromArgb(22, 27, 45);
-            panel_rfid.BackgroundImage = Properties.Resources.modern_minimal_id_card_template_design_green____Made_with_PosterMyWall__1_;
+            panel_rfid.BackgroundImage = (Image)resources.GetObject("panel_rfid.BackgroundImage");
             panel_rfid.BackgroundImageLayout = ImageLayout.Stretch;
+            panel_rfid.Controls.Add(txt_scan);
             panel_rfid.Controls.Add(pictureBox1);
-            panel_rfid.Controls.Add(panel_rfidtextholder);
-            panel_rfid.Controls.Add(label2);
             panel_rfid.Controls.Add(label1);
             panel_rfid.Location = new Point(426, 18);
             panel_rfid.Margin = new Padding(3, 2, 3, 2);
@@ -174,51 +171,31 @@
             panel_rfid.Size = new Size(300, 372);
             panel_rfid.TabIndex = 3;
             // 
-            // pictureBox1
-            // 
-            pictureBox1.BackColor = Color.White;
-            pictureBox1.Image = Properties.Resources.Unknown2;
-            pictureBox1.Location = new Point(29, 51);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(240, 148);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 3;
-            pictureBox1.TabStop = false;
-            // 
-            // panel_rfidtextholder
-            // 
-            panel_rfidtextholder.BackColor = Color.FromArgb(7, 222, 151);
-            panel_rfidtextholder.Controls.Add(txt_scan);
-            panel_rfidtextholder.Location = new Point(29, 204);
-            panel_rfidtextholder.Margin = new Padding(3, 2, 3, 2);
-            panel_rfidtextholder.Name = "panel_rfidtextholder";
-            panel_rfidtextholder.Size = new Size(240, 34);
-            panel_rfidtextholder.TabIndex = 1;
-            // 
             // txt_scan
             // 
+            txt_scan.BackColor = Color.FromArgb(32, 59, 73);
             txt_scan.BorderStyle = BorderStyle.None;
-            txt_scan.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txt_scan.Location = new Point(4, 4);
+            txt_scan.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txt_scan.ForeColor = Color.White;
+            txt_scan.Location = new Point(156, 321);
             txt_scan.Margin = new Padding(3, 2, 3, 2);
             txt_scan.Name = "txt_scan";
             txt_scan.PasswordChar = 'X';
-            txt_scan.Size = new Size(232, 25);
+            txt_scan.Size = new Size(141, 18);
             txt_scan.TabIndex = 0;
             txt_scan.KeyDown += txt_scan_KeyDown;
             // 
-            // label2
+            // pictureBox1
             // 
-            label2.BackColor = Color.Transparent;
-            label2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.White;
-            label2.Location = new Point(12, 4);
-            label2.Name = "label2";
-            label2.Size = new Size(241, 25);
-            label2.TabIndex = 1;
-            label2.Text = "BTC POWER CEBU INC.";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
+            pictureBox1.BackColor = Color.FromArgb(123, 123, 123);
+            pictureBox1.Image = Properties.Resources.Unknown2;
+            pictureBox1.Location = new Point(87, 100);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(128, 109);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
             // 
             // label1
             // 
@@ -364,9 +341,8 @@
             panel_generatedcodeform.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             panel_rfid.ResumeLayout(false);
+            panel_rfid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            panel_rfidtextholder.ResumeLayout(false);
-            panel_rfidtextholder.PerformLayout();
             panel3.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             panel_positionHolder.ResumeLayout(false);
@@ -382,7 +358,6 @@
         private Button btn_close;
         private Panel panel2;
         private Label label1;
-        private Panel panel_rfidtextholder;
         private Panel panel3;
         private GroupBox groupBox1;
         private PictureBox pb_rfid;
@@ -392,7 +367,6 @@
         private TextBox txt_scan;
         private Panel panel_rfid;
         private PictureBox pictureBox1;
-        private Label label2;
         private Panel panel_generatedcodeform;
         private TextBox txt_scangeneratedserial;
         private PictureBox pictureBox2;

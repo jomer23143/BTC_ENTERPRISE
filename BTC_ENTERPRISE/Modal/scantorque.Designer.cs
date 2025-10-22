@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(scantorque));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panel1 = new Panel();
@@ -36,13 +35,11 @@
             lbl_processname = new Label();
             txt_torque = new TextBox();
             lbl_msg = new Label();
-            pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
             label2 = new Label();
             lbl_scancount = new Label();
             panel1.SuspendLayout();
             panel_processname.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -51,8 +48,9 @@
             panel1.Controls.Add(panel_processname);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(767, 75);
+            panel1.Size = new Size(671, 56);
             panel1.TabIndex = 0;
             // 
             // panel_processname
@@ -60,9 +58,10 @@
             panel_processname.Anchor = AnchorStyles.Top;
             panel_processname.BackColor = Color.White;
             panel_processname.Controls.Add(lbl_processname);
-            panel_processname.Location = new Point(20, 19);
+            panel_processname.Location = new Point(18, 14);
+            panel_processname.Margin = new Padding(3, 2, 3, 2);
             panel_processname.Name = "panel_processname";
-            panel_processname.Size = new Size(737, 44);
+            panel_processname.Size = new Size(645, 33);
             panel_processname.TabIndex = 0;
             // 
             // lbl_processname
@@ -71,7 +70,7 @@
             lbl_processname.Font = new Font("Segoe UI Semibold", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_processname.Location = new Point(0, 0);
             lbl_processname.Name = "lbl_processname";
-            lbl_processname.Size = new Size(737, 44);
+            lbl_processname.Size = new Size(645, 33);
             lbl_processname.TabIndex = 0;
             lbl_processname.Text = "Material Name";
             lbl_processname.TextAlign = ContentAlignment.MiddleCenter;
@@ -79,9 +78,10 @@
             // txt_torque
             // 
             txt_torque.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txt_torque.Location = new Point(159, 187);
+            txt_torque.Location = new Point(141, 75);
+            txt_torque.Margin = new Padding(3, 2, 3, 2);
             txt_torque.Name = "txt_torque";
-            txt_torque.Size = new Size(469, 34);
+            txt_torque.Size = new Size(411, 29);
             txt_torque.TabIndex = 1;
             txt_torque.TextAlign = HorizontalAlignment.Center;
             txt_torque.KeyDown += txt_torque_KeyDown;
@@ -90,22 +90,12 @@
             // 
             lbl_msg.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_msg.ForeColor = Color.Navy;
-            lbl_msg.Location = new Point(27, 224);
+            lbl_msg.Location = new Point(26, 103);
             lbl_msg.Name = "lbl_msg";
-            lbl_msg.Size = new Size(715, 32);
+            lbl_msg.Size = new Size(626, 24);
             lbl_msg.TabIndex = 2;
             lbl_msg.Text = "Scan Torque Machine  Serial Here.!";
             lbl_msg.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(324, 81);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(148, 99);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 3;
-            pictureBox1.TabStop = false;
             // 
             // dataGridView1
             // 
@@ -128,7 +118,8 @@
             dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.EnableHeadersVisualStyles = false;
-            dataGridView1.Location = new Point(27, 296);
+            dataGridView1.Location = new Point(24, 158);
+            dataGridView1.Margin = new Padding(3, 2, 3, 2);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
@@ -138,7 +129,7 @@
             dataGridViewCellStyle2.SelectionBackColor = Color.White;
             dataGridViewCellStyle2.SelectionForeColor = Color.Black;
             dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Size = new Size(715, 98);
+            dataGridView1.Size = new Size(626, 138);
             dataGridView1.TabIndex = 7;
             // 
             // label2
@@ -146,9 +137,9 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.Brown;
-            label2.Location = new Point(37, 273);
+            label2.Location = new Point(26, 141);
             label2.Name = "label2";
-            label2.Size = new Size(213, 20);
+            label2.Size = new Size(165, 15);
             label2.TabIndex = 8;
             label2.Text = "Scaned Torque Serial Number";
             // 
@@ -157,32 +148,31 @@
             lbl_scancount.AutoSize = true;
             lbl_scancount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_scancount.ForeColor = Color.Brown;
-            lbl_scancount.Location = new Point(256, 273);
+            lbl_scancount.Location = new Point(218, 141);
             lbl_scancount.Name = "lbl_scancount";
-            lbl_scancount.Size = new Size(78, 20);
+            lbl_scancount.Size = new Size(61, 15);
             lbl_scancount.TabIndex = 9;
             lbl_scancount.Text = "0 out of 1";
             // 
             // scantorque
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.MediumAquamarine;
-            ClientSize = new Size(767, 407);
+            ClientSize = new Size(671, 305);
             Controls.Add(dataGridView1);
             Controls.Add(label2);
             Controls.Add(lbl_scancount);
-            Controls.Add(pictureBox1);
             Controls.Add(lbl_msg);
             Controls.Add(txt_torque);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "scantorque";
             Text = "scantorque";
             Load += scantorque_Load;
             panel1.ResumeLayout(false);
             panel_processname.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -192,7 +182,6 @@
 
         private Panel panel1;
         private Label lbl_msg;
-        private PictureBox pictureBox1;
         private Label lbl_processname;
         public TextBox txt_torque;
         private Panel panel_processname;
