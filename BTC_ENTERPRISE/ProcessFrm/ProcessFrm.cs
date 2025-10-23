@@ -826,7 +826,7 @@ namespace BTC_ENTERPRISE
                         return;
                     }
 
-                    if (HasUnscannedMaterial() || HasUnscannedTorque())
+                    if (HasUnscannedMaterial() || HasUnscannedTorque() || HasUnscannedChemical())
                     {
                         ShowCustomizeAlert.ShowMsg("Validation Error.", "You cannot end this process because one or more required items have not been scanned or torqued yet.", CustomeAlert.Alertype.Warning);
                         return;
@@ -964,10 +964,15 @@ namespace BTC_ENTERPRISE
         {
             return sfDataGrid2.View.Records
                 .Select(r => r.Data as ViewModel.SubProcessView)
-                .Any(t => t?.IsTorque == 1 && t.Torque_count == "0");
+                .Any(t => t?.IsTorque == 1 && t.Torque_value == "0.00");
         }
 
-
+        private bool HasUnscannedChemical()
+        {
+            return sfDataGrid2.View.Records
+                .Select(r => r.Data as ViewModel.SubProcessView)
+                .Any(c => c?.IsChemical == "1" && c.Chemical_name == string.Empty);
+        }
 
         public async Task<bool> PostProcessWithDictionary(int processid, string remark, string status, string rfid)
         {
