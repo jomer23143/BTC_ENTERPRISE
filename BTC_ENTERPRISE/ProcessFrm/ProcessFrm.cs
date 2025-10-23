@@ -58,6 +58,7 @@ namespace BTC_ENTERPRISE
         private bool isRunning = false;
         private Dictionary<int, DateTime> activeProcesses = new Dictionary<int, DateTime>();
         private string _storedDuration;
+        private string _storedChildDuration;
         private bool durationUpdated;
 
         private DataTable parentDurationDatatable = new DataTable("p");
@@ -248,10 +249,10 @@ namespace BTC_ENTERPRISE
                     string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
                     string theStatus = durationRow["status"]?.ToString() ?? "";
 
-                    //if (string.IsNullOrEmpty(childEndTime))
-                    //{
-                    //    continue;
-                    //}
+                    if (theStatus.ToUpper().Trim() == "OPEN")
+                    {
+                        continue;
+                    }
 
                     string childdurationDisplay = "0 Days : 00 : 00 : 00";
                     DateTime childparsedStart;
@@ -275,7 +276,11 @@ namespace BTC_ENTERPRISE
 
                         totalDuration = totalDuration.Add(currentDuration);
                     }
-
+                    if (string.IsNullOrWhiteSpace(durationRow["status"].ToString()))
+                    {
+                        var timeSpan = DateTime.Now - Convert.ToDateTime(childStartTime);
+                        _storedChildDuration = timeSpan.ToString();
+                    }
                     childProcesses.Add(new ViewModel.ChildProcessViewModel
                     {
                         Id = Convert.ToInt32(durationRow["id"]),
@@ -314,7 +319,7 @@ namespace BTC_ENTERPRISE
                 });
                 var record = new ViewModel.ProcessViewModel
                 {
-                    Index = index++,
+                    Index = index,
                     expandIcon = "+",
                     ProcessId = processId,
                     Name = processName,
@@ -734,7 +739,7 @@ namespace BTC_ENTERPRISE
 
                     _storedDuration = record.Duration;
                     //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
-
+                    
                     StartProcessTimers(record);
 
                     if (record.IsOnHold || record.SubProcesses.Count == 0)
@@ -749,6 +754,9 @@ namespace BTC_ENTERPRISE
                             TimeSpan.Zero
                         );
                     }
+                    var lastchildProcess = record.SubProcesses.LastOrDefault();
+
+                    UpdateChildStatus(lastchildProcess, "Processing");
                     record.IsOnHold = false;
                     record.IsEnded = false;
 
@@ -784,7 +792,7 @@ namespace BTC_ENTERPRISE
                         StopProcessTimersIfInactive();
 
                         var lastSubProcess = record.SubProcesses.LastOrDefault();
-
+                        UpdateChildStatus(lastSubProcess, "Pause");
                         LogSubProcess(
                             record,
                             lastSubProcess,
@@ -797,6 +805,7 @@ namespace BTC_ENTERPRISE
       
                         record.StartTime = timeEndString;
                         UpdateStatus(record, true, true, true, "Pause");
+                       
                     }
                     break;
 
@@ -832,13 +841,14 @@ namespace BTC_ENTERPRISE
                             record.AccumulatedDuration += segmentDuration;
                             activeProcesses.Remove(processid);
                         }
-
-                        LogSubProcess(record, lastSubProcess: null, "Process Completed", record.StartTime, timeEndString, segmentDuration);
+                        var lastSubChildProcess = record.SubProcesses.LastOrDefault();
+                        LogSubProcess(record, lastSubChildProcess, "Process Completed", record.StartTime, timeEndString, segmentDuration);
 
                         TimeSpan totalAccumulatedDuration = TimeFormat.ParseCustomDuration(record.Duration);
                         record.Duration = timeFormat.FormatDuration(totalAccumulatedDuration);
                         record.EndTime = $"Time: {segmentEndTime:HH:mm:ss} Date: {segmentEndTime:MM-dd-yyyy}";
                         UpdateStatus(record, true, false, true, "Completed");
+                        UpdateChildStatus(lastSubChildProcess, "Completed");
                         await PostProcessWithDictionary(processid, "Process Completed", status, Token);
                         StopProcessTimersIfInactive();
                     }
@@ -878,6 +888,11 @@ namespace BTC_ENTERPRISE
             record.IsEnded = isEnded;
             record.Status = statusText;
             processstatus = statusText;
+        }
+        private void UpdateChildStatus(ViewModel.ChildProcessViewModel record, string statusText)
+        {
+            record.StatusName = statusText;
+            
         }
 
 
@@ -921,6 +936,7 @@ namespace BTC_ENTERPRISE
                 lastSubProcess.TimeEnd = timeEnd;
                 lastSubProcess.Remarks = remarks;
                 lastSubProcess.Duration = timeFormat.FormatDuration(res);
+                
             }
             else
             {
@@ -1365,6 +1381,7 @@ namespace BTC_ENTERPRISE
 
 
             TimeSpan accumulatedTimeBase = TimeFormat.ParseCustomDuration(_storedDuration);
+           // TimeSpan accumulatedChildTimeBase = TimeFormat.ParseCustomDuration(_storedChildDuration);
 
             foreach (var record in sfDataGrid1.View.Records.Select(r => r.Data as ViewModel.ProcessViewModel))
             {
@@ -1379,6 +1396,18 @@ namespace BTC_ENTERPRISE
 
                     string durationDisplay = timeFormat.FormatDuration(totalRunningDuration);
                     record.Duration = durationDisplay;
+
+                    foreach (var item in record.SubProcesses)
+                    {
+                        if (item.StatusName == "Processing")
+                        {
+                            TimeSpan totalChildRunningDuration = DateTime.Now - Convert.ToDateTime(item.TimeStart);
+                            string durationChildDisplay = timeFormat.FormatDuration(totalChildRunningDuration);
+                            item.Duration = durationChildDisplay;
+                        }
+                       
+                    }
+                   
                     durationUpdated = true;
                 }
             }
