@@ -12,6 +12,10 @@
         public static readonly string PostProcess = $"{BaseUrl}process";
         public static readonly string PostMaterialAssignSerial = $"{BaseUrl}material-assign-serial";
         public static readonly string PostMaterialAssignTorque = $"{BaseUrl}material-assign-torque";
+<<<<<<< HEAD
+=======
+        public static readonly string PostChemicalAssign = $"{BaseUrl}material-assign-chemical";
+>>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
         public static readonly string KitList = $"{BaseUrl}kit-list";
         public static readonly string ManufacturingOrders = $"{BaseUrl}manufacturing-order";
         public static readonly string LoginProduction = $"{BaseUrl}login-production";
@@ -55,6 +59,10 @@
         public static string GetPostMaterialAssignTorqueUrl()
         {
             return PostMaterialAssignTorque;
+        }
+        public static string GetPostChemicalAssignUrl()
+        {
+            return PostChemicalAssign;
         }
         public static string GetKitListUrl()
         {

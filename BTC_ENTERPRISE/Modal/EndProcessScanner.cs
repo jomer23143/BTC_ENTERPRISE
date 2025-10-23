@@ -19,7 +19,7 @@ namespace BTC_ENTERPRISE.Modal
             this.StartPosition = FormStartPosition.CenterScreen;
 
             yui.RoundedFormsDocker(this, 10);
-            yui.RoundedPicturebox(pictureBox1);
+            yui.RoundedPicturebox(pictureBox1, Color.White);
             yui.RoundedButton(button1, 12, Color.FromArgb(7, 222, 151));
             txt_rfid.Select();
         }

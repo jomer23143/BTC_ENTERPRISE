@@ -1,10 +1,9 @@
 ﻿using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Model;
-using Frameworks.Utilities;
 using BTC_ENTERPRISE.YaoUI;
+using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Frameworks.Utilities.ApiUtilities;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -16,16 +15,16 @@ namespace BTC_ENTERPRISE.Modal
         public string count;
         public int tempqty = 0;
         public int tempcount = 0;
+        private string _Tname;
         private string PostTorque = GlobalApi.GetPostMaterialAssignTorqueUrl();
 
-        public event Action<string, string> TorqueScanSuccess;
+        public event Action<string, string, string, string> TorqueScanSuccess;
 
         private ProcessFrm _processfrm;
         public scantorque(ProcessFrm processFrm, string processid, string processname, string qty, string count)
         {
             InitializeComponent();
             YUI yUI = new YUI();
-            // yUI.RoundedFormsDocker(this, 8);
             yUI.RoundedTextBox(txt_torque, 6, Color.White);
             yUI.RoundedPanelDocker(panel_processname, 6);
             this.processid = processid;
@@ -43,8 +42,8 @@ namespace BTC_ENTERPRISE.Modal
                     MessageBox.Show("Please enter a serial number.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
-                if (tempcount >= tempqty)
+                _Tname = txt_torque.Text;
+                if (tempqty <= tempcount)
                 {
                     await PostItemSerial(
                         txt_torque.Text,
@@ -82,7 +81,6 @@ namespace BTC_ENTERPRISE.Modal
 
                 string jsonResponse = await WebRequestApi.PostRequest(PostTorque, json);
 
-                // Check if the response is empty or invalid HTML
                 if (string.IsNullOrWhiteSpace(jsonResponse) || jsonResponse.StartsWith("<"))
                 {
                     ShowMessage("Invalid response from server.", Color.Red);
@@ -90,7 +88,6 @@ namespace BTC_ENTERPRISE.Modal
                 }
                 var token = JToken.Parse(jsonResponse);
 
-                // Handle object-based response (likely error/info)
                 if (token.Type == JTokenType.Object && token["message"] != null)
                 {
                     string message = token["message"]?.ToString();
@@ -111,7 +108,7 @@ namespace BTC_ENTERPRISE.Modal
 
                     return;
                 }
-                // Handle array-based response (expected successful data)
+
                 if (token.Type == JTokenType.Array)
                 {
                     List<Sub_Asy_Process_Model.Root> result;
@@ -122,7 +119,7 @@ namespace BTC_ENTERPRISE.Modal
                     catch (Exception parseEx)
                     {
                         ShowMessage("Failed to parse process data.", Color.Red);
-                        //  Debug.WriteLine("Parse Error: " + parseEx);
+
                         return;
                     }
 
@@ -138,41 +135,58 @@ namespace BTC_ENTERPRISE.Modal
                 else
                 {
 
-                    if (token.Type == JTokenType.Object && token["machine_tool_torque_value"] != null)
+                    var torqueArrayToken = token["torque"];
+
+                    if (torqueArrayToken != null && torqueArrayToken.Type == JTokenType.Array)
                     {
-                        string torqueValue = token["machine_tool_torque_value"]?.ToString();
-                        string torqueName = token["machine_tool_torque_name"]?.ToString();
-                        string torqueRange = token["machine_tool_torque_range"]?.ToString();
+                        bool targetTorqueFound = false;
 
-                        TorqueScanSuccess?.Invoke(torqueName, torqueValue);
-
-                        // Check if serial already exists
-                        var existingRow = dataGridView1.Rows
-                            .Cast<DataGridViewRow>()
-                            .FirstOrDefault(r => r.Cells["torque_name"].Value?.ToString() == torqueName);
-
-                        if (existingRow == null)
+                        foreach (JObject torqueRecord in torqueArrayToken)
                         {
-                            // 🔹 Add new row
-                            tempcount++;
-                            int rowIndex = dataGridView1.Rows.Add();
+                            string torqueValue = torqueRecord["value"]?.ToString();
+                            string torqueName = torqueRecord["torque_name"]?.ToString();
+                            string torquemin = torqueRecord["min"]?.ToString();
+                            string torquemax = torqueRecord["max"]?.ToString();
 
-                            var row = dataGridView1.Rows[rowIndex];
-                            row.Cells["row_number"].Value = rowIndex + 1;
-                            row.Cells["torque_name"].Value = torqueName;
-                            row.Cells["torque_value"].Value = torqueValue;
-                            row.Cells["torque_range"].Value = torqueRange;
+                            var existingRow = dataGridView1.Rows
+                                .Cast<DataGridViewRow>()
+                                .FirstOrDefault(r => r.Cells["torque_name"].Value?.ToString() == torqueName);
+
+                            if (existingRow == null)
+                            {
+                                tempcount++;
+                                int rowIndex = dataGridView1.Rows.Add();
+                                var row = dataGridView1.Rows[rowIndex];
+                                row.Cells["row_number"].Value = rowIndex + 1;
+                                row.Cells["torque_name"].Value = torqueName;
+                                row.Cells["torque_value"].Value = torqueValue;
+                                row.Cells["torque_min"].Value = torquemin;
+                                row.Cells["torque_max"].Value = torquemax;
+                            }
+                            else
+                            {
+                                // Update existing row
+                                existingRow.Cells["torque_name"].Value = torqueName;
+                                existingRow.Cells["torque_value"].Value = torqueValue;
+                                existingRow.Cells["torque_min"].Value = torquemin;
+                                existingRow.Cells["torque_max"].Value = torquemax;
+                            }
+
+                            if (string.Equals(_Tname, torqueName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                TorqueScanSuccess?.Invoke(torqueName, torqueValue, torquemin, torquemax);
+                                targetTorqueFound = true;
+
+                            }
                         }
-                        else
+
+
+                        if (targetTorqueFound)
                         {
-                            // 🔹 Update existing row’s torque info
-                            existingRow.Cells["torque_name"].Value = torqueName;
-                            existingRow.Cells["torque_value"].Value = torqueValue;
-                            existingRow.Cells["torque_range"].Value = torqueRange;
+                            ShowMessage($"Torque '{_Tname}' Scanned Successfully. All Torque Data Updated.", Color.Green);
                         }
-
-                        ShowMessage($"Torque Machine Tools Scanned Successfully.", Color.Green);
                     }
+
 
 
                 }
@@ -203,7 +217,8 @@ namespace BTC_ENTERPRISE.Modal
             dataGridView1.Columns.Add("row_number", "#");
             dataGridView1.Columns.Add("torque_name", "Torque Name");
             dataGridView1.Columns.Add("torque_value", "Torque Value");
-            dataGridView1.Columns.Add("torque_range", "Torque Range");
+            dataGridView1.Columns.Add("torque_min", "Min");
+            dataGridView1.Columns.Add("torque_max", "Max");
             dataGridView1.Columns["row_number"].Width = 50;
 
         }

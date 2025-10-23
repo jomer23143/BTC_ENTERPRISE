@@ -98,9 +98,11 @@ namespace BTC_ENTERPRISE.Model
         {
             public int Index { get; set; }
             public int? MaterialID { get; set; }
+            public int? manufacturing_order_id { get; set; }
             public string Name { get; set; }
             public string Ipn { get; set; }
             public string Torque { get; set; }
+            public string Torque_value { get; set; }
             public string Chemical_name { get; set; }
             public string Chemical_expiry { get; set; }
             public int IsSerialized { get; set; }
@@ -109,7 +111,7 @@ namespace BTC_ENTERPRISE.Model
             public string? Serial_qty { get; set; }
             public string? Serial_count { get; set; }
             public string? Torque_count { get; set; }
-
+            public string? Chemical_count { get; set; }
             public BindingList<ChildSubProcessView> ChildSubProcesses { get; set; } = new BindingList<ChildSubProcessView>();
             public RowType RowType { get; internal set; }
             public SubProcessView SubData { get; internal set; }

@@ -63,11 +63,15 @@
             timer1 = new System.Windows.Forms.Timer(components);
             panel9 = new Panel();
             panel_top = new Panel();
-            checkBoxAdv2 = new Syncfusion.Windows.Forms.Tools.CheckBoxAdv();
-            checkBoxAdv1 = new Syncfusion.Windows.Forms.Tools.CheckBoxAdv();
-            btn_material = new Button();
-            btn_chemical = new Button();
-            btn_torque = new Button();
+            panel_chemical = new Panel();
+            chkIndicator3 = new Label();
+            label_scan_chemical = new Label();
+            panel_torque = new Panel();
+            chkIndicator2 = new Label();
+            label_scan_torque = new Label();
+            panel_material = new Panel();
+            chkIndicator1 = new Label();
+            label_scanserialized = new Label();
             panel_parent_tab_subprocess = new Panel();
             lbl_subprocessInfo = new Label();
             timer2 = new System.Windows.Forms.Timer(components);
@@ -88,8 +92,9 @@
             ((System.ComponentModel.ISupportInitialize)sfDataGrid2).BeginInit();
             panel9.SuspendLayout();
             panel_top.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)checkBoxAdv2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)checkBoxAdv1).BeginInit();
+            panel_chemical.SuspendLayout();
+            panel_torque.SuspendLayout();
+            panel_material.SuspendLayout();
             panel_parent_tab_subprocess.SuspendLayout();
             SuspendLayout();
             // 
@@ -499,11 +504,9 @@
             // panel_top
             // 
             panel_top.BackColor = Color.Gray;
-            panel_top.Controls.Add(checkBoxAdv2);
-            panel_top.Controls.Add(checkBoxAdv1);
-            panel_top.Controls.Add(btn_material);
-            panel_top.Controls.Add(btn_chemical);
-            panel_top.Controls.Add(btn_torque);
+            panel_top.Controls.Add(panel_chemical);
+            panel_top.Controls.Add(panel_torque);
+            panel_top.Controls.Add(panel_material);
             panel_top.Dock = DockStyle.Top;
             panel_top.Location = new Point(0, 0);
             panel_top.Margin = new Padding(3, 2, 3, 2);
@@ -511,93 +514,98 @@
             panel_top.Size = new Size(678, 53);
             panel_top.TabIndex = 2;
             // 
-            // checkBoxAdv2
+            // panel_chemical
             // 
-            checkBoxAdv2.AccessibilityEnabled = true;
-            checkBoxAdv2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            checkBoxAdv2.AutoSize = true;
-            checkBoxAdv2.BeforeTouchSize = new Size(17, 16);
-            checkBoxAdv2.Border3DStyle = Border3DStyle.Etched;
-            checkBoxAdv2.BorderColor = Color.White;
-            checkBoxAdv2.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            checkBoxAdv2.ForeColor = Color.FromArgb(0, 192, 0);
-            checkBoxAdv2.ImageCheckBoxSize = new Size(16, 16);
-            checkBoxAdv2.Location = new Point(653, 17);
-            checkBoxAdv2.Margin = new Padding(3, 2, 3, 2);
-            checkBoxAdv2.Name = "checkBoxAdv2";
-            checkBoxAdv2.Size = new Size(17, 16);
-            checkBoxAdv2.TabIndex = 1;
-            checkBoxAdv2.ThemeStyle.CheckBoxTickThickness = 2;
-            checkBoxAdv2.ThemeStyle.ForeColor = Color.Lime;
+            panel_chemical.Controls.Add(chkIndicator3);
+            panel_chemical.Controls.Add(label_scan_chemical);
+            panel_chemical.Location = new Point(449, 6);
+            panel_chemical.Name = "panel_chemical";
+            panel_chemical.Size = new Size(224, 43);
+            panel_chemical.TabIndex = 2;
             // 
-            // checkBoxAdv1
+            // chkIndicator3
             // 
-            checkBoxAdv1.AccessibilityEnabled = true;
-            checkBoxAdv1.AutoSize = true;
-            checkBoxAdv1.BeforeTouchSize = new Size(17, 16);
-            checkBoxAdv1.Border3DStyle = Border3DStyle.Etched;
-            checkBoxAdv1.BorderColor = Color.White;
-            checkBoxAdv1.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            checkBoxAdv1.ForeColor = Color.FromArgb(0, 192, 0);
-            checkBoxAdv1.ImageCheckBoxSize = new Size(16, 16);
-            checkBoxAdv1.Location = new Point(10, 17);
-            checkBoxAdv1.Margin = new Padding(3, 2, 3, 2);
-            checkBoxAdv1.Name = "checkBoxAdv1";
-            checkBoxAdv1.Size = new Size(17, 16);
-            checkBoxAdv1.TabIndex = 1;
-            checkBoxAdv1.ThemeStyle.CheckBoxTickThickness = 2;
-            checkBoxAdv1.ThemeStyle.ForeColor = Color.Lime;
+            chkIndicator3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            chkIndicator3.ForeColor = Color.Gray;
+            chkIndicator3.Location = new Point(4, 7);
+            chkIndicator3.Name = "chkIndicator3";
+            chkIndicator3.Size = new Size(31, 31);
+            chkIndicator3.TabIndex = 3;
+            chkIndicator3.Text = "✔";
+            chkIndicator3.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // btn_material
+            // label_scan_chemical
             // 
-            btn_material.Anchor = AnchorStyles.Top;
-            btn_material.BackColor = Color.FromArgb(27, 86, 253);
-            btn_material.FlatAppearance.BorderSize = 0;
-            btn_material.FlatStyle = FlatStyle.Flat;
-            btn_material.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
-            btn_material.ForeColor = Color.White;
-            btn_material.Location = new Point(450, 2);
-            btn_material.Margin = new Padding(3, 2, 3, 2);
-            btn_material.Name = "btn_material";
-            btn_material.Size = new Size(198, 49);
-            btn_material.TabIndex = 0;
-            btn_material.Text = "Scan Item Material";
-            btn_material.UseVisualStyleBackColor = false;
-            btn_material.Click += btn_material_Click;
+            label_scan_chemical.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label_scan_chemical.ForeColor = Color.White;
+            label_scan_chemical.Location = new Point(40, 3);
+            label_scan_chemical.Name = "label_scan_chemical";
+            label_scan_chemical.Size = new Size(179, 33);
+            label_scan_chemical.TabIndex = 2;
+            label_scan_chemical.Text = "Scan Chemical";
+            label_scan_chemical.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // btn_chemical
+            // panel_torque
             // 
-            btn_chemical.Anchor = AnchorStyles.Top;
-            btn_chemical.BackColor = Color.RoyalBlue;
-            btn_chemical.FlatAppearance.BorderSize = 0;
-            btn_chemical.FlatStyle = FlatStyle.Flat;
-            btn_chemical.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
-            btn_chemical.ForeColor = Color.White;
-            btn_chemical.Location = new Point(242, 2);
-            btn_chemical.Margin = new Padding(3, 2, 3, 2);
-            btn_chemical.Name = "btn_chemical";
-            btn_chemical.Size = new Size(198, 49);
-            btn_chemical.TabIndex = 0;
-            btn_chemical.Text = "Scan Chemical";
-            btn_chemical.UseVisualStyleBackColor = false;
-            btn_chemical.Click += btn_chemical_Click;
+            panel_torque.Controls.Add(chkIndicator2);
+            panel_torque.Controls.Add(label_scan_torque);
+            panel_torque.Location = new Point(232, 6);
+            panel_torque.Name = "panel_torque";
+            panel_torque.Size = new Size(216, 43);
+            panel_torque.TabIndex = 2;
             // 
-            // btn_torque
+            // chkIndicator2
             // 
-            btn_torque.Anchor = AnchorStyles.Top;
-            btn_torque.BackColor = Color.RoyalBlue;
-            btn_torque.FlatAppearance.BorderSize = 0;
-            btn_torque.FlatStyle = FlatStyle.Flat;
-            btn_torque.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
-            btn_torque.ForeColor = Color.White;
-            btn_torque.Location = new Point(33, 2);
-            btn_torque.Margin = new Padding(3, 2, 3, 2);
-            btn_torque.Name = "btn_torque";
-            btn_torque.Size = new Size(198, 49);
-            btn_torque.TabIndex = 0;
-            btn_torque.Text = "Scan Torque";
-            btn_torque.UseVisualStyleBackColor = false;
-            btn_torque.Click += btn_torque_Click;
+            chkIndicator2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            chkIndicator2.ForeColor = Color.Gray;
+            chkIndicator2.Location = new Point(4, 7);
+            chkIndicator2.Name = "chkIndicator2";
+            chkIndicator2.Size = new Size(31, 31);
+            chkIndicator2.TabIndex = 3;
+            chkIndicator2.Text = "✔";
+            chkIndicator2.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label_scan_torque
+            // 
+            label_scan_torque.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label_scan_torque.ForeColor = Color.White;
+            label_scan_torque.Location = new Point(44, 3);
+            label_scan_torque.Name = "label_scan_torque";
+            label_scan_torque.Size = new Size(179, 33);
+            label_scan_torque.TabIndex = 2;
+            label_scan_torque.Text = "Scan Torque";
+            label_scan_torque.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // panel_material
+            // 
+            panel_material.Controls.Add(chkIndicator1);
+            panel_material.Controls.Add(label_scanserialized);
+            panel_material.Location = new Point(7, 6);
+            panel_material.Name = "panel_material";
+            panel_material.Size = new Size(224, 43);
+            panel_material.TabIndex = 2;
+            // 
+            // chkIndicator1
+            // 
+            chkIndicator1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            chkIndicator1.ForeColor = Color.Gray;
+            chkIndicator1.Location = new Point(4, 7);
+            chkIndicator1.Name = "chkIndicator1";
+            chkIndicator1.Size = new Size(31, 31);
+            chkIndicator1.TabIndex = 3;
+            chkIndicator1.Text = "✔";
+            chkIndicator1.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label_scanserialized
+            // 
+            label_scanserialized.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label_scanserialized.ForeColor = Color.White;
+            label_scanserialized.Location = new Point(40, 5);
+            label_scanserialized.Name = "label_scanserialized";
+            label_scanserialized.Size = new Size(179, 33);
+            label_scanserialized.TabIndex = 2;
+            label_scanserialized.Text = "Scan Serialized";
+            label_scanserialized.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel_parent_tab_subprocess
             // 
@@ -667,8 +675,9 @@
             ((System.ComponentModel.ISupportInitialize)sfDataGrid2).EndInit();
             panel9.ResumeLayout(false);
             panel_top.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)checkBoxAdv2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)checkBoxAdv1).EndInit();
+            panel_chemical.ResumeLayout(false);
+            panel_torque.ResumeLayout(false);
+            panel_material.ResumeLayout(false);
             panel_parent_tab_subprocess.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -704,20 +713,24 @@
         private PictureBox pictureBox1;
         public Label lbl_public_event;
         private Panel panel9;
-        private Button btn_material;
-        private Button btn_torque;
         private Panel panel_top;
         private Panel panel_parent_tab_subprocess;
-        private Syncfusion.Windows.Forms.Tools.CheckBoxAdv checkBoxAdv1;
-        private Syncfusion.Windows.Forms.Tools.CheckBoxAdv checkBoxAdv2;
         private System.Windows.Forms.Timer timer2;
         private Label lbl_subprocessInfo;
         private Label label1;
         private Label lbl_operatorname;
-        private Button btn_chemical;
         private System.Windows.Forms.Timer process_duration_timer;
         private Panel panel10;
         private Button btn_qcChecklist;
         private System.Windows.Forms.Timer timer_duration;
+        private Panel panel_chemical;
+        private Panel panel_torque;
+        private Panel panel_material;
+        private Label label_scanserialized;
+        private Label label_scan_chemical;
+        private Label label_scan_torque;
+        private Label chkIndicator3;
+        private Label chkIndicator2;
+        private Label chkIndicator1;
     }
 }
