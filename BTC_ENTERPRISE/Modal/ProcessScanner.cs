@@ -35,6 +35,7 @@ namespace BTC_ENTERPRISE.Modal
             this.StartPosition = FormStartPosition.CenterScreen;
             YUI yUI = new YUI();
             // yUI.RoundedFormsDocker(this, 8);
+            txt_serialnumber.Select();
             yUI.RoundedTextBox(txt_serialnumber, 6, Color.White);
             yUI.RoundedPanelDocker(panel_processname, 6);
             this.rowindex = rowindex;
@@ -71,8 +72,13 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-                if (_Orderid == serial[1].ToString())
+                if (processId == serial[1].ToString() && !serial["serial_count"].Equals(1) && serial["serial_number"].ToString() != string.Empty)
                 {
+                    //int qty = Convert.ToInt32(serial[5]);
+                    //for (int i = 1; i <= qty; i++)
+                    //{
+                    //    dataGridView1.Rows.Add(index++, serial[4]);
+                    //}
                     dataGridView1.Rows.Add(index++, serial[4]);
                 }
             }

@@ -64,14 +64,14 @@
             panel9 = new Panel();
             panel_top = new Panel();
             panel_chemical = new Panel();
+            btn_scan_chemical = new Button();
             chkIndicator3 = new Label();
-            label_scan_chemical = new Label();
             panel_torque = new Panel();
+            btn_scan_torque = new Button();
             chkIndicator2 = new Label();
-            label_scan_torque = new Label();
             panel_material = new Panel();
+            btn_scanserialized = new Button();
             chkIndicator1 = new Label();
-            label_scanserialized = new Label();
             panel_parent_tab_subprocess = new Panel();
             lbl_subprocessInfo = new Label();
             timer2 = new System.Windows.Forms.Timer(components);
@@ -472,6 +472,8 @@
             sfDataGrid2.QueryCellStyle += sfDataGrid2_QueryCellStyle;
             sfDataGrid2.SelectionChanged += sfDataGrid2_SelectionChanged;
             sfDataGrid2.CellClick += sfDataGrid2_CellClick;
+            sfDataGrid2.CurrentCellActivating += sfDataGrid2_CurrentCellActivating;
+            sfDataGrid2.CurrentCellActivated += sfDataGrid2_CurrentCellActivated;
             // 
             // lbl_processname
             // 
@@ -516,12 +518,29 @@
             // 
             // panel_chemical
             // 
+            panel_chemical.Controls.Add(btn_scan_chemical);
             panel_chemical.Controls.Add(chkIndicator3);
-            panel_chemical.Controls.Add(label_scan_chemical);
             panel_chemical.Location = new Point(449, 6);
             panel_chemical.Name = "panel_chemical";
             panel_chemical.Size = new Size(224, 43);
             panel_chemical.TabIndex = 2;
+            // 
+            // btn_scan_chemical
+            // 
+            btn_scan_chemical.FlatAppearance.BorderColor = Color.White;
+            btn_scan_chemical.FlatAppearance.BorderSize = 0;
+            btn_scan_chemical.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            btn_scan_chemical.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btn_scan_chemical.FlatStyle = FlatStyle.Flat;
+            btn_scan_chemical.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scan_chemical.ForeColor = Color.White;
+            btn_scan_chemical.Location = new Point(41, 1);
+            btn_scan_chemical.Name = "btn_scan_chemical";
+            btn_scan_chemical.Size = new Size(180, 39);
+            btn_scan_chemical.TabIndex = 4;
+            btn_scan_chemical.Text = "Scan Chemical";
+            btn_scan_chemical.UseVisualStyleBackColor = true;
+            btn_scan_chemical.Click += btn_scan_chemical_Click;
             // 
             // chkIndicator3
             // 
@@ -534,25 +553,31 @@
             chkIndicator3.Text = "✔";
             chkIndicator3.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label_scan_chemical
-            // 
-            label_scan_chemical.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label_scan_chemical.ForeColor = Color.White;
-            label_scan_chemical.Location = new Point(40, 3);
-            label_scan_chemical.Name = "label_scan_chemical";
-            label_scan_chemical.Size = new Size(179, 33);
-            label_scan_chemical.TabIndex = 2;
-            label_scan_chemical.Text = "Scan Chemical";
-            label_scan_chemical.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // panel_torque
             // 
+            panel_torque.Controls.Add(btn_scan_torque);
             panel_torque.Controls.Add(chkIndicator2);
-            panel_torque.Controls.Add(label_scan_torque);
             panel_torque.Location = new Point(232, 6);
             panel_torque.Name = "panel_torque";
             panel_torque.Size = new Size(216, 43);
             panel_torque.TabIndex = 2;
+            // 
+            // btn_scan_torque
+            // 
+            btn_scan_torque.FlatAppearance.BorderColor = Color.White;
+            btn_scan_torque.FlatAppearance.BorderSize = 0;
+            btn_scan_torque.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            btn_scan_torque.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btn_scan_torque.FlatStyle = FlatStyle.Flat;
+            btn_scan_torque.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scan_torque.ForeColor = Color.White;
+            btn_scan_torque.Location = new Point(41, 3);
+            btn_scan_torque.Name = "btn_scan_torque";
+            btn_scan_torque.Size = new Size(172, 39);
+            btn_scan_torque.TabIndex = 4;
+            btn_scan_torque.Text = "Scan Torque";
+            btn_scan_torque.UseVisualStyleBackColor = true;
+            btn_scan_torque.Click += btn_scan_torque_Click;
             // 
             // chkIndicator2
             // 
@@ -565,25 +590,31 @@
             chkIndicator2.Text = "✔";
             chkIndicator2.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label_scan_torque
-            // 
-            label_scan_torque.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label_scan_torque.ForeColor = Color.White;
-            label_scan_torque.Location = new Point(44, 3);
-            label_scan_torque.Name = "label_scan_torque";
-            label_scan_torque.Size = new Size(179, 33);
-            label_scan_torque.TabIndex = 2;
-            label_scan_torque.Text = "Scan Torque";
-            label_scan_torque.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // panel_material
             // 
+            panel_material.Controls.Add(btn_scanserialized);
             panel_material.Controls.Add(chkIndicator1);
-            panel_material.Controls.Add(label_scanserialized);
             panel_material.Location = new Point(7, 6);
             panel_material.Name = "panel_material";
             panel_material.Size = new Size(224, 43);
             panel_material.TabIndex = 2;
+            // 
+            // btn_scanserialized
+            // 
+            btn_scanserialized.FlatAppearance.BorderColor = Color.White;
+            btn_scanserialized.FlatAppearance.BorderSize = 0;
+            btn_scanserialized.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            btn_scanserialized.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btn_scanserialized.FlatStyle = FlatStyle.Flat;
+            btn_scanserialized.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scanserialized.ForeColor = Color.White;
+            btn_scanserialized.Location = new Point(41, 3);
+            btn_scanserialized.Name = "btn_scanserialized";
+            btn_scanserialized.Size = new Size(178, 39);
+            btn_scanserialized.TabIndex = 4;
+            btn_scanserialized.Text = "Scan Serialized";
+            btn_scanserialized.UseVisualStyleBackColor = true;
+            btn_scanserialized.Click += btn_scanserialized_Click;
             // 
             // chkIndicator1
             // 
@@ -595,17 +626,6 @@
             chkIndicator1.TabIndex = 3;
             chkIndicator1.Text = "✔";
             chkIndicator1.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // label_scanserialized
-            // 
-            label_scanserialized.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label_scanserialized.ForeColor = Color.White;
-            label_scanserialized.Location = new Point(40, 5);
-            label_scanserialized.Name = "label_scanserialized";
-            label_scanserialized.Size = new Size(179, 33);
-            label_scanserialized.TabIndex = 2;
-            label_scanserialized.Text = "Scan Serialized";
-            label_scanserialized.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel_parent_tab_subprocess
             // 
@@ -726,11 +746,11 @@
         private Panel panel_chemical;
         private Panel panel_torque;
         private Panel panel_material;
-        private Label label_scanserialized;
-        private Label label_scan_chemical;
-        private Label label_scan_torque;
         private Label chkIndicator3;
         private Label chkIndicator2;
         private Label chkIndicator1;
+        private Button btn_scanserialized;
+        private Button btn_scan_chemical;
+        private Button btn_scan_torque;
     }
 }
