@@ -1994,20 +1994,5 @@ namespace BTC_ENTERPRISE
                 sfDataGrid1.Refresh();
             }
         }
-
-        private void sfDataGrid2_QueryRowStyle(object sender, Syncfusion.WinForms.DataGrid.Events.QueryRowStyleEventArgs e)
-        {
-            //if (e.RowIndex == 1)
-            //{
-            //    e.Style.BackColor = Color.Green;
-            //    e.Style.TextColor = Color.White;
-            //}
-            //else
-            //{
-            //    e.Style.BackColor = Color.White;
-            //    e.Style.TextColor = Color.Black;
-            //}
-
-        }
     }
 }
