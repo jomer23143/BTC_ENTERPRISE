@@ -728,13 +728,10 @@ namespace BTC_ENTERPRISE
                 pb_child.Visible = true;
                 lbl_subprocessInfo.Text = "";
                 await LoadSubProcessData(selectedId, tbl_subprocess);
-<<<<<<< HEAD
-                sfDataGrid2.SelectedIndex = 0;
-=======
+
 
                 //   sfDataGrid2.SelectedIndex = 0;
 
->>>>>>> c52c37d1377db1f53ecc27e2681bde1f79cfc106
             }
         }
 
@@ -1295,7 +1292,7 @@ namespace BTC_ENTERPRISE
                     formManager.OpenChildForm(scanner, sender);
                     scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
 
-                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
+                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
                     {
                         global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
                         //var matchingRecords = sfDataGrid2.View.Records

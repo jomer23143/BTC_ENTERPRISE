@@ -385,14 +385,6 @@ namespace BTC_ENTERPRISE.Modal
 
                                 int maxRows = Math.Max(ipns.Count, torques.Count);
 
-<<<<<<< HEAD
-                                if (sub.internal_part_number.Count == 0)
-                                {
-                                    continue;
-                                }
-                                // kung diin ang duha ka list kay walay sulod (one default row for the sub-process)
-=======
->>>>>>> c52c37d1377db1f53ecc27e2681bde1f79cfc106
                                 if (maxRows == 0)
                                 {
                                     tbl_subprocess.Rows.Add(
