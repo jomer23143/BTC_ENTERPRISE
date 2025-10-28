@@ -378,19 +378,21 @@ namespace BTC_ENTERPRISE.Modal
                         {
                             foreach (var sub in process.sub_process)
                             {
-                                // dinhi ta kuhaon ang list sa IPN ug Torque
                                 var ipns = sub.internal_part_number ?? new List<Sub_Asy_Process_Model.InternalPartNumber>();
                                 var torques = sub.torque ?? new List<Sub_Asy_Process_Model.Torque>();
                                 var serials = sub.serial ?? new List<Sub_Asy_Process_Model.Serial>();
-                                // Find the maximum number of items to iterate over
-                                // para ma segurado nga ang tanan mga IPN ug Torque maapil, bisan ug ang usa ka listahan mas mubo o walay sulod.
+                                var iskitlist = sub.is_kit_list;
+
                                 int maxRows = Math.Max(ipns.Count, torques.Count);
 
+<<<<<<< HEAD
                                 if (sub.internal_part_number.Count == 0)
                                 {
                                     continue;
                                 }
                                 // kung diin ang duha ka list kay walay sulod (one default row for the sub-process)
+=======
+>>>>>>> c52c37d1377db1f53ecc27e2681bde1f79cfc106
                                 if (maxRows == 0)
                                 {
                                     tbl_subprocess.Rows.Add(
@@ -438,11 +440,12 @@ namespace BTC_ENTERPRISE.Modal
                                             sub.is_torque,
                                             0,
 
-                                            // Torque Details
+                                            //Torque Details
                                             torque?.min ?? "",
                                             torque?.max ?? "",
                                             torque?.value ?? "",
                                             torque?.torque_name ?? "",
+
 
                                             // Chemical Details
                                             sub.is_chemical,
@@ -456,7 +459,83 @@ namespace BTC_ENTERPRISE.Modal
                         }
                     }
 
+                    //foreach (var process in data.process ?? new List<Sub_Asy_Process_Model.Process>())
+                    //{
+                    //    if (process.sub_process != null)
+                    //    {
+                    //        foreach (var sub in process.sub_process)
+                    //        {
+                    //            var ipns = sub.internal_part_number ?? new List<Sub_Asy_Process_Model.InternalPartNumber>();
+                    //            var torques = sub.torque ?? new List<Sub_Asy_Process_Model.Torque>();
+                    //            var serials = sub.serial ?? new List<Sub_Asy_Process_Model.Serial>();
 
+                    //            // --- CRITICAL CHECK: Ensure the first IPN record (index 0) exists ---
+                    //            if (ipns.Count > 0)
+                    //            {
+                    //                var firstIpn = ipns[0];
+                    //                var ser = serials.Count > 0 ? serials[0] : null; // Use first Serial record if available
+
+                    //                // --- Scenario A: At least one IPN exists, and Torques exist ---
+                    //                if (torques.Count > 0)
+                    //                {
+                    //                    // Inner Loop: Iterate through *all* Torque records.
+                    //                    foreach (var torque in torques)
+                    //                    {
+                    //                        // Add a row using the details of the first IPN but the current Torque.
+                    //                        tbl_subprocess.Rows.Add(
+                    //                            sub.id,
+                    //                            sub.manufacturing_order_process_id,
+
+                    //                            // IPN Details (always from the FIRST IPN)
+                    //                            firstIpn.description ?? "N/A",
+                    //                            firstIpn.ipn_number ?? "",
+                    //                            ser?.serial_number ?? "",
+
+                    //                            // SubProcess/Control Details
+                    //                            sub.serial_quantity, sub.serial_count, sub.is_kit_list,
+                    //                            sub.is_serial, sub.is_torque, 0,
+
+                    //                            // Torque Details (from the current Torque record in the loop)
+                    //                            torque.min ?? "",
+                    //                            torque.max ?? "",
+                    //                            torque.value ?? "",
+                    //                            torque.torque_name ?? "",
+
+                    //                            // Chemical Details (Constant)
+                    //                            sub.is_chemical, sub.chemical_name?.ToString() ?? "", 0, sub.chemical_expiration?.ToString() ?? ""
+                    //                        );
+                    //                    }
+                    //                }
+                    //                // --- Scenario B: First IPN exists, but NO Torques exist ---
+                    //                else
+                    //                {
+                    //                    // Add a single row using the first IPN with empty torque fields
+                    //                    tbl_subprocess.Rows.Add(
+                    //                        sub.id, sub.manufacturing_order_process_id,
+                    //                        firstIpn.description ?? "N/A",
+                    //                        firstIpn.ipn_number ?? "",
+                    //                        ser?.serial_number ?? "",
+                    //                        sub.serial_quantity, sub.serial_count, sub.is_kit_list,
+                    //                        sub.is_serial, sub.is_torque, 0,
+                    //                        "", "", "", "", // Empty Torque fields
+                    //                        sub.is_chemical, sub.chemical_name?.ToString() ?? "", 0, sub.chemical_expiration?.ToString() ?? ""
+                    //                    );
+                    //                }
+                    //            }
+                    //            // --- Scenario C: NO IPNs exist at all (Fallback) ---
+                    //            else if (ipns.Count == 0 && torques.Count == 0) // Only add if everything is missing
+                    //            {
+                    //                // Re-use your original 'maxRows == 0' logic here
+                    //                tbl_subprocess.Rows.Add(
+                    //                    sub.id, sub.manufacturing_order_process_id, "N/A", "", "", sub.serial_quantity, sub.serial_count, sub.is_kit_list,
+                    //                    sub.is_serial, sub.is_torque, 0, "", "", "", "",
+                    //                    sub.is_chemical, sub.chemical_name?.ToString() ?? "", 0, sub.chemical_expiration?.ToString() ?? ""
+                    //                );
+                    //            }
+                    //            // NOTE: If multiple IPN records exist (ipns.Count > 1), they will be ignored by this specific logic.
+                    //        }
+                    //    }
+                    //}
 
 
                     bool anyIsKitList = data.process.Any(p => p.is_kit_list == 1);
