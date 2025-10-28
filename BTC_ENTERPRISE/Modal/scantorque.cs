@@ -1,4 +1,5 @@
-﻿using BTC_ENTERPRISE.Class;
+﻿using System.Data;
+using BTC_ENTERPRISE.Class;
 using BTC_ENTERPRISE.Model;
 using BTC_ENTERPRISE.YaoUI;
 using Frameworks.Utilities.ApiUtilities;
@@ -17,11 +18,11 @@ namespace BTC_ENTERPRISE.Modal
         public int tempcount = 0;
         private string _Tname;
         private string PostTorque = GlobalApi.GetPostMaterialAssignTorqueUrl();
-
+        private DataTable dataserials;
         public event Action<string, string, string, string> TorqueScanSuccess;
 
         private ProcessFrm _processfrm;
-        public scantorque(ProcessFrm processFrm, string processid, string processname, string qty, string count)
+        public scantorque(ProcessFrm processFrm, string processid, string processname, string qty, string count, DataTable table_serials)
         {
             InitializeComponent();
             YUI yUI = new YUI();
@@ -32,6 +33,7 @@ namespace BTC_ENTERPRISE.Modal
             this.qty = qty;
             this.count = count;
             this._processfrm = processFrm;
+            this.dataserials = table_serials;
         }
         private async void txt_torque_KeyDown(object sender, KeyEventArgs e)
         {
@@ -209,18 +211,48 @@ namespace BTC_ENTERPRISE.Modal
 
         private void scantorque_Load(object sender, EventArgs e)
         {
+            LoadTorqueData(dataserials);
+
+        }
+
+        private void LoadTorqueData(DataTable subp_serials)
+        {
             tempqty = int.Parse(qty);
             tempcount = int.Parse(count);
             lbl_scancount.Text = count + " out of " + qty;
+
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();
+
             dataGridView1.Columns.Add("row_number", "#");
             dataGridView1.Columns.Add("torque_name", "Torque Name");
             dataGridView1.Columns.Add("torque_value", "Torque Value");
             dataGridView1.Columns.Add("torque_min", "Min");
             dataGridView1.Columns.Add("torque_max", "Max");
+
             dataGridView1.Columns["row_number"].Width = 50;
 
+
+            int index = 1;
+            string currentProcessId = processid;
+
+            foreach (DataRow torqueRow in subp_serials.Rows)
+            {
+                bool matchesProcess = currentProcessId == torqueRow["id"]?.ToString();
+                bool hasTorqueName = !string.IsNullOrEmpty(torqueRow["torque_name"]?.ToString());
+
+                if (matchesProcess && hasTorqueName)
+                {
+                    dataGridView1.Rows.Add(
+                        index++,
+                        torqueRow["torque_name"]?.ToString() ?? "",
+                        torqueRow["value"]?.ToString() ?? "",
+                        torqueRow["min"]?.ToString() ?? "",
+                        torqueRow["max"]?.ToString() ?? ""
+                    );
+                }
+            }
         }
+
     }
 }
