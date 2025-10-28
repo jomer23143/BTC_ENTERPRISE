@@ -1292,21 +1292,22 @@ namespace BTC_ENTERPRISE
                     formManager.OpenChildForm(scanner, sender);
                     scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
 
-                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
+                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
                     {
                         global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
-                        //var matchingRecords = sfDataGrid2.View.Records
-                        //.Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID == record.MaterialID).ToList();
-                        //foreach (var item in matchingRecords)
-                        //{
-                        //    if (item.Data is ViewModel.SubProcessView s && s.MaterialID == record.MaterialID)
-                        //    {
-                        //        s.Serial_count = serial_count.ToString();
-                        //    }
-                        //}
-                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
-                        //sfDataGrid2.Refresh();
-                        await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                        
+                        var matchingRecords = sfDataGrid2.View.Records
+                        .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID == record.MaterialID).ToList();
+                        foreach (var item in matchingRecords)
+                        {
+                            if (item.Data is ViewModel.SubProcessView s && s.MaterialID == record.MaterialID)
+                            {
+                                s.Serial_count = serial_count.ToString();
+                            }
+                        }
+                        sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
+                        sfDataGrid2.Refresh();
+                       // await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
                     return; // Exit after opening scanner
                 }
@@ -1386,7 +1387,7 @@ namespace BTC_ENTERPRISE
 
 
 
-            scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
+            scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
             {
                 global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), _name, scanned_Serial);
                 await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
@@ -1660,7 +1661,7 @@ namespace BTC_ENTERPRISE
                     formManager.OpenChildForm(scanner, sender);
                     scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
 
-                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
+                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
                     {
                         global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);

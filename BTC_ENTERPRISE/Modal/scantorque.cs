@@ -236,7 +236,7 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             string currentProcessId = processid;
 
-            foreach (DataRow torqueRow in subp_serials.Rows)
+            foreach (System.Data.DataRow torqueRow in subp_serials.Rows)
             {
                 bool matchesProcess = currentProcessId == torqueRow["id"]?.ToString();
                 bool hasTorqueName = !string.IsNullOrEmpty(torqueRow["torque_name"]?.ToString());
