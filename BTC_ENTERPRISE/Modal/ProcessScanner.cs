@@ -72,7 +72,6 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-
                 if (processId == serial[0].ToString() && !serial["serial_count"].Equals(1) && serial["serial_number"].ToString() != string.Empty)
                 {
                     dataGridView1.Rows.Add(index++, serial[4]);

@@ -157,7 +157,7 @@ namespace BTC_EnterpriseV2.Modal
                     if (!exists)
                     {
                         int rowNumber = dataGridView1.Rows.Count + 1;
-                        dataGridView1.Rows.Add(rowNumber, cname);
+                        dataGridView1.Rows.Add(rowNumber, cname, cexp);
 
                     }
 
@@ -197,14 +197,17 @@ namespace BTC_EnterpriseV2.Modal
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add("NoProcess", "No.");
             dataGridView1.Columns.Add("serial_number", "Item Serial Number");
+            dataGridView1.Columns.Add("chemical_expiration", "Expiration Date");
             dataGridView1.Columns["NoProcess"].Width = 50;
 
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-                if (_MaterialID == serial[1].ToString())
+                string? id = serial[0].ToString();
+                if (_MaterialID == id && serial["is_chemical"].ToString() == "1" && serial["chemical_name"].ToString() != string.Empty)
                 {
-                    dataGridView1.Rows.Add(index++, serial[16]);
+                    dataGridView1.Rows.Add(index++, serial["chemical_name"], serial["chemical_expiration"]);
+                    break;
                 }
             }
         }

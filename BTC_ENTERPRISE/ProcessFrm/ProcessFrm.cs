@@ -1131,12 +1131,12 @@ namespace BTC_ENTERPRISE
         private bool _scanS = false;
         private bool _scanT = false;
         private bool _scanChem = false;
+        string ipn = "";
         private async void sfDataGrid2_CellClick(object sender, Syncfusion.WinForms.DataGrid.Events.CellClickEventArgs e)
         {
             if (e.DataRow == null || e.DataRow.RowType != RowType.DefaultRow)
                 return;
-            sfDataGrid1.SelectedIndex = 1;
-            var rec = sfDataGrid2.View.Records;
+
             var record = e.DataRow.RowData as ViewModel.SubProcessView;
             if (record == null) return;
             selectedName = record.Name;
@@ -1152,6 +1152,7 @@ namespace BTC_ENTERPRISE
             bufftcount = Convert.ToString(tcount);
             _Sercount = record.Serial_count;
             _chemicalname = record.Chemical_name;
+            ipn = record.Ipn;
 
 
             if (record.IsSerialized == 1)
@@ -1294,18 +1295,16 @@ namespace BTC_ENTERPRISE
 
                     scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
                     {
-                        global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
+                        global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial, record.Ipn);
                         
                         var matchingRecords = sfDataGrid2.View.Records
                         .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID == record.MaterialID).ToList();
                         foreach (var item in matchingRecords)
                         {
-                            if (item.Data is ViewModel.SubProcessView s && s.MaterialID == record.MaterialID)
-                            {
-                                s.Serial_count = serial_count.ToString();
-                            }
+                            var s = item.Data as ViewModel.SubProcessView;
+                            s.Serial_count = serial_count.ToString();
                         }
-                        sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
+                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
                         sfDataGrid2.Refresh();
                        // await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
@@ -1330,12 +1329,20 @@ namespace BTC_ENTERPRISE
                     {
                         _IscanOK = true;
                         global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
-                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(record, "Torque_value", torqueValue);
-                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(record, "Torque", string.Format("({0}) {1}", torqueName, torqueValue));
+                        // Update the specific record in the grid
+                        var matchingRecords = sfDataGrid2.View.Records
+                        .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == processid && (r.Data as ViewModel.SubProcessView)?.Torque == string.Format("({0}) 0.00", torqueName)).ToList();
+                        foreach (var item in matchingRecords)
+                        {
+                            var s = item.Data as ViewModel.SubProcessView;
+                            s.Torque_count = "0";
+                            s.Torque_value = torqueValue;
+                            s.Torque = string.Format("({0}) {1}", torqueName, torqueValue);
+                        }
+                        sfDataGrid2.Refresh();
                         //sfDataGrid2.View.Records[roid].Data.GetType().GetProperty("Torque_value").SetValue(sfDataGrid2.View.Records[roid].Data, torqueValue);
                         //sfDataGrid2.View.Records[roid].Data.GetType().GetProperty("Torque").SetValue(sfDataGrid2.View.Records[roid].Data, string.Format("({0}) {1}", torqueName, torqueValue));
-                        //sfDataGrid2.Refresh();
-                        await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                       // await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
                     return; // Exit after opening scanner
                 }
@@ -1355,7 +1362,7 @@ namespace BTC_ENTERPRISE
                 {
                     _IscanOK = true;
                     global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
-                    await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                    //await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                 };
                 return; // Exit after opening scanner
             }
@@ -1389,8 +1396,17 @@ namespace BTC_ENTERPRISE
 
             scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
             {
-                global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), _name, scanned_Serial);
-                await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), _name, scanned_Serial,ipn);
+                //await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                var matchingRecords = sfDataGrid2.View.Records
+                      .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == processid).ToList();
+                foreach (var item in matchingRecords)
+                {
+                    var s = item.Data as ViewModel.SubProcessView;
+                    s.Serial_count = serial_count.ToString();
+                }
+                //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
+                sfDataGrid2.Refresh();
             };
             btn_scanserialized.ForeColor = Color.FromArgb(27, 86, 253);
             panel_material.BackColor = Color.White;
@@ -1432,7 +1448,20 @@ namespace BTC_ENTERPRISE
             {
                 _IscanOK = true;
                 global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
-                await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+
+                var matchingRecords = sfDataGrid2.View.Records
+                         .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == processid && (r.Data as ViewModel.SubProcessView)?.Torque == string.Format("({0}) 0.00", torqueName)).ToList();
+                foreach (var item in matchingRecords)
+                {
+                    var s = item.Data as ViewModel.SubProcessView;
+                    s.Torque_count = "0";
+                    s.Torque_value = torqueValue;
+                    s.Torque = string.Format("({0}) {1}", torqueName, torqueValue);
+                }
+                sfDataGrid2.Refresh();
+                // await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Torque_value", torqueValue);
+                //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Torque", string.Format("({0}) {1}", torqueName, torqueValue));
             };
             chkIndicator1.Text = EmptyMark;
 
@@ -1474,7 +1503,7 @@ namespace BTC_ENTERPRISE
             {
                 _IscanOK = true;
                 global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
-                await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                //await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
             };
             chkIndicator2.Text = EmptyMark;
 
@@ -1663,7 +1692,7 @@ namespace BTC_ENTERPRISE
 
                     scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
                     {
-                        global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
+                        global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial,record.Ipn);
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
                     return; // Exit after opening scanner
