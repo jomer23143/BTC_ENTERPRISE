@@ -1321,7 +1321,7 @@ namespace BTC_ENTERPRISE
             {
                 if (record.Torque_value == "0.00")
                 {
-                    var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount);
+                    var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount, tbl_subprocess);
                     formManager.OpenChildForm(Tscanner, sender);
                     Tscanner.Shown += (s, args) => Tscanner.txt_torque.Focus();
 
@@ -1415,7 +1415,7 @@ namespace BTC_ENTERPRISE
                 return;
             }
 
-            var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount);
+            var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount, tbl_subprocess);
             if (tcount == 0)
             {
                 Tscanner.Shown += (s, args) => Tscanner.txt_torque.Enabled = false;
@@ -1678,7 +1678,7 @@ namespace BTC_ENTERPRISE
             {
                 if (record.Torque_value == "0.00")
                 {
-                    var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount);
+                    var Tscanner = new scantorque(this, processid, selectedName, tqty, bufftcount, tbl_subprocess);
                     formManager.OpenChildForm(Tscanner, sender);
                     Tscanner.Shown += (s, args) => Tscanner.txt_torque.Focus();
 
