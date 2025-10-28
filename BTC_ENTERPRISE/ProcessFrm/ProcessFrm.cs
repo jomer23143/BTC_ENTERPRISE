@@ -63,7 +63,7 @@ namespace BTC_ENTERPRISE
 
         private DataTable parentDurationDatatable = new DataTable("p");
         private DataTable ChildrowDataTable = new DataTable("Cr");
-
+        public SfDataGrid _sfDataGrid2;
         public ProcessFrm(string scangeneratedSerial, int segmentid, string moid, string segmentname, string processname, string operatorfullname, string thetoken, DataTable plist, DataTable subplist)
         {
             InitializeComponent();
@@ -71,6 +71,7 @@ namespace BTC_ENTERPRISE
             durationUpdated = false;
             QrController();
             instance = this;
+            _sfDataGrid2 = sfDataGrid2;
             this._serial = scangeneratedSerial;
             pb_child.Visible = false;
             this._MoID = moid;
@@ -259,19 +260,9 @@ namespace BTC_ENTERPRISE
                     string childEndTime = durationRow["end_time"]?.ToString() ?? "-";
                     string status = durationRow["status"]?.ToString() ?? "";
 
-<<<<<<< HEAD
-                    if (theStatus.ToUpper().Trim() == "OPEN")
-                    {
-                        continue;
-                    }
 
-                    string childdurationDisplay = "0 Days : 00 : 00 : 00";
-                    DateTime childparsedStart;
-                    DateTime childparsedEnd;
-=======
                     string childDurationDisplay = "0 Days : 00 : 00 : 00";
                     DateTime childParsedStart, childParsedEnd;
->>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
                     TimeSpan currentDuration = TimeSpan.Zero;
 
                     if (DateTime.TryParse(childStartTime, out childParsedStart))
@@ -713,6 +704,7 @@ namespace BTC_ENTERPRISE
                 pb_child.Visible = true;
                 lbl_subprocessInfo.Text = "";
                 await LoadSubProcessData(selectedId, tbl_subprocess);
+                sfDataGrid2.SelectedIndex = 0;
             }
         }
 
@@ -757,7 +749,7 @@ namespace BTC_ENTERPRISE
 
                     _storedDuration = record.Duration;
                     //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
-                    
+
                     StartProcessTimers(record);
 
                     if (record.IsOnHold || record.SubProcesses.Count == 0)
@@ -772,14 +764,9 @@ namespace BTC_ENTERPRISE
                             TimeSpan.Zero
                         );
                     }
-<<<<<<< HEAD
-                    var lastchildProcess = record.SubProcesses.LastOrDefault();
 
-                    UpdateChildStatus(lastchildProcess, "Processing");
-=======
                     var childlastSubProcess = record.SubProcesses.LastOrDefault();
                     UpdateChildStatus(childlastSubProcess, "Processing");
->>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
                     record.IsOnHold = false;
                     record.IsEnded = false;
 
@@ -830,7 +817,7 @@ namespace BTC_ENTERPRISE
 
                         record.StartTime = timeEndString;
                         UpdateStatus(record, true, true, true, "Pause");
-                       
+
                     }
                     break;
 
@@ -866,23 +853,17 @@ namespace BTC_ENTERPRISE
                             record.AccumulatedDuration += segmentDuration;
                             activeProcesses.Remove(processid);
                         }
-<<<<<<< HEAD
-                        var lastSubChildProcess = record.SubProcesses.LastOrDefault();
-                        LogSubProcess(record, lastSubChildProcess, "Process Completed", record.StartTime, timeEndString, segmentDuration);
-=======
+
                         var ChildlastSubProcess = record.SubProcesses.LastOrDefault();
                         LogSubProcess(record, ChildlastSubProcess, "Process Completed", record.StartTime, timeEndString, segmentDuration);
->>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
 
                         TimeSpan totalAccumulatedDuration = TimeFormat.ParseCustomDuration(record.Duration);
                         record.Duration = timeFormat.FormatDuration(totalAccumulatedDuration);
                         record.EndTime = $"Time: {segmentEndTime:HH:mm:ss} Date: {segmentEndTime:MM-dd-yyyy}";
                         UpdateStatus(record, true, false, true, "Completed");
-<<<<<<< HEAD
-                        UpdateChildStatus(lastSubChildProcess, "Completed");
-=======
+
                         UpdateChildStatus(ChildlastSubProcess, "Completed");
->>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
+
                         await PostProcessWithDictionary(processid, "Process Completed", status, Token);
                         StopProcessTimersIfInactive();
                     }
@@ -927,13 +908,10 @@ namespace BTC_ENTERPRISE
         private void UpdateChildStatus(ViewModel.ChildProcessViewModel record, string statusText)
         {
             record.StatusName = statusText;
-            
+
         }
 
-        private void UpdateChildStatus(ViewModel.ChildProcessViewModel record, string newstatus)
-        {
-            record.StatusName = newstatus;
-        }
+
 
         private void StartProcessTimers(ViewModel.ProcessViewModel record)
         {
@@ -974,7 +952,7 @@ namespace BTC_ENTERPRISE
                 lastSubProcess.TimeEnd = timeEnd;
                 lastSubProcess.Remarks = remarks;
                 lastSubProcess.Duration = timeFormat.FormatDuration(res);
-                
+
             }
             else
             {
@@ -1108,7 +1086,8 @@ namespace BTC_ENTERPRISE
         {
             if (e.DataRow == null || e.DataRow.RowType != RowType.DefaultRow)
                 return;
-
+            sfDataGrid1.SelectedIndex = 1;
+            var rec = sfDataGrid2.View.Records;
             var record = e.DataRow.RowData as ViewModel.SubProcessView;
             if (record == null) return;
             Global global_DTtable = new Global();
@@ -1240,9 +1219,20 @@ namespace BTC_ENTERPRISE
                     formManager.OpenChildForm(scanner, sender);
                     scanner.Shown += (s, args) => scanner.txt_serialnumber.Focus();
 
-                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial) =>
+                    scanner.ItemScanSuccess += async (serial, processid, scanned_Serial, serial_count) =>
                     {
                         global_DTtable.UpdateSerialQuantity(tbl_subprocess, Convert.ToInt32(processid), record.Name, scanned_Serial);
+                        //var matchingRecords = sfDataGrid2.View.Records
+                        //.Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID == record.MaterialID).ToList();
+                        //foreach (var item in matchingRecords)
+                        //{
+                        //    if (item.Data is ViewModel.SubProcessView s && s.MaterialID == record.MaterialID)
+                        //    {
+                        //        s.Serial_count = serial_count.ToString();
+                        //    }
+                        //}
+                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(matchingRecords, "Serial_count", serial_count);
+                        //sfDataGrid2.Refresh();
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
                     return; // Exit after opening scanner
@@ -1266,6 +1256,11 @@ namespace BTC_ENTERPRISE
                     {
                         _IscanOK = true;
                         global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
+                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(record, "Torque_value", torqueValue);
+                        //sfDataGrid2.View.GetPropertyAccessProvider().SetValue(record, "Torque", string.Format("({0}) {1}", torqueName, torqueValue));
+                        //sfDataGrid2.View.Records[roid].Data.GetType().GetProperty("Torque_value").SetValue(sfDataGrid2.View.Records[roid].Data, torqueValue);
+                        //sfDataGrid2.View.Records[roid].Data.GetType().GetProperty("Torque").SetValue(sfDataGrid2.View.Records[roid].Data, string.Format("({0}) {1}", torqueName, torqueValue));
+                        //sfDataGrid2.Refresh();
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
                     };
                     return; // Exit after opening scanner
@@ -1353,7 +1348,7 @@ namespace BTC_ENTERPRISE
 
 
             TimeSpan accumulatedTimeBase = TimeFormat.ParseCustomDuration(_storedDuration);
-           // TimeSpan accumulatedChildTimeBase = TimeFormat.ParseCustomDuration(_storedChildDuration);
+            // TimeSpan accumulatedChildTimeBase = TimeFormat.ParseCustomDuration(_storedChildDuration);
 
             foreach (var record in sfDataGrid1.View.Records.Select(r => r.Data as ViewModel.ProcessViewModel))
             {
@@ -1370,19 +1365,6 @@ namespace BTC_ENTERPRISE
                     string durationDisplay = timeFormat.FormatDuration(totalRunningDuration);
                     record.Duration = durationDisplay;
 
-<<<<<<< HEAD
-                    foreach (var item in record.SubProcesses)
-                    {
-                        if (item.StatusName == "Processing")
-                        {
-                            TimeSpan totalChildRunningDuration = DateTime.Now - Convert.ToDateTime(item.TimeStart);
-                            string durationChildDisplay = timeFormat.FormatDuration(totalChildRunningDuration);
-                            item.Duration = durationChildDisplay;
-                        }
-                       
-                    }
-                   
-=======
                     foreach (var child in record.SubProcesses)
                     {
                         if (child.StatusName == "Processing")
@@ -1391,9 +1373,6 @@ namespace BTC_ENTERPRISE
                             child.Duration = timeFormat.FormatDuration(childtDuration);
                         }
                     }
-
-
->>>>>>> aa5de00f078297ac125bb9b01f308349168114d0
                     durationUpdated = true;
                 }
             }
@@ -1405,6 +1384,19 @@ namespace BTC_ENTERPRISE
             }
         }
 
+        private void sfDataGrid2_QueryRowStyle(object sender, Syncfusion.WinForms.DataGrid.Events.QueryRowStyleEventArgs e)
+        {
+            //if (e.RowIndex == 1)
+            //{
+            //    e.Style.BackColor = Color.Green;
+            //    e.Style.TextColor = Color.White;
+            //}
+            //else
+            //{
+            //    e.Style.BackColor = Color.White;
+            //    e.Style.TextColor = Color.Black;
+            //}
 
+        }
     }
 }

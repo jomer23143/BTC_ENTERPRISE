@@ -4,6 +4,8 @@ using BTC_ENTERPRISE.YaoUI;
 using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Syncfusion.WinForms.DataGrid;
+using Syncfusion.WinForms.DataGrid.Interactivity;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -19,7 +21,6 @@ namespace BTC_ENTERPRISE.Modal
         private string PostTorque = GlobalApi.GetPostMaterialAssignTorqueUrl();
 
         public event Action<string, string, string, string> TorqueScanSuccess;
-
         private ProcessFrm _processfrm;
         public scantorque(ProcessFrm processFrm, string processid, string processname, string qty, string count)
         {
@@ -176,7 +177,6 @@ namespace BTC_ENTERPRISE.Modal
                             {
                                 TorqueScanSuccess?.Invoke(torqueName, torqueValue, torquemin, torquemax);
                                 targetTorqueFound = true;
-
                             }
                         }
 

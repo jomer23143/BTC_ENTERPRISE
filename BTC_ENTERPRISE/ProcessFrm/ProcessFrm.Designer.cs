@@ -470,6 +470,7 @@
             sfDataGrid2.TabIndex = 0;
             sfDataGrid2.Text = "sfDataGrid2";
             sfDataGrid2.QueryCellStyle += sfDataGrid2_QueryCellStyle;
+            sfDataGrid2.QueryRowStyle += sfDataGrid2_QueryRowStyle;
             sfDataGrid2.SelectionChanged += sfDataGrid2_SelectionChanged;
             sfDataGrid2.CellClick += sfDataGrid2_CellClick;
             // 

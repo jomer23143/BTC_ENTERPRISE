@@ -386,6 +386,10 @@ namespace BTC_ENTERPRISE.Modal
                                 // para ma segurado nga ang tanan mga IPN ug Torque maapil, bisan ug ang usa ka listahan mas mubo o walay sulod.
                                 int maxRows = Math.Max(ipns.Count, torques.Count);
 
+                                if (sub.internal_part_number.Count == 0)
+                                {
+                                    continue;
+                                }
                                 // kung diin ang duha ka list kay walay sulod (one default row for the sub-process)
                                 if (maxRows == 0)
                                 {
