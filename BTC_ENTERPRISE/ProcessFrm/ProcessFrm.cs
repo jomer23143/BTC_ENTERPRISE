@@ -59,7 +59,7 @@ namespace BTC_ENTERPRISE
         private Dictionary<int, DateTime> activeProcesses = new Dictionary<int, DateTime>();
         private string _storedDuration;
         private bool durationUpdated;
-
+        private int rowindex;
 
         private DataTable parentDurationDatatable = new DataTable("p");
         private DataTable ChildrowDataTable = new DataTable("Cr");
@@ -486,7 +486,12 @@ namespace BTC_ENTERPRISE
 
             if (viewModels.Count > 0)
             {
-                sfDataGrid2.SelectedIndex = 0;
+                await Task.Delay(50);
+
+                if (rowindex >= 0 && rowindex < sfDataGrid2.RowCount)
+                {
+                    sfDataGrid2.SelectedIndex = rowindex;
+                }
 
                 var firstRecord = viewModels[0];
 
@@ -722,7 +727,6 @@ namespace BTC_ENTERPRISE
                 lbl_subprocessInfo.Text = "";
                 await LoadSubProcessData(selectedId, tbl_subprocess);
 
-                //   sfDataGrid2.SelectedIndex = 0;
 
             }
         }
@@ -1094,7 +1098,6 @@ namespace BTC_ENTERPRISE
         //i make this outside to access entire class
         //  string record; 
         string selectedName;
-        int rowindex = 0;
         string processid;
         string manufacturingOrderID;
         string qty = "0";
@@ -1123,7 +1126,8 @@ namespace BTC_ENTERPRISE
             var record = e.DataRow.RowData as ViewModel.SubProcessView;
             if (record == null) return;
             selectedName = record.Name;
-            rowindex = 0;
+            int currentRowIndex = sfDataGrid2.CurrentCell.RowIndex;
+            rowindex = currentRowIndex;
             processid = Convert.ToString(record.MaterialID);
             manufacturingOrderID = Convert.ToString(record.manufacturing_order_id);
             qty = record.Serial_qty;
@@ -1322,6 +1326,13 @@ namespace BTC_ENTERPRISE
                     _IscanOK = true;
                     global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
                     await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                    await Task.Delay(50);
+
+                    // 3. Restore the selection using the stored index
+                    if (rowindex >= 0 && rowindex < sfDataGrid2.RowCount)
+                    {
+                        sfDataGrid2.SelectedIndex = rowindex;
+                    }
                 };
                 return; // Exit after opening scanner
             }
@@ -1399,6 +1410,8 @@ namespace BTC_ENTERPRISE
                 _IscanOK = true;
                 global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
                 await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                await Task.Delay(50);
+
             };
             chkIndicator1.Text = EmptyMark;
 
@@ -1478,7 +1491,8 @@ namespace BTC_ENTERPRISE
         private void ProcessSubProcessSelection(ViewModel.SubProcessView record, object sender)
         {
             selectedName = record.Name;
-            rowindex = 0;
+            int currentRowIndex = sfDataGrid2.CurrentCell.RowIndex;
+            rowindex = currentRowIndex;
             processid = Convert.ToString(record.MaterialID);
             manufacturingOrderID = Convert.ToString(record.manufacturing_order_id);
             qty = record.Serial_qty;
@@ -1654,6 +1668,8 @@ namespace BTC_ENTERPRISE
                         _IscanOK = true;
                         global_DTtable.UpdateTorqueQuantity(tbl_subprocess, Convert.ToInt32(processid), 1, torqueName, torqueValue);
                         await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                        await Task.Delay(50);
+
                     };
                     return; // Exit after opening scanner
                 }
@@ -1674,6 +1690,7 @@ namespace BTC_ENTERPRISE
                     _IscanOK = true;
                     global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
                     await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+
                 };
                 return; // Exit after opening scanner
             }

@@ -202,7 +202,7 @@ namespace BTC_EnterpriseV2.Modal
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-                if (_MaterialID == serial[1].ToString())
+                if (_MaterialID == serial[0].ToString())
                 {
                     dataGridView1.Rows.Add(index++, serial[16]);
                 }
