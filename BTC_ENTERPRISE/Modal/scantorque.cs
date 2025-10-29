@@ -5,6 +5,8 @@ using BTC_ENTERPRISE.YaoUI;
 using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Syncfusion.WinForms.DataGrid;
+using Syncfusion.WinForms.DataGrid.Interactivity;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -20,7 +22,6 @@ namespace BTC_ENTERPRISE.Modal
         private string PostTorque = GlobalApi.GetPostMaterialAssignTorqueUrl();
         private DataTable dataserials;
         public event Action<string, string, string, string> TorqueScanSuccess;
-
         private ProcessFrm _processfrm;
         public scantorque(ProcessFrm processFrm, string processid, string processname, string qty, string count, DataTable table_serials)
         {
@@ -178,7 +179,6 @@ namespace BTC_ENTERPRISE.Modal
                             {
                                 TorqueScanSuccess?.Invoke(torqueName, torqueValue, torquemin, torquemax);
                                 targetTorqueFound = true;
-
                             }
                         }
 
@@ -236,7 +236,7 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             string currentProcessId = processid;
 
-            foreach (DataRow torqueRow in subp_serials.Rows)
+            foreach (System.Data.DataRow torqueRow in subp_serials.Rows)
             {
                 bool matchesProcess = currentProcessId == torqueRow["id"]?.ToString();
                 bool hasTorqueName = !string.IsNullOrEmpty(torqueRow["torque_name"]?.ToString());

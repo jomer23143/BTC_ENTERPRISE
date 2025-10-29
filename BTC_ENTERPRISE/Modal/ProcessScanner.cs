@@ -28,7 +28,7 @@ namespace BTC_ENTERPRISE.Modal
         private DataTable dataserials;
         private ProcessFrm _processfrm;
 
-        public event Action<string, string, string> ItemScanSuccess;
+        public event Action<string, string, string,int> ItemScanSuccess;
         public ProcessScanner(ProcessFrm processFrm, int rowindex, string processid, string manufacturingorderid, string processname, string generatedseril, string qty, string count, int iskitlist, DataTable table_serials)
         {
             InitializeComponent();
@@ -72,13 +72,8 @@ namespace BTC_ENTERPRISE.Modal
             int index = 1;
             foreach (DataRow serial in serials.Rows)
             {
-                if (processId == serial[1].ToString() && !serial["serial_count"].Equals(1) && serial["serial_number"].ToString() != string.Empty)
+                if (processId == serial[0].ToString() && !serial["serial_count"].Equals(1) && serial["serial_number"].ToString() != string.Empty)
                 {
-                    //int qty = Convert.ToInt32(serial[5]);
-                    //for (int i = 1; i <= qty; i++)
-                    //{
-                    //    dataGridView1.Rows.Add(index++, serial[4]);
-                    //}
                     dataGridView1.Rows.Add(index++, serial[4]);
                 }
             }
@@ -221,8 +216,11 @@ namespace BTC_ENTERPRISE.Modal
                 }
                 else
                 {
+                    var res = token.ToObject<Sub_Asy_Process_Model.SubProcess>();
+                    int serial_count = res.serial_count;
+
                     _ScannedSerial = txt_serialnumber.Text;
-                    ItemScanSuccess?.Invoke(serial, processid, _ScannedSerial);
+                    ItemScanSuccess?.Invoke(serial, processid, _ScannedSerial, serial_count);
 
                     bool exists = dataGridView1.Rows
                       .Cast<DataGridViewRow>()
