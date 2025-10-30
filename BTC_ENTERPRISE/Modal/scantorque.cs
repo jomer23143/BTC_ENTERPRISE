@@ -5,8 +5,6 @@ using BTC_ENTERPRISE.YaoUI;
 using Frameworks.Utilities.ApiUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Syncfusion.WinForms.DataGrid;
-using Syncfusion.WinForms.DataGrid.Interactivity;
 
 namespace BTC_ENTERPRISE.Modal
 {
@@ -144,19 +142,43 @@ namespace BTC_ENTERPRISE.Modal
                     {
                         bool targetTorqueFound = false;
 
+                        decimal actualValue = 0.0m;
+                        decimal minValue = 0.0m;
+                        decimal maxValue = 0.0m;
+
                         foreach (JObject torqueRecord in torqueArrayToken)
                         {
                             string torqueValue = torqueRecord["value"]?.ToString();
                             string torqueName = torqueRecord["torque_name"]?.ToString();
                             string torquemin = torqueRecord["min"]?.ToString();
                             string torquemax = torqueRecord["max"]?.ToString();
-
+                            string targetTorqueName = txt_torque.Text;
                             var existingRow = dataGridView1.Rows
                                 .Cast<DataGridViewRow>()
                                 .FirstOrDefault(r => r.Cells["torque_name"].Value?.ToString() == torqueName);
 
                             if (existingRow == null)
                             {
+                                if (string.Equals(torqueName, targetTorqueName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    bool isValidNumeric = decimal.TryParse(torqueValue, out actualValue) &&
+                                                          decimal.TryParse(torquemin, out minValue) &&
+                                                          decimal.TryParse(torquemax, out maxValue);
+
+                                    if (!isValidNumeric)
+                                    {
+                                        ShowMessage($"Error: Torque values for '{torqueName}' are not valid numbers.", Color.Orange);
+                                        continue;
+                                    }
+
+                                    if (actualValue < minValue || actualValue > maxValue)
+                                    {
+                                        ShowMessage($"Scanned Torque '{torqueName}' with Value '{torqueValue}' is out of range ({torquemin} - {torquemax}).", Color.Red);
+                                        continue;
+                                    }
+
+                                }
+
                                 tempcount++;
                                 int rowIndex = dataGridView1.Rows.Add();
                                 var row = dataGridView1.Rows[rowIndex];
@@ -168,7 +190,26 @@ namespace BTC_ENTERPRISE.Modal
                             }
                             else
                             {
-                                // Update existing row
+
+                                if (string.Equals(torqueName, targetTorqueName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    bool isValidNumeric = decimal.TryParse(torqueValue, out actualValue) &&
+                                                          decimal.TryParse(torquemin, out minValue) &&
+                                                          decimal.TryParse(torquemax, out maxValue);
+
+                                    if (!isValidNumeric)
+                                    {
+                                        ShowMessage($"Error: Torque values for '{torqueName}' are not valid numbers.", Color.Orange);
+                                        continue;
+                                    }
+
+                                    if (actualValue < minValue || actualValue > maxValue)
+                                    {
+                                        ShowMessage($"Scanned Torque '{torqueName}' with Value '{torqueValue}' is out of range ({torquemin} - {torquemax}).", Color.Red);
+                                        continue;
+                                    }
+                                }
+
                                 existingRow.Cells["torque_name"].Value = torqueName;
                                 existingRow.Cells["torque_value"].Value = torqueValue;
                                 existingRow.Cells["torque_min"].Value = torquemin;

@@ -534,11 +534,12 @@
             btn_scan_chemical.FlatStyle = FlatStyle.Flat;
             btn_scan_chemical.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scan_chemical.ForeColor = Color.White;
-            btn_scan_chemical.Location = new Point(41, 1);
+            btn_scan_chemical.Location = new Point(42, 1);
             btn_scan_chemical.Name = "btn_scan_chemical";
-            btn_scan_chemical.Size = new Size(180, 39);
+            btn_scan_chemical.Size = new Size(179, 39);
             btn_scan_chemical.TabIndex = 4;
             btn_scan_chemical.Text = "Scan Chemical";
+            btn_scan_chemical.TextAlign = ContentAlignment.MiddleLeft;
             btn_scan_chemical.UseVisualStyleBackColor = true;
             btn_scan_chemical.Click += btn_scan_chemical_Click;
             // 
@@ -546,7 +547,7 @@
             // 
             chkIndicator3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator3.ForeColor = Color.Gray;
-            chkIndicator3.Location = new Point(4, 7);
+            chkIndicator3.Location = new Point(5, 7);
             chkIndicator3.Name = "chkIndicator3";
             chkIndicator3.Size = new Size(31, 31);
             chkIndicator3.TabIndex = 3;
@@ -571,11 +572,12 @@
             btn_scan_torque.FlatStyle = FlatStyle.Flat;
             btn_scan_torque.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scan_torque.ForeColor = Color.White;
-            btn_scan_torque.Location = new Point(41, 3);
+            btn_scan_torque.Location = new Point(53, 3);
             btn_scan_torque.Name = "btn_scan_torque";
-            btn_scan_torque.Size = new Size(172, 39);
+            btn_scan_torque.Size = new Size(160, 39);
             btn_scan_torque.TabIndex = 4;
             btn_scan_torque.Text = "Scan Torque";
+            btn_scan_torque.TextAlign = ContentAlignment.MiddleLeft;
             btn_scan_torque.UseVisualStyleBackColor = true;
             btn_scan_torque.Click += btn_scan_torque_Click;
             // 
@@ -583,7 +585,7 @@
             // 
             chkIndicator2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator2.ForeColor = Color.Gray;
-            chkIndicator2.Location = new Point(4, 7);
+            chkIndicator2.Location = new Point(16, 7);
             chkIndicator2.Name = "chkIndicator2";
             chkIndicator2.Size = new Size(31, 31);
             chkIndicator2.TabIndex = 3;
@@ -608,11 +610,12 @@
             btn_scanserialized.FlatStyle = FlatStyle.Flat;
             btn_scanserialized.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scanserialized.ForeColor = Color.White;
-            btn_scanserialized.Location = new Point(41, 3);
+            btn_scanserialized.Location = new Point(57, 3);
             btn_scanserialized.Name = "btn_scanserialized";
-            btn_scanserialized.Size = new Size(178, 39);
+            btn_scanserialized.Size = new Size(162, 39);
             btn_scanserialized.TabIndex = 4;
             btn_scanserialized.Text = "Scan Serialized";
+            btn_scanserialized.TextAlign = ContentAlignment.MiddleLeft;
             btn_scanserialized.UseVisualStyleBackColor = true;
             btn_scanserialized.Click += btn_scanserialized_Click;
             // 
@@ -620,9 +623,9 @@
             // 
             chkIndicator1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator1.ForeColor = Color.Gray;
-            chkIndicator1.Location = new Point(4, 7);
+            chkIndicator1.Location = new Point(16, 6);
             chkIndicator1.Name = "chkIndicator1";
-            chkIndicator1.Size = new Size(31, 31);
+            chkIndicator1.Size = new Size(35, 31);
             chkIndicator1.TabIndex = 3;
             chkIndicator1.Text = "✔";
             chkIndicator1.TextAlign = ContentAlignment.MiddleCenter;

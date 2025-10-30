@@ -1128,6 +1128,7 @@ namespace BTC_ENTERPRISE
         string _chemicalname;
         Global global_DTtable = new Global();
         Color CheckColor = Color.Green;
+        Color CheckColor2 = Color.LimeGreen;
         Color UncheckColor = Color.Gray;
         string CheckMark = "✔";
         string EmptyMark = "";
@@ -1157,32 +1158,6 @@ namespace BTC_ENTERPRISE
             _Sercount = record.Serial_count;
             _chemicalname = record.Chemical_name;
             ipn = record.Ipn;
-
-
-            if (record.IsSerialized == 1)
-            {
-                _scanS = true;
-            }
-            else
-            {
-                _scanS = false;
-            }
-            if (record.IsTorque == 1)
-            {
-                _scanT = true;
-            }
-            else
-            {
-                _scanT = false;
-            }
-            if (record.IsChemical == "1")
-            {
-                _scanChem = true;
-            }
-            else
-            {
-                _scanChem = false;
-            }
 
 
 
@@ -1252,6 +1227,43 @@ namespace BTC_ENTERPRISE
                 lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
                 return;
             }
+
+            if (record.IsSerialized == 1)
+            {
+                _scanS = true;
+                chkIndicator1.Text = CheckMark;
+                chkIndicator1.ForeColor = CheckColor2;
+
+            }
+            else
+            {
+                _scanS = false;
+            }
+            if (record.IsTorque == 1)
+            {
+                chkIndicator2.Text = CheckMark;
+                chkIndicator2.ForeColor = CheckColor2;
+
+                _scanT = true;
+            }
+            else
+            {
+                _scanT = false;
+            }
+            if (record.IsChemical == "1")
+            {
+                chkIndicator3.Text = CheckMark;
+                chkIndicator3.ForeColor = CheckColor2;
+                _scanChem = true;
+
+            }
+            else
+            {
+                _scanChem = false;
+            }
+
+
+
 
 
 
