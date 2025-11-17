@@ -1004,7 +1004,7 @@ namespace BTC_ENTERPRISE
         {
             return sfDataGrid2.View.Records
                 .Select(r => r.Data as ViewModel.SubProcessView)
-                .Any(m => m?.Serial_count == "1");
+                .Any(m => Convert.ToInt32(m?.Serial_count) >= 1);
         }
 
         private bool HasUnscannedTorque()
@@ -1073,15 +1073,28 @@ namespace BTC_ENTERPRISE
             Color newTextColor = Color.Black;
             FontStyle newFontStyle = FontStyle.Regular;
 
-            if (record.IsSerialized == 1 && record.Serial_count == "0" &&
+            if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1 &&
                 record.IsTorque == 0 && record.IsChemical == "0")
             {
                 // BLUE (27, 86, 253)
                 newTextColor = Color.FromArgb(27, 86, 253);
             }
+            else if (record.IsSerialized == 1 && record.Serial_count == "0" &&
+                record.IsTorque == 0 && record.IsChemical == "0")
+            {
+                // BLUE (27, 86, 253)
+                newTextColor = Color.FromArgb(27, 86, 253);
+
+            }
 
             else if (record.IsTorque == 1 && record.Torque_count == "0" &&
                      record.IsSerialized == 0 && record.IsChemical == "0")
+            {
+                // CYAN (7, 222, 151)
+                newTextColor = Color.FromArgb(7, 222, 151);
+            }
+            else if (record.IsTorque == 1 && record.Torque_count == "1" &&
+                record.IsSerialized == 0 && record.IsChemical == "0")
             {
                 // CYAN (7, 222, 151)
                 newTextColor = Color.FromArgb(7, 222, 151);
@@ -1093,15 +1106,21 @@ namespace BTC_ENTERPRISE
 
                 newTextColor = Color.FromArgb(255, 128, 0);
             }
+            else if (record.IsChemical == "1" && record.Chemical_count == "1" &&
+                     record.IsTorque == 0 && record.IsSerialized == 0)
+            {
 
-            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&  // Serialized Complete
+                newTextColor = Color.FromArgb(255, 128, 0);
+            }
+
+            else if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1 &&  // Serialized Complete
                      record.IsTorque == 1 && record.Torque_count == "1" &&    // Torque Complete
                      record.IsChemical == "1" && record.Chemical_count == "0") // Chemical Incomplete
             {
                 newTextColor = Color.Teal;
             }
 
-            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&
+            else if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1 &&
                      record.IsTorque == 1 && record.Torque_count == "1" &&
                      record.IsChemical == "1" && record.Chemical_count != "0")
             {
@@ -1161,7 +1180,7 @@ namespace BTC_ENTERPRISE
 
 
 
-            if (record.IsSerialized == 1 && record.Serial_count == "1")
+            if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1)
             {
                 IsScanItem = true;
 
@@ -1507,7 +1526,7 @@ namespace BTC_ENTERPRISE
             var Chemicalscanner = new ScanChemical(this, rowindex, processid, selectedName, tbl_subprocess);
             if (_chemicalname == string.Empty)
             {
-                Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Enabled = false;
+                Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Enabled = true;
             }
             else
             {
@@ -1597,7 +1616,7 @@ namespace BTC_ENTERPRISE
             }
 
 
-            if (record.IsSerialized == 1 && record.Serial_count == "1")
+            if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1)
             {
                 IsScanItem = true;
 
@@ -1660,7 +1679,20 @@ namespace BTC_ENTERPRISE
             else
             {
                 formManager.closeAForm();
-                lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
+                lbl_subprocessInfo.Text = "No required Serial,Torque and Chemical for this material.";
+                //this is for the reset of the indicators and buttons
+                chkIndicator1.Text = EmptyMark;
+                chkIndicator2.Text = EmptyMark;
+                chkIndicator3.Text = EmptyMark;
+
+                btn_scanserialized.ForeColor = Color.White;
+                panel_material.BackColor = Color.Transparent;
+
+                btn_scan_torque.ForeColor = Color.White;
+                panel_torque.BackColor = Color.Transparent;
+
+                btn_scan_chemical.ForeColor = Color.White;
+                panel_chemical.BackColor = Color.Transparent;
                 return;
             }
 
@@ -1698,7 +1730,7 @@ namespace BTC_ENTERPRISE
                 {
                     lbl_subprocessInfo.Text = "This material is not serialized, cannot scan item.";
                     formManager.closeAForm();
-                    return;
+                    //  return;
                 }
 
                 if (record.Serial_count != "0")

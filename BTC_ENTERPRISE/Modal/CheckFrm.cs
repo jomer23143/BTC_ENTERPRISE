@@ -20,7 +20,7 @@ namespace BTC_ENTERPRISE.Modal
         public string? modulename;
         public string? type;
         private string loginApiUrl = GlobalApi.GetOperatorLoginUrl();
-        private string ScanUrl = GlobalApi.GetScanSerialUrl();
+        private string ScanUrl = GlobalApi.GetScanUrl();
         public DataTable tbl_process = new DataTable("tblprocess");
         public DataTable tbl_subprocess = new DataTable("tblsubp");
         private string segmentname;

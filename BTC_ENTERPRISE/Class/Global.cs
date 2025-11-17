@@ -22,7 +22,7 @@ namespace BTC_ENTERPRISE.Class
         public static int process_id { get; set; }
 
 
-        public void UpdateSerialQuantity(DataTable subprocess, int materialID, string description, string newserialnumber,string ipn)
+        public void UpdateSerialQuantity(DataTable subprocess, int materialID, string description, string newserialnumber, string ipn)
         {
             foreach (System.Data.DataRow row in subprocess.Rows)
             {
@@ -44,14 +44,14 @@ namespace BTC_ENTERPRISE.Class
                             newCount = 0;
                         }
 
-                        
+
                         row["serial_count"] = newCount;
                         if (row["ipn_number"].ToString() == ipn)
                         {
                             row["serial_number"] = newserialnumber;
                         }
                     }
-                    
+
                 }
             }
         }
@@ -72,19 +72,12 @@ namespace BTC_ENTERPRISE.Class
         {
             foreach (System.Data.DataRow row in subprocess.Rows)
             {
-                int currentId = Convert.ToInt32(row["id"]);
-                string currentChemical = row["chemical_name"]?.ToString() ?? string.Empty;
-
-                if (currentId == materialID)
+                if (Convert.ToInt32(row["id"]) == materialID)
                 {
-                    //if (currentChemical.Equals(Cname, StringComparison.OrdinalIgnoreCase))
-                    //{
-                        row["chemical_count"] = newQuantity;
-                        row["chemical_name"] = Cname;
-                        row["chemical_expiration"] = Cexp;
-                        //break;
+                    row["chemical_count"] = newQuantity;
+                    row["chemical_name"] = Cname;
+                    row["chemical_expiration"] = Cexp;
 
-                   //}
                 }
 
 
