@@ -685,106 +685,106 @@ namespace BTC_ENTERPRISE
 
         private void sfDataGrid1_QueryButtonCellStyle(object sender, Syncfusion.WinForms.DataGrid.Events.QueryButtonCellStyleEventArgs e)
         {
-            if (e.RowIndex < 0 || e.Column == null) return;
+            //if (e.RowIndex < 0 || e.Column == null) return;
 
-            int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
-            if (recordIndex < 0) return;
-            var res = sfDataGrid1.View.Records;
-            //var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
-            if (res == null) return;
-            foreach (var item in res)
-            {
-                var record = item.Data as ViewModel.ProcessViewModel;
+            //int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
+            //if (recordIndex < 0) return;
+            //var res = sfDataGrid1.View.Records;
+            ////var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
+            //if (res == null) return;
+            //foreach (var item in res)
+            //{
+            //    var record = item.Data as ViewModel.ProcessViewModel;
 
-                if (_IscanOK == true)
-                {
-                    e.Style.TextColor = Color.Green;
-                }
+            //    if (_IscanOK == true)
+            //    {
+            //        e.Style.TextColor = Color.Green;
+            //    }
 
-                bool isRowEnabled = false;
+            //    bool isRowEnabled = false;
 
-                if (record.Status != "Completed")
-                {
+            //    if (record.Status != "Completed")
+            //    {
 
-                    isRowEnabled =true;
-                }
-                else
-                {
+            //        isRowEnabled =true;
+            //    }
+            //    else
+            //    {
 
-                    var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
-                    if (prevRecord != null && prevRecord.Status == "Completed" && record.Status != "Completed")
-                    {
-                        isRowEnabled = true;
-                    }
-                }
+            //        var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
+            //        if (prevRecord != null && prevRecord.Status == "Completed" && record.Status != "Completed")
+            //        {
+            //            isRowEnabled = true;
+            //        }
+            //    }
 
-                switch (e.Column.MappingName)
-                {
-                    case "StartButton":
-                        if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
-                        {
-                            e.Style.BackColor = Color.LightGray;
-                            e.Style.TextColor = Color.DarkGray;
-                            e.Style.Enabled = true;
-                        }
-                        else
-                        {
-                            e.Style.BackColor = Color.ForestGreen;
-                            e.Style.TextColor = Color.White;
-                            e.Style.Enabled = true;
-                        }
-                        break;
+            //    switch (e.Column.MappingName)
+            //    {
+            //        case "StartButton":
+            //            if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
+            //            {
+            //                e.Style.BackColor = Color.LightGray;
+            //                e.Style.TextColor = Color.DarkGray;
+            //                e.Style.Enabled = true;
+            //            }
+            //            else
+            //            {
+            //                e.Style.BackColor = Color.ForestGreen;
+            //                e.Style.TextColor = Color.White;
+            //                e.Style.Enabled = true;
+            //            }
+            //            break;
 
-                    case "HoldButton":
-                        if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-                        {
-                            e.Style.BackColor = Color.LightGray;
-                            e.Style.TextColor = Color.DarkGray;
-                            e.Style.Enabled = true;
-                        }
-                        else
-                        {
-                            e.Style.BackColor = Color.Goldenrod;
-                            e.Style.TextColor = Color.White;
-                            e.Style.Enabled = true;
-                        }
-                        break;
+            //        case "HoldButton":
+            //            if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+            //            {
+            //                e.Style.BackColor = Color.LightGray;
+            //                e.Style.TextColor = Color.DarkGray;
+            //                e.Style.Enabled = true;
+            //            }
+            //            else
+            //            {
+            //                e.Style.BackColor = Color.Goldenrod;
+            //                e.Style.TextColor = Color.White;
+            //                e.Style.Enabled = true;
+            //            }
+            //            break;
 
-                    case "EndButton":
-                        if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-                        {
-                            e.Style.BackColor = Color.LightGray;
-                            e.Style.TextColor = Color.DarkGray;
-                            e.Style.Enabled = false;
-                        }
-                        else
-                        {
-                            e.Style.BackColor = Color.Salmon;
-                            e.Style.TextColor = Color.White;
-                            e.Style.Enabled = true;
-                        }
-                        break;
+            //        case "EndButton":
+            //            if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+            //            {
+            //                e.Style.BackColor = Color.LightGray;
+            //                e.Style.TextColor = Color.DarkGray;
+            //                e.Style.Enabled = false;
+            //            }
+            //            else
+            //            {
+            //                e.Style.BackColor = Color.Salmon;
+            //                e.Style.TextColor = Color.White;
+            //                e.Style.Enabled = true;
+            //            }
+            //            break;
 
-                    case "ExpandCollapse":
-                        if (record.IsExpanded)
-                        {
-                            e.Style.TextColor = Color.Red;
-                            e.Style.Enabled = true;
-                            e.Style.BackColor = Color.SeaGreen;
-                            record.expandIcon = "➖";
+            //        case "ExpandCollapse":
+            //            if (record.IsExpanded)
+            //            {
+            //                e.Style.TextColor = Color.Red;
+            //                e.Style.Enabled = true;
+            //                e.Style.BackColor = Color.SeaGreen;
+            //                record.expandIcon = "➖";
 
-                        }
-                        else
-                        {
-                            e.Style.TextColor = Color.Green;
-                            e.Style.Enabled = true;
-                            e.Style.BackColor = Color.LimeGreen;
-                            record.expandIcon = "➕";
+            //            }
+            //            else
+            //            {
+            //                e.Style.TextColor = Color.Green;
+            //                e.Style.Enabled = true;
+            //                e.Style.BackColor = Color.LimeGreen;
+            //                record.expandIcon = "➕";
 
-                        }
-                        break;
-                }
-            }
+            //            }
+            //            break;
+            //    }
+            //}
         }
 
 
