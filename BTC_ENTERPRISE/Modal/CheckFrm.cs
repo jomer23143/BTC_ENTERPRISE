@@ -20,7 +20,7 @@ namespace BTC_ENTERPRISE.Modal
         public string? modulename;
         public string? type;
         private string loginApiUrl = GlobalApi.GetOperatorLoginUrl();
-        private string ScanUrl = GlobalApi.GetScanSerialUrl();
+        private string ScanUrl = GlobalApi.GetScanUrl();
         public DataTable tbl_process = new DataTable("tblprocess");
         public DataTable tbl_subprocess = new DataTable("tblsubp");
         private string segmentname;
@@ -36,7 +36,7 @@ namespace BTC_ENTERPRISE.Modal
 
         private MainDashboard maindash = new MainDashboard();
 
-        public delegate void checkHandler(string moid, int segmentid, string segment, string processname, string serialnumber, string operatorname, string operatortoken, DataTable process_list, DataTable subprocess_list, bool islogin);
+        public delegate void checkHandler(string moid, int segmentid, string segment, string processname, string serialnumber, string operatorname, string operatortoken, bool islogin);
         public event checkHandler AfterScanned;
 
         public CheckFrm(MainDashboard main, string _isloginOperator, bool _islogin)
@@ -68,6 +68,7 @@ namespace BTC_ENTERPRISE.Modal
 
         private void CheckFrm_Load(object sender, EventArgs e)
         {
+            
             if (string.IsNullOrEmpty(_islogin))
             {
                 panel_rfid.Visible = true;
@@ -90,6 +91,7 @@ namespace BTC_ENTERPRISE.Modal
                 txt_scangeneratedserial.Select();
             }
             LoadRegistryAsync();
+            Utils.SetConnectionDetails();
 
         }
 
@@ -116,7 +118,6 @@ namespace BTC_ENTERPRISE.Modal
                     MessageBox.Show("Invalid data format in registry.");
                 }
             }
-
         }
 
 
@@ -142,55 +143,59 @@ namespace BTC_ENTERPRISE.Modal
             if (e.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(txt_scangeneratedserial.Text))
             {
                 label_scaninfo.Text = "Processing.....";
-                await LoadSegmentProcessAsync(txt_scangeneratedserial.Text, _segmentid);
+                Global gb = new Global();
+                var result = await gb.Refresh_SubAsy_Process(_segmentid, txt_scangeneratedserial.Text.Trim());
+                //await LoadSegmentProcessAsync(txt_scangeneratedserial.Text, _segmentid);
                 txt_scangeneratedserial.Clear();
                 txt_scangeneratedserial.Focus();
-
-                var licenses = SessionData.TempDataLicense.AsEnumerable();
-
-
-                var licenseRow = licenses
-                    .Where(row => row.Field<int>("id") == _Prcess_license_Id)
-                    .Where(row =>
-                    {
-                        var expiryStr = row.Field<string>("expiry_date");
-
-                        if (DateTime.TryParse(expiryStr, out DateTime expiryDate))
-                        {
-                            return expiryDate >= DateTime.Now.Date;
-                        }
-                        return false;
-                    })
-                    .FirstOrDefault();
-
-                if (licenseRow == null)
-                {
-                    MessageBox.Show("You are not registered or your license has expired.",
-                                    "Access Denied",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning);
-                    return;
-                }
+                moid = result[0].ToString();
+                processname = result[1].ToString();
+                serialnumber = result[2].ToString();
+                //var licenses = SessionData.TempDataLicense.AsEnumerable();
 
 
+                //var licenseRow = licenses
+                //    .Where(row => row.Field<int>("id") == _Prcess_license_Id)
+                //    .Where(row =>
+                //    {
+                //        var expiryStr = row.Field<string>("expiry_date");
+
+                //        if (DateTime.TryParse(expiryStr, out DateTime expiryDate))
+                //        {
+                //            return expiryDate >= DateTime.Now.Date;
+                //        }
+                //        return false;
+                //    })
+                //    .FirstOrDefault();
+
+                //if (licenseRow == null)
+                //{
+                //    MessageBox.Show("You are not registered or your license has expired.",
+                //                    "Access Denied",
+                //                    MessageBoxButtons.OK,
+                //                    MessageBoxIcon.Warning);
+                //    return;
+                //}
 
 
-                // Check if the license is expired
-                if (DateTime.TryParse(licenseRow.Field<string>("expiry_date"), out DateTime expiryDate))
-                {
-                    if (expiryDate < DateTime.Now)
-                    {
-                        MessageBox.Show("Your license for this process has expired. Please contact your Production Head for renewal.",
-                                        "License Expired",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
 
-                // All checks passed
+
+                //// Check if the license is expired
+                //if (DateTime.TryParse(licenseRow.Field<string>("expiry_date"), out DateTime expiryDate))
+                //{
+                //    if (expiryDate < DateTime.Now)
+                //    {
+                //        MessageBox.Show("Your license for this process has expired. Please contact your Production Head for renewal.",
+                //                        "License Expired",
+                //                        MessageBoxButtons.OK,
+                //                        MessageBoxIcon.Warning);
+                //        return;
+                //    }
+                //}
+
+                //// All checks passed
                 AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                     operatorName, OperatorToken, tbl_process, tbl_subprocess, false);
+                                     operatorName, OperatorToken, false);
 
                 e.Handled = true;
                 this.Close();
@@ -266,21 +271,21 @@ namespace BTC_ENTERPRISE.Modal
                 if (Global.process_name.ToUpper() == "WAREHOUSE KITTING")
                 {
                     AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                   operatorName, OperatorToken, tbl_process, tbl_subprocess, false);
+                                   operatorName, OperatorToken, false);
                     DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else if (Global.process_name.ToUpper() == "KITLIST RECEIVING")
                 {
                     AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                   operatorName, OperatorToken, tbl_process, tbl_subprocess, false);
+                                   operatorName, OperatorToken, false);
                     DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 if (islogin)
                 {
                     AfterScanned?.Invoke(moid, _segmentid, segmentname, processname, serialnumber,
-                                   operatorName, OperatorToken, tbl_process, tbl_subprocess, true);
+                                   operatorName, OperatorToken, true);
                     DialogResult = DialogResult.OK;
                     this.Close();
                 }
@@ -346,8 +351,9 @@ namespace BTC_ENTERPRISE.Modal
                                         durationItems.manufacturing_order_process_type_id ?? "N/A",
                                         durationItems.start_time,
                                         durationItems.end_time,
-                                        durationItems.status?.Name ?? "Open",
-                                        mainprocess.status?.Color ?? "White",
+                                        mainprocess.is_hold == 1? "ON HOLD": durationItems.status.Name?? "Open",
+                                        mainprocess.is_hold,
+                                        mainprocess.is_hold == 1? "#EF4444" : mainprocess.status?.Color ?? "White",
                                         durationItems.remarks ?? ""
                                     );
                                 }
@@ -364,6 +370,7 @@ namespace BTC_ENTERPRISE.Modal
                                 null,
                                 null,
                                 mainprocess.status?.Name ?? "Open",
+                                mainprocess.is_hold,
                                 mainprocess.status?.Color ?? "White",
                                 ""
                             );
@@ -540,11 +547,11 @@ namespace BTC_ENTERPRISE.Modal
                     var rawStartTime = data.duration?.FirstOrDefault()?.start_time;
                     var rawEndTime = data.duration?.FirstOrDefault()?.end_time;
 
-                    if (durationItem == null)
-                    {
-                        MessageBox.Show("No duration data found.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                    //if (durationItem == null)
+                    //{
+                    //    MessageBox.Show("No duration data found.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //    return;
+                    //}
 
                     bool isSubAssembly = segmentId == 1;
 
@@ -578,6 +585,7 @@ namespace BTC_ENTERPRISE.Modal
                 tbl_process.Columns.Add("start_time", typeof(string));
                 tbl_process.Columns.Add("end_time", typeof(string));
                 tbl_process.Columns.Add("status", typeof(string));
+                tbl_process.Columns.Add("is_hold", typeof(int));
                 tbl_process.Columns.Add("color", typeof(string));
                 tbl_process.Columns.Add("remark", typeof(string));
 

@@ -61,6 +61,7 @@ namespace BTC_ENTERPRISE.Settings
                     String[] records = program.Split(new String[] { "<limiter>" }, StringSplitOptions.RemoveEmptyEntries);
                     programsGrid.Rows.Add(records);
                 }
+                Utils.SetConnectionDetails();
             }
             catch (Exception ex)
             {

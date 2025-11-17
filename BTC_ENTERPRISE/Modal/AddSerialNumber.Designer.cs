@@ -30,6 +30,7 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddSerialNumber));
             panel1 = new Panel();
             btn_close = new Button();
             label2 = new Label();
@@ -224,6 +225,7 @@
             // bunifuloading
             // 
             bunifuloading.BackColor = Color.White;
+            bunifuloading.Image = (Image)resources.GetObject("bunifuloading.Image");
             bunifuloading.Location = new Point(239, 244);
             bunifuloading.Margin = new Padding(3, 2, 3, 2);
             bunifuloading.Name = "bunifuloading";

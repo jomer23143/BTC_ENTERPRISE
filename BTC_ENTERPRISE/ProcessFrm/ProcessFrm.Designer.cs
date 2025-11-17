@@ -39,6 +39,7 @@
             lbl_public_event = new Label();
             panel6 = new Panel();
             panel10 = new Panel();
+            btnrefresh = new Button();
             btn_qcChecklist = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             lbl_operatorname = new Label();
@@ -195,6 +196,7 @@
             // 
             // panel10
             // 
+            panel10.Controls.Add(btnrefresh);
             panel10.Controls.Add(btn_qcChecklist);
             panel10.Dock = DockStyle.Right;
             panel10.Location = new Point(1093, 0);
@@ -203,20 +205,38 @@
             panel10.Size = new Size(209, 90);
             panel10.TabIndex = 1;
             // 
+            // btnrefresh
+            // 
+            btnrefresh.Anchor = AnchorStyles.Right;
+            btnrefresh.BackColor = Color.ForestGreen;
+            btnrefresh.FlatAppearance.BorderColor = Color.White;
+            btnrefresh.FlatStyle = FlatStyle.Flat;
+            btnrefresh.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnrefresh.ForeColor = Color.White;
+            btnrefresh.Location = new Point(114, 5);
+            btnrefresh.Margin = new Padding(3, 2, 3, 2);
+            btnrefresh.Name = "btnrefresh";
+            btnrefresh.Size = new Size(89, 77);
+            btnrefresh.TabIndex = 1;
+            btnrefresh.Text = "Refresh";
+            btnrefresh.UseVisualStyleBackColor = false;
+            btnrefresh.Click += btnrefresh_Click;
+            // 
             // btn_qcChecklist
             // 
             btn_qcChecklist.Anchor = AnchorStyles.Right;
+            btn_qcChecklist.BackColor = Color.Transparent;
             btn_qcChecklist.FlatAppearance.BorderColor = Color.White;
             btn_qcChecklist.FlatStyle = FlatStyle.Flat;
             btn_qcChecklist.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_qcChecklist.ForeColor = Color.White;
-            btn_qcChecklist.Location = new Point(11, 8);
+            btn_qcChecklist.Location = new Point(10, 5);
             btn_qcChecklist.Margin = new Padding(3, 2, 3, 2);
             btn_qcChecklist.Name = "btn_qcChecklist";
-            btn_qcChecklist.Size = new Size(187, 77);
+            btn_qcChecklist.Size = new Size(98, 77);
             btn_qcChecklist.TabIndex = 0;
             btn_qcChecklist.Text = "Scan QC Checklist";
-            btn_qcChecklist.UseVisualStyleBackColor = true;
+            btn_qcChecklist.UseVisualStyleBackColor = false;
             btn_qcChecklist.Click += btn_qcChecklist_Click;
             // 
             // tableLayoutPanel1
@@ -755,5 +775,6 @@
         private Button btn_scanserialized;
         private Button btn_scan_chemical;
         private Button btn_scan_torque;
+        private Button btnrefresh;
     }
 }

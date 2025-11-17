@@ -49,6 +49,7 @@
             public string? is_quality { get; set; }
             public string? quality_validated { get; set; }
             public string? cycle_time { get; set; }
+            public int? is_hold { get; set; }
             public DateTime created_at { get; set; }
             public DateTime updated_at { get; set; }
             public Status status { get; set; }

@@ -63,7 +63,7 @@ namespace BTC_ENTERPRISE.Forms
             //login.ShowDialog();
             using var CheckProcessForm = new CheckFrm(this, lbl_operatorlogin.Text,true);
 
-            CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist,islogin) =>
+            CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token,islogin) =>
             {
                 string scannedSerial = serialnumber ?? string.Empty;
                 string processType = segmentname ?? string.Empty;
@@ -82,7 +82,7 @@ namespace BTC_ENTERPRISE.Forms
                 {
                     if (!islogin)
                     {
-                        fulldisplaycontroll.OpenChildForm(new ProcessFrm(scannedSerial, _segmentID, MoId, processType, Pname, operatorName, token, processlist, subprocesslist), sender);
+                        fulldisplaycontroll.OpenChildForm(new ProcessFrm(scannedSerial, _segmentID, MoId, processType, Pname, operatorName, token), sender);
                     }
                     
                 }
@@ -254,7 +254,7 @@ namespace BTC_ENTERPRISE.Forms
 
             using var CheckProcessForm = new CheckFrm(this, lbl_operatorlogin.Text,false);
 
-            CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist,islogin) =>
+            CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token,islogin) =>
         {
             string scannedSerial = serialnumber ?? string.Empty;
             string processType = segmentname ?? string.Empty;
@@ -263,7 +263,7 @@ namespace BTC_ENTERPRISE.Forms
             int _segmentID = segmentid;
             if (Global.process_name.ToUpper() != "WAREHOUSE KITTING" || Global.process_name.ToUpper() != "KITLIST RECIEVING") 
             {
-                fulldisplaycontroll.OpenChildForm(new ProcessFrm(scannedSerial, _segmentID, MoId, processType, Pname, operatorName, token, processlist, subprocesslist), sender);
+                fulldisplaycontroll.OpenChildForm(new ProcessFrm(scannedSerial, _segmentID, MoId, processType, Pname, operatorName, token), sender);
             }
         };
 

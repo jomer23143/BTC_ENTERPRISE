@@ -69,6 +69,7 @@ namespace BTC_ENTERPRISE.Model
 
             public bool IsStarted { get; set; }
             public bool IsOnHold { get; set; }
+            public int is_hold { get; set; }
             public bool IsCancelled { get; set; }
             public bool IsEnded { get; set; }
             public bool IsExpanded { get; set; }

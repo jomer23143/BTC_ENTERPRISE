@@ -206,7 +206,7 @@ namespace BTC_ENTERPRISE.SideBar
 
                 using var CheckProcessForm = new CheckFrm(_mainDashboard, _mainDashboard.lbl_operatorlogin.Text, false);
                 var _oparatorName = "";
-                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist, islogin) =>
+                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, islogin) =>
                 {
                     string scannedSerial = serialnumber ?? string.Empty;
                     string processType = segmentname ?? string.Empty;
@@ -251,7 +251,7 @@ namespace BTC_ENTERPRISE.SideBar
                 //login.ShowDialog();
                 using var CheckProcessForm = new CheckFrm(_mainDashboard, _mainDashboard.lbl_operatorlogin.Text, false);
                 var _oparatorName = "";
-                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist, islogin) =>
+                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, islogin) =>
                 {
                     string scannedSerial = serialnumber ?? string.Empty;
                     string processType = segmentname ?? string.Empty;
@@ -289,7 +289,7 @@ namespace BTC_ENTERPRISE.SideBar
                 //login.ShowDialog();
                 using var CheckProcessForm = new CheckFrm(_mainDashboard, _mainDashboard.lbl_operatorlogin.Text, false);
                 var _oparatorName = "";
-                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist, islogin) =>
+                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, islogin) =>
                 {
                     string scannedSerial = serialnumber ?? string.Empty;
                     string processType = segmentname ?? string.Empty;
@@ -422,7 +422,7 @@ namespace BTC_ENTERPRISE.SideBar
                 
                 using var CheckProcessForm = new CheckFrm(_mainDashboard, _mainDashboard.lbl_operatorlogin.Text,false);
                 var _oparatorName = "";
-                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, processlist, subprocesslist, islogin) =>
+                CheckProcessForm.AfterScanned += (moid, segmentid, segmentname, processname, serialnumber, operatorName, token, islogin) =>
                 {
                     string scannedSerial = serialnumber ?? string.Empty;
                     string processType = segmentname ?? string.Empty;

@@ -16,7 +16,8 @@ namespace BTC_EnterpriseV2.Modal
         private string _MaterialID;
         public int rowindex;
         private ProcessFrm _processfrm;
-
+        public int tempqty = 1;
+        public int tempcount = 0;
         //access to return value
         private string cname;
         private string cexp;
@@ -58,8 +59,11 @@ namespace BTC_EnterpriseV2.Modal
                 string expiryDate = parts[1].Trim();
                 cname = chemicalName;
                 cexp = expiryDate;
-
-                await PostItemSerial(chemicalName, expiryDate, _MaterialID);
+                if (tempcount < tempqty)
+                {
+                    await PostItemSerial(chemicalName, expiryDate, _MaterialID);
+                    lbl_scancount.Text = $"{tempcount} of {tempqty} Scanned";
+                }
 
             }
 
@@ -148,6 +152,7 @@ namespace BTC_EnterpriseV2.Modal
                 }
                 else
                 {
+                    tempcount++;
                     ChemicalScanSuccess?.Invoke(materialId, cname, cexp);
 
                     bool exists = dataGridView1.Rows

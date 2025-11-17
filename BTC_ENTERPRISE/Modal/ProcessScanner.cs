@@ -246,6 +246,7 @@ namespace BTC_ENTERPRISE.Modal
             }
             catch (Exception ex)
             {
+                txt_serialnumber.Clear();
                 ShowMessage(ex.Message, Color.Orange);
             }
 

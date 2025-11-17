@@ -154,6 +154,7 @@ namespace BTC_ENTERPRISE.Modal
                     if (item.Cells["colpart_serial"]?.Value.ToString() == txtserial_number.Text.ToUpper().Trim())
                     {
                         MessageBox.Show("Already Added");
+                        txtserial_number.SelectAll();
                         return;
                     }
                 }

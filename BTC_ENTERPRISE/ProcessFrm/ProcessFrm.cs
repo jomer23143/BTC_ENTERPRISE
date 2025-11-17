@@ -13,6 +13,7 @@ using Syncfusion.Data.Extensions;
 using Syncfusion.WinForms.DataGrid;
 using Syncfusion.WinForms.DataGrid.Enums;
 using Syncfusion.WinForms.DataGrid.Styles;
+using static BTC_ENTERPRISE.Model.WarehouseKitting;
 using Timer = System.Windows.Forms.Timer;
 
 namespace BTC_ENTERPRISE
@@ -65,7 +66,7 @@ namespace BTC_ENTERPRISE
         private DataTable parentDurationDatatable = new DataTable("p");
         private DataTable ChildrowDataTable = new DataTable("Cr");
         public SfDataGrid _sfDataGrid2;
-        public ProcessFrm(string scangeneratedSerial, int segmentid, string moid, string segmentname, string processname, string operatorfullname, string thetoken, DataTable plist, DataTable subplist)
+        public ProcessFrm(string scangeneratedSerial, int segmentid, string moid, string segmentname, string processname, string operatorfullname, string thetoken)
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -79,8 +80,8 @@ namespace BTC_ENTERPRISE
             this._segmentID = segmentid;
             this.processname = processname;
             this.segmentname = segmentname;
-            this.tbl_process = plist;
-            this.tbl_subprocess = subplist;
+            //this.tbl_process = plist;
+            //this.tbl_subprocess = subplist;
             this.lbl_operatorname.Text = operatorfullname;
             this.Token = thetoken;
             formManager = new FormManager(panel_top, panel_parent_tab_subprocess);
@@ -92,6 +93,7 @@ namespace BTC_ENTERPRISE
             yaoui.RoundedPanelDocker(panel_torque, 8);
             yaoui.RoundedPanelDocker(panel_chemical, 8);
             yaoui.RoundedButton(btn_qcChecklist, 8, Color.Tomato);
+            yaoui.RoundedButton(btnrefresh, 8, Color.ForestGreen);
             // checkBoxAdv2.Checked = true;
 
             // Timers
@@ -118,7 +120,8 @@ namespace BTC_ENTERPRISE
             lbl_parentname.Text = processname;
             lbl_generatedSerial.Text = _serial;
             pb_parent.Visible = true;
-
+            tbl_subprocess = SessionData.tbl_subprocess_Session;
+            tbl_process = SessionData.tbl_process_Session;
             await LoadProcessDataMerged_Sf(tbl_process);
 
 
@@ -190,6 +193,7 @@ namespace BTC_ENTERPRISE
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Color", HeaderText = "Color", Visible = false });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Id", HeaderText = "ID", Visible = false });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "CycleTime", HeaderText = "CycleTime", Visible = false });
+            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "is_hold", HeaderText = "OnHold", Visible = false });
 
             sfDataGrid1.Columns.Add(new GridButtonColumn() { MappingName = "StartButton", HeaderText = "Start", CellStyle = cellstyle });
             sfDataGrid1.Columns.Add(new GridButtonColumn() { MappingName = "EndButton", HeaderText = "End", CellStyle = cellstyle });
@@ -222,7 +226,7 @@ namespace BTC_ENTERPRISE
                 string statusName = lastDurationRow["status"]?.ToString() ?? "Unknown";
                 string statusColor = lastDurationRow["color"]?.ToString() ?? "White";
                 string cycleTime = lastDurationRow["cycle_time"]?.ToString() ?? "N/A";
-
+                int isHold = Convert.ToInt32(lastDurationRow["is_hold"]?.ToString());
                 string startTimeDisplay = "-";
                 string endTimeDisplay = "-";
 
@@ -314,7 +318,7 @@ namespace BTC_ENTERPRISE
                     EndTime = endTimeDisplay,
 
                     Duration = finalTotalDurationDisplay,
-
+                    is_hold = isHold,
                     Status = statusName,
                     Color = statusColor,
                     CycleTime = cycleTime,
@@ -550,7 +554,7 @@ namespace BTC_ENTERPRISE
 
             int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
             if (recordIndex < 0) return;
-
+            //var result = sfDataGrid1.View.Records;
             var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
             if (record == null) return;
 
@@ -596,17 +600,84 @@ namespace BTC_ENTERPRISE
                 e.Style.TextColor = textColor;
                 e.Style.Font = new GridFontInfo(new Font("Segoe UI", 10, FontStyle.Bold));
             }
+          
+            switch (e.Column.MappingName)
+            {
+                case "StartButton":
+                    if ( record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                        //e.Style.Enabled = true;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.ForestGreen;
+                        e.Style.TextColor = Color.White;
+                        //e.Style.Enabled = true;
+                    }
+                    break;
 
+                case "HoldButton":
+                    if ( record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                       // e.Style.Enabled = false;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.Goldenrod;
+                        e.Style.TextColor = Color.White;
+                       // e.Style.Enabled = true;
+                    }
+                    break;
+
+                case "EndButton":
+                    if (record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                        //e.Style.Enabled = false;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.Salmon;
+                        e.Style.TextColor = Color.White;
+                       // e.Style.Enabled = true;
+                    }
+                    break;
+
+                case "ExpandCollapse":
+                    if (record.IsExpanded)
+                    {
+                        e.Style.TextColor = Color.Red;
+                       // e.Style.Enabled = true;
+                        e.Style.BackColor = Color.SeaGreen;
+                        record.expandIcon = "➖";
+
+                    }
+                    else
+                    {
+                        e.Style.TextColor = Color.Green;
+                        //e.Style.Enabled = true;
+                        e.Style.BackColor = Color.LimeGreen;
+                        record.expandIcon = "➕";
+
+                    }
+                    break;
+            }
 
             var firstPendingRow = sfDataGrid1.View.Records
-                .Select(r => r.Data as ViewModel.ProcessViewModel)
-                .FirstOrDefault(r => r.Status != "Completed");
+                .Where(r => (r.Data as ViewModel.ProcessViewModel)?.Status != "Completed").ToList();
+                //.Select(r => r.Data as ViewModel.ProcessViewModel)
+                //.FirstOrDefault(r => r.Status != "Completed");
 
-            if (record != firstPendingRow)
-            {
-                e.Style.BackColor = Color.LightGray;
-                e.Style.TextColor = Color.DarkGray;
-            }
+            //if (record != firstPendingRow)
+            //{
+            //    e.Style.BackColor = Color.LightGray;
+            //    e.Style.TextColor = Color.DarkGray;
+            //}
 
 
 
@@ -618,97 +689,101 @@ namespace BTC_ENTERPRISE
 
             int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
             if (recordIndex < 0) return;
-
-            var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
-            if (record == null) return;
-
-            if (_IscanOK == true)
+            var res = sfDataGrid1.View.Records;
+            //var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
+            if (res == null) return;
+            foreach (var item in res)
             {
-                e.Style.TextColor = Color.Green;
-            }
+                var record = item.Data as ViewModel.ProcessViewModel;
 
-            bool isRowEnabled = false;
-
-            if (recordIndex == 0)
-            {
-
-                isRowEnabled = record.Status != "Completed";
-            }
-            else
-            {
-
-                var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
-                if (prevRecord != null && prevRecord.Status == "Completed" && record.Status != "Completed")
+                if (_IscanOK == true)
                 {
-                    isRowEnabled = true;
+                    e.Style.TextColor = Color.Green;
                 }
-            }
 
-            switch (e.Column.MappingName)
-            {
-                case "StartButton":
-                    if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing")
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                        e.Style.Enabled = false;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.ForestGreen;
-                        e.Style.TextColor = Color.White;
-                        e.Style.Enabled = true;
-                    }
-                    break;
+                bool isRowEnabled = false;
 
-                case "HoldButton":
-                    if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled)
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                        e.Style.Enabled = false;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.Goldenrod;
-                        e.Style.TextColor = Color.White;
-                        e.Style.Enabled = true;
-                    }
-                    break;
+                if (record.Status != "Completed")
+                {
 
-                case "EndButton":
-                    if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled)
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                        e.Style.Enabled = false;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.Salmon;
-                        e.Style.TextColor = Color.White;
-                        e.Style.Enabled = true;
-                    }
-                    break;
+                    isRowEnabled =true;
+                }
+                else
+                {
 
-                case "ExpandCollapse":
-                    if (record.IsExpanded)
+                    var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
+                    if (prevRecord != null && prevRecord.Status == "Completed" && record.Status != "Completed")
                     {
-                        e.Style.TextColor = Color.Red;
-                        e.Style.Enabled = true;
-                        e.Style.BackColor = Color.SeaGreen;
-                        record.expandIcon = "➖";
-
+                        isRowEnabled = true;
                     }
-                    else
-                    {
-                        e.Style.TextColor = Color.Green;
-                        e.Style.Enabled = true;
-                        e.Style.BackColor = Color.LimeGreen;
-                        record.expandIcon = "➕";
+                }
 
-                    }
-                    break;
+                switch (e.Column.MappingName)
+                {
+                    case "StartButton":
+                        if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
+                        {
+                            e.Style.BackColor = Color.LightGray;
+                            e.Style.TextColor = Color.DarkGray;
+                            e.Style.Enabled = true;
+                        }
+                        else
+                        {
+                            e.Style.BackColor = Color.ForestGreen;
+                            e.Style.TextColor = Color.White;
+                            e.Style.Enabled = true;
+                        }
+                        break;
+
+                    case "HoldButton":
+                        if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+                        {
+                            e.Style.BackColor = Color.LightGray;
+                            e.Style.TextColor = Color.DarkGray;
+                            e.Style.Enabled = true;
+                        }
+                        else
+                        {
+                            e.Style.BackColor = Color.Goldenrod;
+                            e.Style.TextColor = Color.White;
+                            e.Style.Enabled = true;
+                        }
+                        break;
+
+                    case "EndButton":
+                        if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
+                        {
+                            e.Style.BackColor = Color.LightGray;
+                            e.Style.TextColor = Color.DarkGray;
+                            e.Style.Enabled = false;
+                        }
+                        else
+                        {
+                            e.Style.BackColor = Color.Salmon;
+                            e.Style.TextColor = Color.White;
+                            e.Style.Enabled = true;
+                        }
+                        break;
+
+                    case "ExpandCollapse":
+                        if (record.IsExpanded)
+                        {
+                            e.Style.TextColor = Color.Red;
+                            e.Style.Enabled = true;
+                            e.Style.BackColor = Color.SeaGreen;
+                            record.expandIcon = "➖";
+
+                        }
+                        else
+                        {
+                            e.Style.TextColor = Color.Green;
+                            e.Style.Enabled = true;
+                            e.Style.BackColor = Color.LimeGreen;
+                            record.expandIcon = "➕";
+
+                        }
+                        break;
+                }
             }
         }
 
@@ -807,6 +882,7 @@ namespace BTC_ENTERPRISE
 
                 // ─────────────── HOLD ───────────────
                 case "HoldButton":
+
                     string processName = record.Name;
                     if (record.Status == "Pause")
                     {
@@ -824,6 +900,7 @@ namespace BTC_ENTERPRISE
 
                     else
                     {
+
                         if (activeProcesses.TryGetValue(processid, out DateTime segmentStartTime))
                         {
                             segmentDuration = segmentEndTime - segmentStartTime;
@@ -831,8 +908,8 @@ namespace BTC_ENTERPRISE
                             //record.AccumulatedDuration =  TimeSpan.FromTicks(Convert.ToDateTime(record.Duration).Ticks);
                             record.AccumulatedDuration += segmentDuration;
                         }
-                        StopProcessTimersIfInactive();
 
+                        StopProcessTimersIfInactive();
                         var lastSubProcess = record.SubProcesses.LastOrDefault();
                         UpdateChildStatus(lastSubProcess, "Pause");
                         LogSubProcess(
@@ -840,9 +917,10 @@ namespace BTC_ENTERPRISE
                             lastSubProcess,
                             "Paused: " + lbl_public_event.Text,
                             record.StartTime,
-                            timeEndString,
+                            DateTime.Now.ToString(),
                             segmentDuration
                         );
+
                         UpdateChildStatus(lastSubProcess, "Paused");
                         //record.Duration = timeFormat.FormatDuration(record.AccumulatedDuration);
 
@@ -850,6 +928,7 @@ namespace BTC_ENTERPRISE
                         UpdateStatus(record, true, true, true, "Pause");
 
                     }
+
                     break;
 
 
@@ -1004,7 +1083,7 @@ namespace BTC_ENTERPRISE
         {
             return sfDataGrid2.View.Records
                 .Select(r => r.Data as ViewModel.SubProcessView)
-                .Any(m => m?.Serial_count == "1");
+                .Any(m => Convert.ToInt32(m?.Serial_count) >= 1);
         }
 
         private bool HasUnscannedTorque()
@@ -1079,6 +1158,11 @@ namespace BTC_ENTERPRISE
                 // BLUE (27, 86, 253)
                 newTextColor = Color.FromArgb(27, 86, 253);
             }
+            else if (Convert.ToInt32(record.Serial_count) >= 1)
+            {
+                // BLUE (27, 86, 253)
+                newTextColor = Color.FromArgb(27, 86, 253);
+            }
 
             else if (record.IsTorque == 1 && record.Torque_count == "0" &&
                      record.IsSerialized == 0 && record.IsChemical == "0")
@@ -1094,14 +1178,14 @@ namespace BTC_ENTERPRISE
                 newTextColor = Color.FromArgb(255, 128, 0);
             }
 
-            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&  // Serialized Complete
+            else if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1 &&  // Serialized Complete
                      record.IsTorque == 1 && record.Torque_count == "1" &&    // Torque Complete
                      record.IsChemical == "1" && record.Chemical_count == "0") // Chemical Incomplete
             {
                 newTextColor = Color.Teal;
             }
 
-            else if (record.IsSerialized == 1 && record.Serial_count == "1" &&
+            else if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1 &&
                      record.IsTorque == 1 && record.Torque_count == "1" &&
                      record.IsChemical == "1" && record.Chemical_count != "0")
             {
@@ -1161,7 +1245,7 @@ namespace BTC_ENTERPRISE
 
 
 
-            if (record.IsSerialized == 1 && record.Serial_count == "1")
+            if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1)
             {
                 IsScanItem = true;
 
@@ -1225,6 +1309,19 @@ namespace BTC_ENTERPRISE
             {
                 formManager.closeAForm();
                 lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
+
+                chkIndicator2.Text = EmptyMark;
+                chkIndicator1.Text = EmptyMark;
+                chkIndicator3.Text = EmptyMark;
+
+                btn_scanserialized.ForeColor = Color.White;
+                panel_material.BackColor = Color.Transparent;
+
+                btn_scan_torque.ForeColor = Color.White;
+                panel_torque.BackColor = Color.Transparent;
+
+                btn_scan_chemical.ForeColor = Color.White;
+                panel_chemical.BackColor = Color.Transparent;
                 return;
             }
 
@@ -1299,7 +1396,7 @@ namespace BTC_ENTERPRISE
                 {
                     lbl_subprocessInfo.Text = "This material is not serialized, cannot scan item.";
                     formManager.closeAForm();
-                    return;
+
                 }
 
                 if (record.Serial_count != "0")
@@ -1378,7 +1475,16 @@ namespace BTC_ENTERPRISE
                 {
                     _IscanOK = true;
                     global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
-
+                    var matchingRecords = sfDataGrid2.View.Records
+                        .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == materialID && (r.Data as ViewModel.SubProcessView)?.IsChemical == "1").ToList();
+                    foreach (var item in matchingRecords)
+                    {
+                        var s = item.Data as ViewModel.SubProcessView;
+                        s.Chemical_count = "1";
+                        s.Chemical_name = Cname;
+                        s.Chemical_expiry = expiryx;
+                    }
+                    sfDataGrid2.Refresh();
                 };
                 return; // Exit after opening scanner
             }
@@ -1507,7 +1613,7 @@ namespace BTC_ENTERPRISE
             var Chemicalscanner = new ScanChemical(this, rowindex, processid, selectedName, tbl_subprocess);
             if (_chemicalname == string.Empty)
             {
-                Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Enabled = false;
+                Chemicalscanner.Shown += (s, args) => Chemicalscanner.txt_chemical.Enabled = true;
             }
             else
             {
@@ -1520,6 +1626,17 @@ namespace BTC_ENTERPRISE
             {
                 _IscanOK = true;
                 global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
+
+                var matchingRecords = sfDataGrid2.View.Records
+                         .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == materialID && (r.Data as ViewModel.SubProcessView)?.IsChemical == "1").ToList();
+                foreach (var item in matchingRecords)
+                {
+                    var s = item.Data as ViewModel.SubProcessView;
+                    s.Chemical_count = "1";
+                    s.Chemical_name = Cname;
+                    s.Chemical_expiry = expiryx;
+                }
+                sfDataGrid2.Refresh();
                 //await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
             };
             chkIndicator2.Text = EmptyMark;
@@ -1661,6 +1778,21 @@ namespace BTC_ENTERPRISE
             {
                 formManager.closeAForm();
                 lbl_subprocessInfo.Text = "This material is neither serialized nor requires torque.";
+
+
+
+                chkIndicator2.Text = EmptyMark;
+                chkIndicator1.Text = EmptyMark;
+                chkIndicator3.Text = EmptyMark;
+
+                btn_scanserialized.ForeColor = Color.White;
+                panel_material.BackColor = Color.Transparent;
+
+                btn_scan_torque.ForeColor = Color.White;
+                panel_torque.BackColor = Color.Transparent;
+
+                btn_scan_chemical.ForeColor = Color.White;
+                panel_chemical.BackColor = Color.Transparent;
                 return;
             }
 
@@ -1698,7 +1830,7 @@ namespace BTC_ENTERPRISE
                 {
                     lbl_subprocessInfo.Text = "This material is not serialized, cannot scan item.";
                     formManager.closeAForm();
-                    return;
+                    // return;
                 }
 
                 if (record.Serial_count != "0")
@@ -1756,7 +1888,17 @@ namespace BTC_ENTERPRISE
                 {
                     _IscanOK = true;
                     global_DTtable.UpdateChemical(tbl_subprocess, Convert.ToInt32(processid), 1, Cname, expiryx);
-                    await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
+                    var matchingRecords = sfDataGrid2.View.Records
+                        .Where(r => (r.Data as ViewModel.SubProcessView)?.MaterialID.ToString() == materialID && (r.Data as ViewModel.SubProcessView)?.IsChemical == "1").ToList();
+                    foreach (var item in matchingRecords)
+                    {
+                        var s = item.Data as ViewModel.SubProcessView;
+                        s.Chemical_count = "1";
+                        s.Chemical_name = Cname;
+                        s.Chemical_expiry = expiryx;
+                    }
+                    sfDataGrid2.Refresh();
+                    //await LoadSubProcessData(_selectedProcessID, tbl_subprocess);
 
                 };
                 return; // Exit after opening scanner
@@ -1764,6 +1906,8 @@ namespace BTC_ENTERPRISE
 
             lbl_subprocessInfo.Text = "All required scans for this material are complete or the material requires no scanning.";
             formManager.closeAForm();
+
+
 
         }
 
@@ -2044,6 +2188,15 @@ namespace BTC_ENTERPRISE
             {
                 sfDataGrid1.Refresh();
             }
+        }
+
+        private async void btnrefresh_Click(object sender, EventArgs e)
+        {
+            Global gb = new Global();
+            var result = await gb.Refresh_SubAsy_Process(_segmentID,lbl_generatedSerial.Text);
+            tbl_subprocess = SessionData.tbl_subprocess_Session;
+            tbl_process = SessionData.tbl_process_Session;
+            await LoadProcessDataMerged_Sf(tbl_process);
         }
     }
 }

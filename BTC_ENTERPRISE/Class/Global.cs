@@ -1,9 +1,32 @@
-﻿using System.Data;
+﻿using BTC_ENTERPRISE.Model;
+using Frameworks.Utilities.ApiUtilities;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Data;
+using System.Diagnostics;
+using static BTC_ENTERPRISE.Model.WarehouseKitting;
+using static BTC_ENTERPRISE.Modal.CheckFrm;
 
 namespace BTC_ENTERPRISE.Class
 {
     public class Global
     {
+        private object jsonResponse;
+        public string? modulename;
+        public string? type;
+        private string loginApiUrl = GlobalApi.GetOperatorLoginUrl();
+        private string ScanUrl = GlobalApi.GetScanUrl();
+        private string segmentname;
+        private int _segmentid;
+        private string OperatorToken;
+        private string operatorName;
+        private int _Prcess_license_Id;
+        private string moid;
+        private string processname;
+        private string serialnumber;
+        private string _islogin;
+        private bool islogin;
+
 
         public static string UserToken = "";
         public static List<license>? dt_license { get; set; }
@@ -90,6 +113,288 @@ namespace BTC_ENTERPRISE.Class
 
             }
         }
+        public async Task<string[]> Refresh_SubAsy_Process(int mo_process_id,string generatedserial)
+        {
+            await LoadSegmentProcessAsync(generatedserial, mo_process_id);
+
+            var licenses = SessionData.TempDataLicense.AsEnumerable();
+
+
+            var licenseRow = licenses
+                .Where(row => row.Field<int>("id") == _Prcess_license_Id)
+                .Where(row =>
+                {
+                    var expiryStr = row.Field<string>("expiry_date");
+
+                    if (DateTime.TryParse(expiryStr, out DateTime expiryDate))
+                    {
+                        return expiryDate >= DateTime.Now.Date;
+                    }
+                    return false;
+                })
+                .FirstOrDefault();
+           
+            if (licenseRow == null)
+            {
+                MessageBox.Show("You are not registered or your license has expired.",
+                                "Access Denied",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                return null;
+            }
+
+
+
+
+            // Check if the license is expired
+            if (DateTime.TryParse(licenseRow.Field<string>("expiry_date"), out DateTime expiryDate))
+            {
+                if (expiryDate < DateTime.Now)
+                {
+                    MessageBox.Show("Your license for this process has expired. Please contact your Production Head for renewal.",
+                                    "License Expired",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                    return null;
+                }
+            }
+            string[] result = { moid,processname,serialnumber };
+            return result;
+            //DataSet ds = new DataSet();
+            //ds.Tables.Add(tbl_process);
+            //ds.Tables.Add(tbl_subprocess);
+            //return ds;
+        }
+        public async Task LoadSegmentProcessAsync(string serial, int segmentId)
+        {
+            try
+            {
+                var postData = new Dictionary<string, object>
+                {
+                    { "serial_number", serial },
+                    { "manufacturing_order_segment_id", segmentId }
+                };
+                string json = JsonConvert.SerializeObject(postData);
+                Debug.WriteLine("Request JSON: " + json);
+
+                var token = await ApiHelper.PostJsonAsync(ScanUrl, postData, OperatorToken);
+                if (token == null) return;
+
+                if (token.Type == JTokenType.Array)
+                {
+                    var result = token.ToObject<List<Sub_Asy_Process_Model.Root>>();
+                    var data = result?.FirstOrDefault();
+
+                    if (data == null)
+                    {
+                        return;
+                    }
+
+                    _Prcess_license_Id = data.license_id != null ? int.Parse(data.license_id) : 0;
+                    //InitTables();
+                    SessionData.tbl_process_Session.Rows.Clear();
+                    SessionData.tbl_subprocess_Session.Rows.Clear();
+
+                    foreach (var mainprocess in data.process)
+                    {
+                        // Check if there are any duration records
+                        if (mainprocess.duration != null && mainprocess.duration.Any())
+                        {
+                            // Iterate over every duration record
+                            foreach (var durationItems in mainprocess.duration)
+                            {
+
+                                if (durationItems.manufacturing_order_process_type_id?.ToString()?.Trim() == "1")
+                                {
+                                    SessionData.tbl_process_Session.Rows.Add(
+                                        mainprocess.id,
+                                        mainprocess.name ?? "N/A",
+                                        mainprocess.cycle_time ?? "N/A",
+                                        durationItems.manufacturing_order_process_type_id ?? "N/A",
+                                        durationItems.start_time,
+                                        durationItems.end_time,
+                                        mainprocess.is_hold == 1 ? "ON HOLD" : durationItems.status.Name ?? "Open",
+                                        mainprocess.is_hold,
+                                        mainprocess.is_hold == 1 ? "#EF4444" : mainprocess.status?.Color ?? "White",
+                                        durationItems.remarks ?? ""
+                                    );
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Add one row for the process even if it has NO duration records
+                            SessionData.tbl_process_Session.Rows.Add(
+                                mainprocess.id,
+                                mainprocess.name ?? "N/A",
+                                mainprocess.cycle_time ?? "N/A",
+                                "N/A",
+                                null,
+                                null,
+                                mainprocess.status?.Name ?? "Open",
+                                mainprocess.is_hold,
+                                mainprocess.status?.Color ?? "White",
+                                ""
+                            );
+                        }
+                    }
+
+
+
+                    foreach (var process in data.process ?? new List<Sub_Asy_Process_Model.Process>())
+                    {
+                        if (process.sub_process != null)
+                        {
+                            foreach (var sub in process.sub_process)
+                            {
+                                var ipns = sub.internal_part_number ?? new List<Sub_Asy_Process_Model.InternalPartNumber>();
+                                var torques = sub.torque ?? new List<Sub_Asy_Process_Model.Torque>();
+                                var serials = sub.serial ?? new List<Sub_Asy_Process_Model.Serial>();
+                                var iskitlist = sub.is_kit_list;
+
+                                int maxRows = Math.Max(ipns.Count, torques.Count);
+
+                                if (maxRows == 0)
+                                {
+                                    SessionData.tbl_subprocess_Session.Rows.Add(
+                                        sub.id,
+                                        sub.manufacturing_order_process_id,
+                                        "N/A",
+                                        "",
+                                        "",
+                                        sub.serial_quantity,
+                                        sub.serial_count,
+                                        sub.is_kit_list,
+                                        sub.is_serial,
+                                        sub.is_torque,
+                                        0,
+                                        "",
+                                        "",
+                                        "",
+                                        "",
+                                        sub.is_chemical,
+                                        sub.chemical_name?.ToString() ?? "",
+                                        0,
+                                        sub.chemical_expiration?.ToString() ?? ""
+                                    );
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < maxRows; i++)
+                                    {
+                                        var ser = i < serials.Count ? serials[i] : null;
+                                        var ipn = i < ipns.Count ? ipns[i] : null;
+                                        var torque = i < torques.Count ? torques[i] : null;
+
+                                        SessionData.tbl_subprocess_Session.Rows.Add(
+                                            sub.id,
+                                            sub.manufacturing_order_process_id,
+
+                                            ipn?.description ?? "N/A",
+                                            ipn?.ipn_number ?? "",
+                                            ser?.serial_number ?? "",
+                                            // SubProcess Details 
+                                            sub.serial_quantity,
+                                            sub.serial_count,
+                                            sub.is_kit_list,
+                                            sub.is_serial,
+                                            sub.is_torque,
+                                            0,
+
+                                            //Torque Details
+                                            torque?.min ?? "",
+                                            torque?.max ?? "",
+                                            torque?.value ?? "",
+                                            torque?.torque_name ?? "",
+
+
+                                            // Chemical Details
+                                            sub.is_chemical,
+                                            sub.chemical_name?.ToString() ?? "",
+                                            0,
+                                            sub.chemical_expiration?.ToString() ?? ""
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    bool anyIsKitList = data.process.Any(p => p.is_kit_list == 1);
+
+                    moid = data.mo_id;
+                    processname = data.name;
+                    serialnumber = data.serial_number;
+
+                    var durationItem = data.duration?.FirstOrDefault();
+                    var rawStartTime = data.duration?.FirstOrDefault()?.start_time;
+                    var rawEndTime = data.duration?.FirstOrDefault()?.end_time;
+
+                    //if (durationItem == null)
+                    //{
+                    //    MessageBox.Show("No duration data found.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //    return;
+                    //}
+
+                    bool isSubAssembly = segmentId == 1;
+
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected response format.", "API Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+            }
+            catch (JsonReaderException ex)
+            {
+                MessageBox.Show($"JSON Error: {ex.Message}", "Parsing Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"API Error: {ex.Message}");
+            }
+        }
+        //private void InitTables()
+        //{
+        //    if (tbl_process.Columns.Count == 0)
+        //    {
+        //        tbl_process.Columns.Add("id", typeof(int));
+        //        tbl_process.Columns.Add("name", typeof(string));
+        //        tbl_process.Columns.Add("cycle_time", typeof(string));
+        //        tbl_process.Columns.Add("manufacturing_order_process_type_id", typeof(string));
+        //        tbl_process.Columns.Add("start_time", typeof(string));
+        //        tbl_process.Columns.Add("end_time", typeof(string));
+        //        tbl_process.Columns.Add("status", typeof(string));
+        //        tbl_process.Columns.Add("is_hold", typeof(int));
+        //        tbl_process.Columns.Add("color", typeof(string));
+        //        tbl_process.Columns.Add("remark", typeof(string));
+
+        //        tbl_process.Columns.Add("DurationRecords", typeof(List<Sub_Asy_Process_Model.Duration>));
+        //    }
+
+        //    if (tbl_subprocess.Columns.Count == 0)
+        //    {
+        //        tbl_subprocess.Columns.Add("id", typeof(int));
+        //        tbl_subprocess.Columns.Add("manufacturing_order_process_id", typeof(int));
+        //        tbl_subprocess.Columns.Add("description", typeof(string));
+        //        tbl_subprocess.Columns.Add("ipn_number", typeof(string));
+        //        tbl_subprocess.Columns.Add("serial_number", typeof(string));
+        //        tbl_subprocess.Columns.Add("serial_quantity", typeof(int));
+        //        tbl_subprocess.Columns.Add("serial_count", typeof(int));
+        //        tbl_subprocess.Columns.Add("is_kit_list", typeof(int));
+        //        tbl_subprocess.Columns.Add("is_serial", typeof(int));
+        //        tbl_subprocess.Columns.Add("is_torque", typeof(int));
+        //        tbl_subprocess.Columns.Add("torque_count", typeof(string));
+        //        tbl_subprocess.Columns.Add("min", typeof(string));
+        //        tbl_subprocess.Columns.Add("max", typeof(string));
+        //        tbl_subprocess.Columns.Add("value", typeof(string));
+        //        tbl_subprocess.Columns.Add("torque_name", typeof(string));
+        //        tbl_subprocess.Columns.Add("is_chemical", typeof(string));
+        //        tbl_subprocess.Columns.Add("chemical_name", typeof(string));
+        //        tbl_subprocess.Columns.Add("chemical_count", typeof(string));
+        //        tbl_subprocess.Columns.Add("chemical_expiration", typeof(string));
+        //    }
+        //}
 
 
     }
