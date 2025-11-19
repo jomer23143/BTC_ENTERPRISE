@@ -146,6 +146,12 @@ namespace BTC_ENTERPRISE.Modal
                 Global gb = new Global();
                 var result = await gb.Refresh_SubAsy_Process(_segmentid, txt_scangeneratedserial.Text.Trim());
                 //await LoadSegmentProcessAsync(txt_scangeneratedserial.Text, _segmentid);
+                if (result == null)
+                {
+                    txt_scangeneratedserial.Clear();
+                    txt_scangeneratedserial.Focus();
+                    return;
+                }
                 txt_scangeneratedserial.Clear();
                 txt_scangeneratedserial.Focus();
                 moid = result[0].ToString();

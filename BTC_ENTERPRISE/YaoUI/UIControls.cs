@@ -6,9 +6,9 @@ namespace BTC_ENTERPRISE.YaoUI
     public static class UIControls
     {
 
-        public static void SetupUI(MainDashboard form, EventHandler settingHandler, EventHandler logoutHandler, EventHandler loginHandler)
+        public static void SetupUI(MainDashboard form, EventHandler settingHandler, EventHandler logoutHandler, EventHandler loginHandler, EventHandler exitHandler)
         {
-            //   form.FormBorderStyle = FormBorderStyle.None;  // temporary disabled for testing porpuse
+              form.FormBorderStyle = FormBorderStyle.None;  // temporary disabled for testing porpuse
             form.StartPosition = FormStartPosition.CenterScreen;
             form.WindowState = FormWindowState.Maximized;
 
@@ -36,7 +36,7 @@ namespace BTC_ENTERPRISE.YaoUI
             // Create "Logout" menu item
             var logoutItem = new ToolStripMenuItem("Logout", null, logoutHandler)
             {
-                BackColor = Color.Red,
+                BackColor = Color.Orange,
                 ForeColor = Color.White
             };
             var loginItem = new ToolStripMenuItem("Login", null, loginHandler)
@@ -44,10 +44,16 @@ namespace BTC_ENTERPRISE.YaoUI
                 BackColor = Color.Green,
                 ForeColor = Color.White
             };
+            var exitItem = new ToolStripMenuItem("Exit", null, exitHandler)
+            {
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
             // Add items to context menu
             contextMenu.Items.Add(settingsItem);
             contextMenu.Items.Add(logoutItem);
             contextMenu.Items.Add(loginItem);
+            contextMenu.Items.Add(exitItem);
             if (Global.UserToken != "")
             {
                 if (MainDashboardV1.processType == "101" || MainDashboardV1.processType == "102")

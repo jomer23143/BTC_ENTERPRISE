@@ -113,7 +113,7 @@ namespace BTC_ENTERPRISE.Forms
                         type = received.kit_list_item.type,
                         actual_quantity = received.actual_quantity,
                         short_quantity = received.short_quantity,
-                        received_quantity = received.received_quantity,
+                        //received_quantity = received.received_quantity,
                         unit = received.kit_list_item.unit,
                         track = received.kit_list_item.track,
                         comment = received.comment == null ? "" : received.comment.ToString(),

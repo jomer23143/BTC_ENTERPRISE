@@ -36,7 +36,7 @@ namespace BTC_ENTERPRISE.Modal
             YUI yUI = new YUI();
             // yUI.RoundedFormsDocker(this, 8);
             txt_serialnumber.Select();
-            yUI.RoundedTextBox(txt_serialnumber, 6, Color.White);
+            //yUI.RoundedTextBox(txt_serialnumber, 6, Color.White);
             yUI.RoundedPanelDocker(panel_processname, 6);
             this.rowindex = rowindex;
             this.processId = processid;

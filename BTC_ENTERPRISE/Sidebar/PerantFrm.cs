@@ -221,7 +221,7 @@ namespace BTC_ENTERPRISE.SideBar
                     toogle(false);
                     _mainDashboard.lbl_operatorlogin.Text = _oparatorName;
                     // _mainDashboard.Refresh_Main_Menu(sender);
-                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click);
+                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click,_mainDashboard.Exit_Click);
                     formManager.OpenChildForm(new PrintQRFrm(), sender);
                 }
             }
@@ -266,7 +266,7 @@ namespace BTC_ENTERPRISE.SideBar
                     toogle(false);
                     _mainDashboard.lbl_operatorlogin.Text = _oparatorName;
                     // _mainDashboard.Refresh_Main_Menu(sender);
-                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click);
+                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click, _mainDashboard.Exit_Click);
                     formManager.OpenChildForm(new Warehouse_Kitting(), sender);
                 }
             }
@@ -304,7 +304,7 @@ namespace BTC_ENTERPRISE.SideBar
                     toogle(false);
                     _mainDashboard.lbl_operatorlogin.Text = _oparatorName;
                     // _mainDashboard.Refresh_Main_Menu(sender);
-                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click);
+                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click, _mainDashboard.Exit_Click);
                     formManager.OpenChildForm(new Kitlist_Recieving(), sender);
                 }
             }
@@ -404,7 +404,7 @@ namespace BTC_ENTERPRISE.SideBar
                     Global.UserToken = string.Empty;
                     is_login();
                     formManager.closeAForm();
-                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click);
+                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click, _mainDashboard.Exit_Click);
                     //_mainDashboard.Refresh_Main_Menu(sender);
                     _mainDashboard.lbl_operatorlogin.Text = string.Empty;
                 }
@@ -437,7 +437,7 @@ namespace BTC_ENTERPRISE.SideBar
                     toogle(false);
                     _mainDashboard.lbl_operatorlogin.Text = _oparatorName;
                     // _mainDashboard.Refresh_Main_Menu(sender);
-                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click);
+                    UIControls.SetupUI(_mainDashboard, _mainDashboard.Setting_Click, _mainDashboard.Logout_Click, _mainDashboard.login_Click, _mainDashboard.Exit_Click);
 
                 } 
             }

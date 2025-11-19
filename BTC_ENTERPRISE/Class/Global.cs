@@ -160,10 +160,6 @@ namespace BTC_ENTERPRISE.Class
             }
             string[] result = { moid,processname,serialnumber };
             return result;
-            //DataSet ds = new DataSet();
-            //ds.Tables.Add(tbl_process);
-            //ds.Tables.Add(tbl_subprocess);
-            //return ds;
         }
         public async Task LoadSegmentProcessAsync(string serial, int segmentId)
         {
@@ -203,8 +199,17 @@ namespace BTC_ENTERPRISE.Class
                             // Iterate over every duration record
                             foreach (var durationItems in mainprocess.duration)
                             {
-
-                                if (durationItems.manufacturing_order_process_type_id?.ToString()?.Trim() == "1")
+                                string statusName = "";
+                                if (mainprocess.is_hold == 1 && mainprocess.is_quality == "0")
+                                    statusName = "ON HOLD";
+                                else if (mainprocess.is_quality == "1" && mainprocess.quality_validated == "0")
+                                    statusName = "QC Required";
+                                else if (mainprocess.quality_validated == "1")
+                                    statusName = "Quality Approved";
+                                else
+                                    statusName = durationItems.status?.Name ?? "Open";
+                        
+                                if (durationItems.manufacturing_order_process_type_id?.ToString()?.Trim() == "1" || durationItems.manufacturing_order_process_type_id?.ToString()?.Trim() == "2")
                                 {
                                     SessionData.tbl_process_Session.Rows.Add(
                                         mainprocess.id,
@@ -213,7 +218,10 @@ namespace BTC_ENTERPRISE.Class
                                         durationItems.manufacturing_order_process_type_id ?? "N/A",
                                         durationItems.start_time,
                                         durationItems.end_time,
-                                        mainprocess.is_hold == 1 ? "ON HOLD" : durationItems.status.Name ?? "Open",
+                                        statusName,
+                                        mainprocess.is_quality,
+                                        mainprocess.quality_validated,
+                                        // mainprocess.is_hold == 1 ? "ON HOLD" : durationItems.status.Name ?? "Open",
                                         mainprocess.is_hold,
                                         mainprocess.is_hold == 1 ? "#EF4444" : mainprocess.status?.Color ?? "White",
                                         durationItems.remarks ?? ""
@@ -223,6 +231,15 @@ namespace BTC_ENTERPRISE.Class
                         }
                         else
                         {
+                            string statusName = "";
+                            if (mainprocess.is_hold == 1 && mainprocess.is_quality == "0")
+                                statusName = "ON HOLD";
+                            else if (mainprocess.is_quality == "1" && mainprocess.quality_validated == "0")
+                                statusName = "QC Required";
+                            else if (mainprocess.quality_validated == "1")
+                                statusName = "Quality Approved";
+                            else
+                                statusName = mainprocess.status?.Name ?? "Open";
                             // Add one row for the process even if it has NO duration records
                             SessionData.tbl_process_Session.Rows.Add(
                                 mainprocess.id,
@@ -231,7 +248,9 @@ namespace BTC_ENTERPRISE.Class
                                 "N/A",
                                 null,
                                 null,
-                                mainprocess.status?.Name ?? "Open",
+                                statusName,
+                                mainprocess.is_quality,
+                                mainprocess.quality_validated,
                                 mainprocess.is_hold,
                                 mainprocess.status?.Color ?? "White",
                                 ""
@@ -354,48 +373,5 @@ namespace BTC_ENTERPRISE.Class
                 Debug.WriteLine($"API Error: {ex.Message}");
             }
         }
-        //private void InitTables()
-        //{
-        //    if (tbl_process.Columns.Count == 0)
-        //    {
-        //        tbl_process.Columns.Add("id", typeof(int));
-        //        tbl_process.Columns.Add("name", typeof(string));
-        //        tbl_process.Columns.Add("cycle_time", typeof(string));
-        //        tbl_process.Columns.Add("manufacturing_order_process_type_id", typeof(string));
-        //        tbl_process.Columns.Add("start_time", typeof(string));
-        //        tbl_process.Columns.Add("end_time", typeof(string));
-        //        tbl_process.Columns.Add("status", typeof(string));
-        //        tbl_process.Columns.Add("is_hold", typeof(int));
-        //        tbl_process.Columns.Add("color", typeof(string));
-        //        tbl_process.Columns.Add("remark", typeof(string));
-
-        //        tbl_process.Columns.Add("DurationRecords", typeof(List<Sub_Asy_Process_Model.Duration>));
-        //    }
-
-        //    if (tbl_subprocess.Columns.Count == 0)
-        //    {
-        //        tbl_subprocess.Columns.Add("id", typeof(int));
-        //        tbl_subprocess.Columns.Add("manufacturing_order_process_id", typeof(int));
-        //        tbl_subprocess.Columns.Add("description", typeof(string));
-        //        tbl_subprocess.Columns.Add("ipn_number", typeof(string));
-        //        tbl_subprocess.Columns.Add("serial_number", typeof(string));
-        //        tbl_subprocess.Columns.Add("serial_quantity", typeof(int));
-        //        tbl_subprocess.Columns.Add("serial_count", typeof(int));
-        //        tbl_subprocess.Columns.Add("is_kit_list", typeof(int));
-        //        tbl_subprocess.Columns.Add("is_serial", typeof(int));
-        //        tbl_subprocess.Columns.Add("is_torque", typeof(int));
-        //        tbl_subprocess.Columns.Add("torque_count", typeof(string));
-        //        tbl_subprocess.Columns.Add("min", typeof(string));
-        //        tbl_subprocess.Columns.Add("max", typeof(string));
-        //        tbl_subprocess.Columns.Add("value", typeof(string));
-        //        tbl_subprocess.Columns.Add("torque_name", typeof(string));
-        //        tbl_subprocess.Columns.Add("is_chemical", typeof(string));
-        //        tbl_subprocess.Columns.Add("chemical_name", typeof(string));
-        //        tbl_subprocess.Columns.Add("chemical_count", typeof(string));
-        //        tbl_subprocess.Columns.Add("chemical_expiration", typeof(string));
-        //    }
-        //}
-
-
     }
 }

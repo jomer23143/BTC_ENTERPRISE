@@ -153,18 +153,18 @@ namespace BTC_ENTERPRISE
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextColor = Color.Black,
-                Font = new GridFontInfo(new Font("Segoe UI", 18, FontStyle.Bold))
+                Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular))
             };
 
             CellStyleInfo cellstyle1 = new CellStyleInfo
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextColor = Color.Black,
-                Font = new GridFontInfo(new Font("Segoe UI", 12, FontStyle.Regular))
+                Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular))
             };
 
             sfDataGrid1.HeaderRowHeight = 45;
-            sfDataGrid1.Style.HeaderStyle.Font = new GridFontInfo(new Font("Segoe UI", 12, FontStyle.Bold));
+            sfDataGrid1.Style.HeaderStyle.Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular));
             sfDataGrid1.Style.HeaderStyle.BackColor = Color.Gray;
             sfDataGrid1.Style.HeaderStyle.TextColor = Color.Black;
             sfDataGrid1.Style.SelectionStyle.BackColor = Color.PaleGreen;
@@ -184,8 +184,8 @@ namespace BTC_ENTERPRISE
                 AllowDefaultButtonText = true
             });
 
-            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Index", HeaderText = "#", Width = 50, CellStyle = cellstyle1 });
-            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Name", HeaderText = "Process", Width = 450, AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Index", HeaderText = "#", Width = 30, CellStyle = cellstyle1 });
+            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Name", HeaderText = "Process", Width = 200, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "StartTime", HeaderText = "Time Start", Visible = true, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "EndTime", HeaderText = "Time End", Visible = true, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Duration", HeaderText = "Duration", CellStyle = cellstyle1, AllowTextWrapping = true });
@@ -194,6 +194,8 @@ namespace BTC_ENTERPRISE
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "Id", HeaderText = "ID", Visible = false });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "CycleTime", HeaderText = "CycleTime", Visible = false });
             sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "is_hold", HeaderText = "OnHold", Visible = false });
+            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "is_quality", HeaderText = "IsQuality", Visible = false });
+            sfDataGrid1.Columns.Add(new GridTextColumn() { MappingName = "quality_validated", HeaderText = "IsValidated", Visible = false });
 
             sfDataGrid1.Columns.Add(new GridButtonColumn() { MappingName = "StartButton", HeaderText = "Start", CellStyle = cellstyle });
             sfDataGrid1.Columns.Add(new GridButtonColumn() { MappingName = "EndButton", HeaderText = "End", CellStyle = cellstyle });
@@ -420,18 +422,18 @@ namespace BTC_ENTERPRISE
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextColor = Color.FromArgb(0, 0, 0),
             };
-            cellstyle1.Font = new GridFontInfo(new Font("Segoe UI", 12, FontStyle.Regular));
+            cellstyle1.Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular));
             sfDataGrid2.HeaderRowHeight = 45;
-            sfDataGrid2.Style.HeaderStyle.Font = new GridFontInfo(new Font("Segoe UI", 12, FontStyle.Bold));
+            sfDataGrid2.Style.HeaderStyle.Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular));
             sfDataGrid2.Style.HeaderStyle.BackColor = Color.Gray;
             sfDataGrid2.Style.HeaderStyle.TextColor = Color.Black;
             sfDataGrid2.Style.SelectionStyle.BackColor = Color.LimeGreen;
             sfDataGrid2.Style.SelectionStyle.TextColor = Color.White;
 
-            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Index", HeaderText = "#", Width = 50, AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Index", HeaderText = "#", Width = 30, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "MaterialID", HeaderText = "ID", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
-            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Name", HeaderText = "Material", Width = 300, AllowTextWrapping = true, CellStyle = cellstyle1 });
-            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Ipn", HeaderText = "ipn", AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Name", HeaderText = "Material", Width = 250, AllowTextWrapping = true, CellStyle = cellstyle1 });
+            sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Ipn", HeaderText = "Ipn", AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Torque", HeaderText = "Torque", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Serial_qty", HeaderText = "Qty", Visible = true, AllowTextWrapping = true, CellStyle = cellstyle1 });
             sfDataGrid2.Columns.Add(new GridTextColumn() { MappingName = "Serial_count", HeaderText = "s", Visible = false, AllowTextWrapping = true, CellStyle = cellstyle1 });
@@ -555,8 +557,8 @@ namespace BTC_ENTERPRISE
             int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
             if (recordIndex < 0) return;
             //var result = sfDataGrid1.View.Records;
-            var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
-            if (record == null) return;
+            //var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
+            //if (record == null) return;
 
 
             if (e.Column.MappingName == "ExpandCollapse")
@@ -566,12 +568,13 @@ namespace BTC_ENTERPRISE
 
             }
 
-
+            var record = e.DataRow.RowData as ViewModel.ProcessViewModel;
             if (e.Column.MappingName == "Status")
             {
+                
                 Color textColor = Color.LightGray;
 
-                if (!string.IsNullOrWhiteSpace(record.Color))
+                if (!string.IsNullOrWhiteSpace(record?.Color))
                 {
                     try
                     {
@@ -598,75 +601,10 @@ namespace BTC_ENTERPRISE
 
 
                 e.Style.TextColor = textColor;
-                e.Style.Font = new GridFontInfo(new Font("Segoe UI", 10, FontStyle.Bold));
+                e.Style.Font = new GridFontInfo(new Font("Segoe UI", 8, FontStyle.Regular));
             }
-          
-            switch (e.Column.MappingName)
-            {
-                case "StartButton":
-                    if ( record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                        //e.Style.Enabled = true;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.ForestGreen;
-                        e.Style.TextColor = Color.White;
-                        //e.Style.Enabled = true;
-                    }
-                    break;
 
-                case "HoldButton":
-                    if ( record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                       // e.Style.Enabled = false;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.Goldenrod;
-                        e.Style.TextColor = Color.White;
-                       // e.Style.Enabled = true;
-                    }
-                    break;
-
-                case "EndButton":
-                    if (record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-                    {
-                        e.Style.BackColor = Color.LightGray;
-                        e.Style.TextColor = Color.DarkGray;
-                        //e.Style.Enabled = false;
-                    }
-                    else
-                    {
-                        e.Style.BackColor = Color.Salmon;
-                        e.Style.TextColor = Color.White;
-                       // e.Style.Enabled = true;
-                    }
-                    break;
-
-                case "ExpandCollapse":
-                    if (record.IsExpanded)
-                    {
-                        e.Style.TextColor = Color.Red;
-                       // e.Style.Enabled = true;
-                        e.Style.BackColor = Color.SeaGreen;
-                        record.expandIcon = "➖";
-
-                    }
-                    else
-                    {
-                        e.Style.TextColor = Color.Green;
-                        //e.Style.Enabled = true;
-                        e.Style.BackColor = Color.LimeGreen;
-                        record.expandIcon = "➕";
-
-                    }
-                    break;
-            }
+           
 
             var firstPendingRow = sfDataGrid1.View.Records
                 .Where(r => (r.Data as ViewModel.ProcessViewModel)?.Status != "Completed").ToList();
@@ -685,107 +623,101 @@ namespace BTC_ENTERPRISE
 
         private void sfDataGrid1_QueryButtonCellStyle(object sender, Syncfusion.WinForms.DataGrid.Events.QueryButtonCellStyleEventArgs e)
         {
-            //if (e.RowIndex < 0 || e.Column == null) return;
 
-            //int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
-            //if (recordIndex < 0) return;
-            //var res = sfDataGrid1.View.Records;
-            ////var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
-            //if (res == null) return;
-            //foreach (var item in res)
-            //{
-            //    var record = item.Data as ViewModel.ProcessViewModel;
+            if (e.RowIndex < 0 || e.Column == null) return;
 
-            //    if (_IscanOK == true)
-            //    {
-            //        e.Style.TextColor = Color.Green;
-            //    }
+            int recordIndex = sfDataGrid1.TableControl.ResolveToRecordIndex(e.RowIndex);
+            if (recordIndex < 0) return;
 
-            //    bool isRowEnabled = false;
+            var record = sfDataGrid1.View.Records.GetItemAt(recordIndex) as ViewModel.ProcessViewModel;
+            if (record == null) return;
 
-            //    if (record.Status != "Completed")
-            //    {
+            if (_IscanOK == true)
+            {
+                e.Style.TextColor = Color.Green;
+            }
 
-            //        isRowEnabled =true;
-            //    }
-            //    else
-            //    {
+            bool isRowEnabled = false;
 
-            //        var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
-            //        if (prevRecord != null && prevRecord.Status == "Completed" && record.Status != "Completed")
-            //        {
-            //            isRowEnabled = true;
-            //        }
-            //    }
+            if (recordIndex == 0)
+            {
+                isRowEnabled = record.Status != "Completed";
+            }
+            else if (record.Status == "ON HOLD")
+            {
+                isRowEnabled = true;
+            }
+            else
+            {
+                var res = sfDataGrid1.View.Records;
+                var prevRecord = sfDataGrid1.View.Records.GetItemAt(recordIndex - 1) as ViewModel.ProcessViewModel;
+                if (prevRecord != null && prevRecord.Status == "Completed")
+                {
+                    isRowEnabled = true;
+                }
+                else if (prevRecord.Status == "Quality Approved")
+                {
+                    isRowEnabled = true;
+                }
+                if (prevRecord != null && record.Status == "Quality Approved")
+                {
+                    isRowEnabled = false;
+                }
+                if (prevRecord != null && record.Status == "QC Required")
+                {
+                    isRowEnabled = false;
+                }
 
-            //    switch (e.Column.MappingName)
-            //    {
-            //        case "StartButton":
-            //            if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing" || record.is_hold == 0)
-            //            {
-            //                e.Style.BackColor = Color.LightGray;
-            //                e.Style.TextColor = Color.DarkGray;
-            //                e.Style.Enabled = true;
-            //            }
-            //            else
-            //            {
-            //                e.Style.BackColor = Color.ForestGreen;
-            //                e.Style.TextColor = Color.White;
-            //                e.Style.Enabled = true;
-            //            }
-            //            break;
+            }
 
-            //        case "HoldButton":
-            //            if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-            //            {
-            //                e.Style.BackColor = Color.LightGray;
-            //                e.Style.TextColor = Color.DarkGray;
-            //                e.Style.Enabled = true;
-            //            }
-            //            else
-            //            {
-            //                e.Style.BackColor = Color.Goldenrod;
-            //                e.Style.TextColor = Color.White;
-            //                e.Style.Enabled = true;
-            //            }
-            //            break;
+            switch (e.Column.MappingName)
+            {
+                case "StartButton":
+                    if (!isRowEnabled || record.Status == "Completed" || record.IsCancelled || record.Status == "Processing")
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                        e.Style.Enabled = false;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.ForestGreen;
+                        e.Style.TextColor = Color.White;
+                        e.Style.Enabled = true;
+                    }
+                    break;
 
-            //        case "EndButton":
-            //            if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.is_hold == 0)
-            //            {
-            //                e.Style.BackColor = Color.LightGray;
-            //                e.Style.TextColor = Color.DarkGray;
-            //                e.Style.Enabled = false;
-            //            }
-            //            else
-            //            {
-            //                e.Style.BackColor = Color.Salmon;
-            //                e.Style.TextColor = Color.White;
-            //                e.Style.Enabled = true;
-            //            }
-            //            break;
+                case "HoldButton":
+                    if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.Status == "ON HOLD")
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                        e.Style.Enabled = false;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.Goldenrod;
+                        e.Style.TextColor = Color.White;
+                        e.Style.Enabled = true;
+                    }
+                    break;
 
-            //        case "ExpandCollapse":
-            //            if (record.IsExpanded)
-            //            {
-            //                e.Style.TextColor = Color.Red;
-            //                e.Style.Enabled = true;
-            //                e.Style.BackColor = Color.SeaGreen;
-            //                record.expandIcon = "➖";
-
-            //            }
-            //            else
-            //            {
-            //                e.Style.TextColor = Color.Green;
-            //                e.Style.Enabled = true;
-            //                e.Style.BackColor = Color.LimeGreen;
-            //                record.expandIcon = "➕";
-
-            //            }
-            //            break;
-            //    }
-            //}
-             
+                case "EndButton":
+                    if (!isRowEnabled || record.Status == "Open" || record.Status == "Completed" || record.IsCancelled || record.Status == "ON HOLD")
+                    {
+                        e.Style.BackColor = Color.LightGray;
+                        e.Style.TextColor = Color.DarkGray;
+                        e.Style.Enabled = false;
+                    }
+                    else
+                    {
+                        e.Style.BackColor = Color.Salmon;
+                        e.Style.TextColor = Color.White;
+                        e.Style.Enabled = true;
+                    }
+                    break;
+               
+            }
         }
 
 
@@ -848,7 +780,7 @@ namespace BTC_ENTERPRISE
                     }
                     record.Status = "Processing";
                     processstatus = "Processing";
-
+                    record.Color = "#F59E0B";
                     DateTime startTime = DateTime.Now;
                     activeProcesses[processid] = startTime;
 
@@ -974,7 +906,7 @@ namespace BTC_ENTERPRISE
                         UpdateStatus(record, true, false, true, "Completed");
 
                         UpdateChildStatus(ChildlastSubProcess, "Completed");
-
+                        record.Color = "#10B981";
                         await PostProcessWithDictionary(processid, "Process Completed", status, Token);
                         StopProcessTimersIfInactive();
                     }
@@ -1194,7 +1126,7 @@ namespace BTC_ENTERPRISE
             }
 
             e.Style.TextColor = newTextColor;
-            e.Style.Font = new GridFontInfo(new Font("Segoe UI", 10, newFontStyle));
+            e.Style.Font = new GridFontInfo(new Font("Segoe UI", 8, newFontStyle));
         }
         //i make this outside to access entire class
         //  string record; 
@@ -1246,7 +1178,7 @@ namespace BTC_ENTERPRISE
 
 
 
-            if (record.IsSerialized == 1 && Convert.ToInt32(record.Serial_count) >= 1)
+            if (record.IsSerialized == 1)
             {
                 IsScanItem = true;
 
@@ -1265,7 +1197,7 @@ namespace BTC_ENTERPRISE
                 btn_scan_chemical.ForeColor = Color.White;
                 panel_chemical.BackColor = Color.Transparent;
             }
-            else if (record.IsTorque == 1 && record.Torque_value == "0.00")
+            else if (record.IsTorque == 1 )
             {
                 IsScanItem = false;
 
@@ -1285,7 +1217,7 @@ namespace BTC_ENTERPRISE
                 btn_scan_chemical.ForeColor = Color.White;
                 panel_chemical.BackColor = Color.Transparent;
             }
-            else if ((record.IsChemical == "1" && record.Chemical_name == string.Empty))
+            else if ((record.IsChemical == "1"))
             {
                 _IsScanChemical = true;
 
@@ -1400,7 +1332,7 @@ namespace BTC_ENTERPRISE
 
                 }
 
-                if (record.Serial_count != "0")
+                if (record.IsSerialized == 1)
                 {
                     _name = record.Name;
                     var scanner = new ProcessScanner(this, rowindex, processid, manufacturingOrderID, selectedName, lbl_generatedSerial.Text, qty, buffcount, iskitlist, tbl_subprocess);
@@ -1466,7 +1398,7 @@ namespace BTC_ENTERPRISE
 
             }
             //Chemical
-            if (record.IsChemical == "1" && string.IsNullOrEmpty(record.Chemical_name))
+            if (record.IsChemical == "1")
             {
                 var Chemicalscanner = new ScanChemical(this, rowindex, processid, selectedName, tbl_subprocess);
                 formManager.OpenChildForm(Chemicalscanner, sender);
@@ -1499,6 +1431,10 @@ namespace BTC_ENTERPRISE
 
         private void btn_scanserialized_Click(object sender, EventArgs e)
         {
+            if (processstatus == "Open")
+            {
+                return;
+            }
             if (!_scanS)
             {
                 lbl_subprocessInfo.Text = "This material is not serialized, cannot scan item.";
@@ -1549,6 +1485,10 @@ namespace BTC_ENTERPRISE
 
         private void btn_scan_torque_Click(object sender, EventArgs e)
         {
+            if (processstatus == "Open")
+            {
+                return;
+            }
             if (!_scanT)
             {
                 lbl_subprocessInfo.Text = "This process is not require Torque.";
@@ -1606,6 +1546,10 @@ namespace BTC_ENTERPRISE
 
         private void btn_scan_chemical_Click(object sender, EventArgs e)
         {
+            if (processstatus == "Open")
+            {
+                return;
+            }
             if (!_scanChem)
             {
                 lbl_subprocessInfo.Text = "This process is not require Chemical.";
@@ -2193,6 +2137,7 @@ namespace BTC_ENTERPRISE
 
         private async void btnrefresh_Click(object sender, EventArgs e)
         {
+            pb_parent.Visible = true;
             Global gb = new Global();
             var result = await gb.Refresh_SubAsy_Process(_segmentID,lbl_generatedSerial.Text);
             tbl_subprocess = SessionData.tbl_subprocess_Session;

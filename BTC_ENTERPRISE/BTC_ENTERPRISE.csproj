@@ -7,8 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackAsTool>False</PackAsTool>
-    <FileVersion>1.0.0.2</FileVersion>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.3</FileVersion>
+    <AssemblyVersion>1.0.0.3</AssemblyVersion>
     <PackageIcon>charging-station.png</PackageIcon>
     <ApplicationIcon>charging-station.ico</ApplicationIcon>
   </PropertyGroup>

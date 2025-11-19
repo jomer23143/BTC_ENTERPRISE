@@ -27,14 +27,14 @@ namespace BTC_ENTERPRISE.Forms
         public MainDashboard()
         {
             InitializeComponent();
-            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click);
+            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click, Exit_Click);
             Manage_SubAssy = new Manage_SubAssy(panel_menubar, panel_Subassy_Display);
             fulldisplaycontroll = new FormManager(panel_menubar, panel_Subassy_Display);
             this._perantFrm = new PerantFrm(this);
         }
         private void MainDashboard_SizeChanged(object sender, EventArgs e)
         {
-            UIControls.SetupUI(this, Setting_Click, Logout_Click,login_Click);
+            UIControls.SetupUI(this, Setting_Click, Logout_Click,login_Click, Exit_Click);
         }
         public void Setting_Click(object? sender, EventArgs e)
         {
@@ -89,7 +89,7 @@ namespace BTC_ENTERPRISE.Forms
             };
 
             CheckProcessForm.ShowDialog(this);
-            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click);
+            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click, Exit_Click);
             _perantFrm.toogle(false);
             _perantFrm.is_login();
             //Refresh_Main_Menu(sender);
@@ -101,7 +101,7 @@ namespace BTC_ENTERPRISE.Forms
             if (DialogResult == DialogResult.Yes)
             {
                 Global.UserToken = string.Empty;
-                UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click);
+                UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click, Exit_Click);
                 lbl_operatorlogin.Text = string.Empty;
                 _perantFrm.toogle(false);
                 _perantFrm.is_login();
@@ -120,6 +120,14 @@ namespace BTC_ENTERPRISE.Forms
                
             }
 
+        }
+        public void Exit_Click(object? sender, EventArgs e)
+        {
+            DialogResult = MessageBox.Show("Are you sure you want to exit the application?", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (DialogResult == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -227,7 +235,7 @@ namespace BTC_ENTERPRISE.Forms
                                 break;
 
                         }
-                        UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click);
+                        UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click, Exit_Click);
                     }
                     else
                     {
@@ -244,7 +252,7 @@ namespace BTC_ENTERPRISE.Forms
 
         private void panel_main_display_SizeChanged(object sender, EventArgs e)
         {
-            UIControls.SetupUI(this, Setting_Click, Logout_Click,login_Click);
+            UIControls.SetupUI(this, Setting_Click, Logout_Click,login_Click, Exit_Click);
         }
 
 
@@ -268,7 +276,7 @@ namespace BTC_ENTERPRISE.Forms
         };
 
             CheckProcessForm.ShowDialog(this);
-            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click);
+            UIControls.SetupUI(this, Setting_Click, Logout_Click, login_Click, Exit_Click);
         }
 
 

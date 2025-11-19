@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProcessFrm));
             panel1 = new Panel();
             lbl_parentname = new Label();
             panel2 = new Panel();
@@ -150,7 +151,7 @@
             panel3.Location = new Point(0, 41);
             panel3.Margin = new Padding(3, 2, 3, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(9, 578);
+            panel3.Size = new Size(9, 574);
             panel3.TabIndex = 1;
             // 
             // panel4
@@ -159,14 +160,14 @@
             panel4.Location = new Point(1311, 41);
             panel4.Margin = new Padding(3, 2, 3, 2);
             panel4.Name = "panel4";
-            panel4.Size = new Size(9, 578);
+            panel4.Size = new Size(9, 574);
             panel4.TabIndex = 1;
             // 
             // panel5
             // 
             panel5.Controls.Add(lbl_public_event);
             panel5.Dock = DockStyle.Bottom;
-            panel5.Location = new Point(9, 585);
+            panel5.Location = new Point(9, 581);
             panel5.Margin = new Padding(3, 2, 3, 2);
             panel5.Name = "panel5";
             panel5.Size = new Size(1302, 34);
@@ -208,7 +209,9 @@
             // btnrefresh
             // 
             btnrefresh.Anchor = AnchorStyles.Right;
-            btnrefresh.BackColor = Color.ForestGreen;
+            btnrefresh.BackColor = Color.White;
+            btnrefresh.BackgroundImage = (Image)resources.GetObject("btnrefresh.BackgroundImage");
+            btnrefresh.BackgroundImageLayout = ImageLayout.Zoom;
             btnrefresh.FlatAppearance.BorderColor = Color.White;
             btnrefresh.FlatStyle = FlatStyle.Flat;
             btnrefresh.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -216,9 +219,8 @@
             btnrefresh.Location = new Point(114, 5);
             btnrefresh.Margin = new Padding(3, 2, 3, 2);
             btnrefresh.Name = "btnrefresh";
-            btnrefresh.Size = new Size(89, 77);
+            btnrefresh.Size = new Size(89, 71);
             btnrefresh.TabIndex = 1;
-            btnrefresh.Text = "Refresh";
             btnrefresh.UseVisualStyleBackColor = false;
             btnrefresh.Click += btnrefresh_Click;
             // 
@@ -230,10 +232,10 @@
             btn_qcChecklist.FlatStyle = FlatStyle.Flat;
             btn_qcChecklist.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_qcChecklist.ForeColor = Color.White;
-            btn_qcChecklist.Location = new Point(10, 5);
+            btn_qcChecklist.Location = new Point(10, 7);
             btn_qcChecklist.Margin = new Padding(3, 2, 3, 2);
             btn_qcChecklist.Name = "btn_qcChecklist";
-            btn_qcChecklist.Size = new Size(98, 77);
+            btn_qcChecklist.Size = new Size(98, 69);
             btn_qcChecklist.TabIndex = 0;
             btn_qcChecklist.Text = "Scan QC Checklist";
             btn_qcChecklist.UseVisualStyleBackColor = false;
@@ -414,17 +416,17 @@
             panel7.Location = new Point(9, 134);
             panel7.Margin = new Padding(3, 2, 3, 2);
             panel7.Name = "panel7";
-            panel7.Size = new Size(616, 446);
+            panel7.Size = new Size(757, 442);
             panel7.TabIndex = 3;
             // 
             // pb_parent
             // 
             pb_parent.Anchor = AnchorStyles.Top;
             pb_parent.Image = Properties.Resources.loadingscreen;
-            pb_parent.Location = new Point(174, 130);
+            pb_parent.Location = new Point(347, 118);
             pb_parent.Margin = new Padding(3, 2, 3, 2);
             pb_parent.Name = "pb_parent";
-            pb_parent.Size = new Size(223, 172);
+            pb_parent.Size = new Size(141, 130);
             pb_parent.SizeMode = PictureBoxSizeMode.StretchImage;
             pb_parent.TabIndex = 0;
             pb_parent.TabStop = false;
@@ -440,7 +442,7 @@
             sfDataGrid1.Name = "sfDataGrid1";
             sfDataGrid1.PreviewRowHeight = 35;
             sfDataGrid1.RowHeaderWidth = 40D;
-            sfDataGrid1.Size = new Size(616, 446);
+            sfDataGrid1.Size = new Size(757, 442);
             sfDataGrid1.Style.Border3DStyle = Border3DStyle.Flat;
             sfDataGrid1.Style.BorderColor = Color.FromArgb(100, 100, 100);
             sfDataGrid1.Style.BorderStyle = BorderStyle.None;
@@ -456,20 +458,20 @@
             panel8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel8.Controls.Add(pb_child);
             panel8.Controls.Add(sfDataGrid2);
-            panel8.Location = new Point(630, 164);
+            panel8.Location = new Point(772, 164);
             panel8.Margin = new Padding(3, 2, 3, 2);
             panel8.Name = "panel8";
-            panel8.Size = new Size(678, 346);
+            panel8.Size = new Size(536, 173);
             panel8.TabIndex = 4;
             // 
             // pb_child
             // 
             pb_child.Anchor = AnchorStyles.Top;
             pb_child.Image = Properties.Resources.loadingscreen;
-            pb_child.Location = new Point(248, 17);
+            pb_child.Location = new Point(219, 18);
             pb_child.Margin = new Padding(3, 2, 3, 2);
             pb_child.Name = "pb_child";
-            pb_child.Size = new Size(208, 147);
+            pb_child.Size = new Size(105, 87);
             pb_child.SizeMode = PictureBoxSizeMode.StretchImage;
             pb_child.TabIndex = 0;
             pb_child.TabStop = false;
@@ -483,7 +485,7 @@
             sfDataGrid2.Margin = new Padding(3, 2, 3, 2);
             sfDataGrid2.Name = "sfDataGrid2";
             sfDataGrid2.PreviewRowHeight = 35;
-            sfDataGrid2.Size = new Size(678, 346);
+            sfDataGrid2.Size = new Size(536, 173);
             sfDataGrid2.Style.Border3DStyle = Border3DStyle.Flat;
             sfDataGrid2.Style.BorderColor = Color.FromArgb(100, 100, 100);
             sfDataGrid2.Style.BorderStyle = BorderStyle.None;
@@ -498,11 +500,11 @@
             // lbl_processname
             // 
             lbl_processname.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lbl_processname.Font = new Font("Segoe UI Semibold", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_processname.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_processname.ForeColor = Color.FromArgb(64, 64, 64);
-            lbl_processname.Location = new Point(630, 134);
+            lbl_processname.Location = new Point(772, 130);
             lbl_processname.Name = "lbl_processname";
-            lbl_processname.Size = new Size(676, 28);
+            lbl_processname.Size = new Size(534, 28);
             lbl_processname.TabIndex = 5;
             lbl_processname.Text = "Process Name Here";
             lbl_processname.TextAlign = ContentAlignment.MiddleCenter;
@@ -517,10 +519,10 @@
             panel9.BackColor = Color.White;
             panel9.Controls.Add(panel_top);
             panel9.Controls.Add(panel_parent_tab_subprocess);
-            panel9.Location = new Point(630, 512);
+            panel9.Location = new Point(772, 341);
             panel9.Margin = new Padding(3, 2, 3, 2);
             panel9.Name = "panel9";
-            panel9.Size = new Size(678, 68);
+            panel9.Size = new Size(533, 235);
             panel9.TabIndex = 6;
             // 
             // panel_top
@@ -533,16 +535,16 @@
             panel_top.Location = new Point(0, 0);
             panel_top.Margin = new Padding(3, 2, 3, 2);
             panel_top.Name = "panel_top";
-            panel_top.Size = new Size(678, 53);
+            panel_top.Size = new Size(533, 48);
             panel_top.TabIndex = 2;
             // 
             // panel_chemical
             // 
             panel_chemical.Controls.Add(btn_scan_chemical);
             panel_chemical.Controls.Add(chkIndicator3);
-            panel_chemical.Location = new Point(449, 6);
+            panel_chemical.Location = new Point(368, 2);
             panel_chemical.Name = "panel_chemical";
-            panel_chemical.Size = new Size(224, 43);
+            panel_chemical.Size = new Size(161, 40);
             panel_chemical.TabIndex = 2;
             // 
             // btn_scan_chemical
@@ -552,11 +554,11 @@
             btn_scan_chemical.FlatAppearance.MouseDownBackColor = Color.Transparent;
             btn_scan_chemical.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btn_scan_chemical.FlatStyle = FlatStyle.Flat;
-            btn_scan_chemical.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scan_chemical.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scan_chemical.ForeColor = Color.White;
-            btn_scan_chemical.Location = new Point(42, 1);
+            btn_scan_chemical.Location = new Point(47, 2);
             btn_scan_chemical.Name = "btn_scan_chemical";
-            btn_scan_chemical.Size = new Size(179, 39);
+            btn_scan_chemical.Size = new Size(109, 36);
             btn_scan_chemical.TabIndex = 4;
             btn_scan_chemical.Text = "Scan Chemical";
             btn_scan_chemical.TextAlign = ContentAlignment.MiddleLeft;
@@ -567,9 +569,9 @@
             // 
             chkIndicator3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator3.ForeColor = Color.Gray;
-            chkIndicator3.Location = new Point(5, 7);
+            chkIndicator3.Location = new Point(5, 4);
             chkIndicator3.Name = "chkIndicator3";
-            chkIndicator3.Size = new Size(31, 31);
+            chkIndicator3.Size = new Size(33, 31);
             chkIndicator3.TabIndex = 3;
             chkIndicator3.Text = "✔";
             chkIndicator3.TextAlign = ContentAlignment.MiddleCenter;
@@ -578,9 +580,9 @@
             // 
             panel_torque.Controls.Add(btn_scan_torque);
             panel_torque.Controls.Add(chkIndicator2);
-            panel_torque.Location = new Point(232, 6);
+            panel_torque.Location = new Point(188, 2);
             panel_torque.Name = "panel_torque";
-            panel_torque.Size = new Size(216, 43);
+            panel_torque.Size = new Size(170, 40);
             panel_torque.TabIndex = 2;
             // 
             // btn_scan_torque
@@ -590,11 +592,11 @@
             btn_scan_torque.FlatAppearance.MouseDownBackColor = Color.Transparent;
             btn_scan_torque.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btn_scan_torque.FlatStyle = FlatStyle.Flat;
-            btn_scan_torque.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scan_torque.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scan_torque.ForeColor = Color.White;
             btn_scan_torque.Location = new Point(53, 3);
             btn_scan_torque.Name = "btn_scan_torque";
-            btn_scan_torque.Size = new Size(160, 39);
+            btn_scan_torque.Size = new Size(98, 34);
             btn_scan_torque.TabIndex = 4;
             btn_scan_torque.Text = "Scan Torque";
             btn_scan_torque.TextAlign = ContentAlignment.MiddleLeft;
@@ -605,9 +607,9 @@
             // 
             chkIndicator2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator2.ForeColor = Color.Gray;
-            chkIndicator2.Location = new Point(16, 7);
+            chkIndicator2.Location = new Point(5, 4);
             chkIndicator2.Name = "chkIndicator2";
-            chkIndicator2.Size = new Size(31, 31);
+            chkIndicator2.Size = new Size(42, 31);
             chkIndicator2.TabIndex = 3;
             chkIndicator2.Text = "✔";
             chkIndicator2.TextAlign = ContentAlignment.MiddleCenter;
@@ -616,9 +618,9 @@
             // 
             panel_material.Controls.Add(btn_scanserialized);
             panel_material.Controls.Add(chkIndicator1);
-            panel_material.Location = new Point(7, 6);
+            panel_material.Location = new Point(6, 2);
             panel_material.Name = "panel_material";
-            panel_material.Size = new Size(224, 43);
+            panel_material.Size = new Size(167, 40);
             panel_material.TabIndex = 2;
             // 
             // btn_scanserialized
@@ -628,11 +630,11 @@
             btn_scanserialized.FlatAppearance.MouseDownBackColor = Color.Transparent;
             btn_scanserialized.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btn_scanserialized.FlatStyle = FlatStyle.Flat;
-            btn_scanserialized.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_scanserialized.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_scanserialized.ForeColor = Color.White;
-            btn_scanserialized.Location = new Point(57, 3);
+            btn_scanserialized.Location = new Point(46, 4);
             btn_scanserialized.Name = "btn_scanserialized";
-            btn_scanserialized.Size = new Size(162, 39);
+            btn_scanserialized.Size = new Size(116, 31);
             btn_scanserialized.TabIndex = 4;
             btn_scanserialized.Text = "Scan Serialized";
             btn_scanserialized.TextAlign = ContentAlignment.MiddleLeft;
@@ -643,9 +645,9 @@
             // 
             chkIndicator1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             chkIndicator1.ForeColor = Color.Gray;
-            chkIndicator1.Location = new Point(16, 6);
+            chkIndicator1.Location = new Point(3, 4);
             chkIndicator1.Name = "chkIndicator1";
-            chkIndicator1.Size = new Size(35, 31);
+            chkIndicator1.Size = new Size(37, 30);
             chkIndicator1.TabIndex = 3;
             chkIndicator1.Text = "✔";
             chkIndicator1.TextAlign = ContentAlignment.MiddleCenter;
@@ -655,10 +657,10 @@
             panel_parent_tab_subprocess.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel_parent_tab_subprocess.BackColor = Color.White;
             panel_parent_tab_subprocess.Controls.Add(lbl_subprocessInfo);
-            panel_parent_tab_subprocess.Location = new Point(9, 58);
+            panel_parent_tab_subprocess.Location = new Point(4, 52);
             panel_parent_tab_subprocess.Margin = new Padding(3, 2, 3, 2);
             panel_parent_tab_subprocess.Name = "panel_parent_tab_subprocess";
-            panel_parent_tab_subprocess.Size = new Size(662, 8);
+            panel_parent_tab_subprocess.Size = new Size(526, 181);
             panel_parent_tab_subprocess.TabIndex = 1;
             // 
             // lbl_subprocessInfo
@@ -669,7 +671,7 @@
             lbl_subprocessInfo.ForeColor = Color.OrangeRed;
             lbl_subprocessInfo.Location = new Point(0, 0);
             lbl_subprocessInfo.Name = "lbl_subprocessInfo";
-            lbl_subprocessInfo.Size = new Size(662, 8);
+            lbl_subprocessInfo.Size = new Size(526, 181);
             lbl_subprocessInfo.TabIndex = 0;
             lbl_subprocessInfo.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -686,7 +688,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1320, 619);
+            ClientSize = new Size(1320, 615);
             Controls.Add(panel9);
             Controls.Add(lbl_processname);
             Controls.Add(panel8);

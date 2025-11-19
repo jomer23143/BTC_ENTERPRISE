@@ -38,6 +38,8 @@ namespace BTC_ENTERPRISE.Modal
 
         private void AddSerialNumber_Load(object sender, EventArgs e)
         {
+            txtserial_number.Clear();
+            txtserial_number.Focus();
             bunifuloading.Hide();
             foreach (System.Data.DataRow item in list_data.Rows)
             {
@@ -46,7 +48,7 @@ namespace BTC_ENTERPRISE.Modal
             int rows_count = dgSerialnumber.Rows.Count;
             label1.Text = String.Format("IPN : {0}",ipn );
             lbl_rowcount.Text = string.Format("{0} out of {1}", rows_count, pick_quantity);
-            txtserial_number.Focus();
+           
            
 
         }
@@ -154,13 +156,16 @@ namespace BTC_ENTERPRISE.Modal
                     if (item.Cells["colpart_serial"]?.Value.ToString() == txtserial_number.Text.ToUpper().Trim())
                     {
                         MessageBox.Show("Already Added");
-                        txtserial_number.SelectAll();
+                        txtserial_number.Clear();
+                        txtserial_number.Focus();
                         return;
                     }
                 }
                 int rows_count = dgSerialnumber.Rows.Count;
                 if (rows_count == Convert.ToUInt32(pick_quantity))
                 {
+                    txtserial_number.Clear();
+                    txtserial_number.Focus();
                     MessageBox.Show("You have reached the maximum pick quantity.");
                     return;
                 }

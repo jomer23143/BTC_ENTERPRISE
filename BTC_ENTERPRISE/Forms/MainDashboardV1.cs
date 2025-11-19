@@ -23,14 +23,14 @@ namespace BTC_ENTERPRISE.Forms
         public MainDashboardV1()
         {
             InitializeComponent();
-            UIControls.SetupUI(null, Setting_Click, Logout_Click,login_Click);
+           /// UIControls.SetupUI(null, Setting_Click, Logout_Click,login_Click);
             Manage_SubAssy = new Manage_SubAssy(panel_menubar, panel_Subassy_Display);
             fulldisplaycontroll = new FormManager(panel_menubar, panel_Subassy_Display);
 
         }
         private void MainDashboard_SizeChanged(object sender, EventArgs e)
         {
-            UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
+            //UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
         }
         private void Setting_Click(object? sender, EventArgs e)
         {
@@ -56,7 +56,7 @@ namespace BTC_ENTERPRISE.Forms
             if (DialogResult == DialogResult.Yes)
             {
                 Global.UserToken = string.Empty;
-                UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
+                //UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
                 fulldisplaycontroll.closeAForm();
             }
           
@@ -187,7 +187,7 @@ namespace BTC_ENTERPRISE.Forms
                                 break;
 
                         }
-                        UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
+                      //  UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
                     }
                     else
                     {
@@ -233,7 +233,7 @@ namespace BTC_ENTERPRISE.Forms
                     dt_license.Add(license_name);
                 }
                 Global.dt_license = dt_license;
-                UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
+                //UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
             }
             else
             {
@@ -243,7 +243,7 @@ namespace BTC_ENTERPRISE.Forms
         }
         private void panel_main_display_SizeChanged(object sender, EventArgs e)
         {
-            UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
+            //UIControls.SetupUI(null, Setting_Click, Logout_Click, login_Click);
         }
 
 

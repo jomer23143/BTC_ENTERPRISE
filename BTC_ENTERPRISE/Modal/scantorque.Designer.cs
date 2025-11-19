@@ -50,7 +50,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(671, 56);
+            panel1.Size = new Size(513, 26);
             panel1.TabIndex = 0;
             // 
             // panel_processname
@@ -58,10 +58,10 @@
             panel_processname.Anchor = AnchorStyles.Top;
             panel_processname.BackColor = Color.White;
             panel_processname.Controls.Add(lbl_processname);
-            panel_processname.Location = new Point(18, 14);
+            panel_processname.Location = new Point(-61, 1);
             panel_processname.Margin = new Padding(3, 2, 3, 2);
             panel_processname.Name = "panel_processname";
-            panel_processname.Size = new Size(645, 33);
+            panel_processname.Size = new Size(645, 25);
             panel_processname.TabIndex = 0;
             // 
             // lbl_processname
@@ -70,7 +70,7 @@
             lbl_processname.Font = new Font("Segoe UI Semibold", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_processname.Location = new Point(0, 0);
             lbl_processname.Name = "lbl_processname";
-            lbl_processname.Size = new Size(645, 33);
+            lbl_processname.Size = new Size(645, 25);
             lbl_processname.TabIndex = 0;
             lbl_processname.Text = "Material Name";
             lbl_processname.TextAlign = ContentAlignment.MiddleCenter;
@@ -78,21 +78,22 @@
             // txt_torque
             // 
             txt_torque.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txt_torque.Location = new Point(141, 75);
+            txt_torque.Location = new Point(118, 32);
             txt_torque.Margin = new Padding(3, 2, 3, 2);
             txt_torque.Name = "txt_torque";
-            txt_torque.Size = new Size(411, 29);
+            txt_torque.Size = new Size(269, 29);
             txt_torque.TabIndex = 1;
             txt_torque.TextAlign = HorizontalAlignment.Center;
             txt_torque.KeyDown += txt_torque_KeyDown;
             // 
             // lbl_msg
             // 
+            lbl_msg.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lbl_msg.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_msg.ForeColor = Color.Navy;
-            lbl_msg.Location = new Point(26, 103);
+            lbl_msg.Location = new Point(15, 61);
             lbl_msg.Name = "lbl_msg";
-            lbl_msg.Size = new Size(626, 24);
+            lbl_msg.Size = new Size(468, 24);
             lbl_msg.TabIndex = 2;
             lbl_msg.Text = "Scan Torque Machine  Serial Here.!";
             lbl_msg.TextAlign = ContentAlignment.MiddleCenter;
@@ -101,6 +102,7 @@
             // 
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView1.BackgroundColor = Color.FromArgb(37, 45, 55);
@@ -118,7 +120,7 @@
             dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.EnableHeadersVisualStyles = false;
-            dataGridView1.Location = new Point(24, 158);
+            dataGridView1.Location = new Point(12, 108);
             dataGridView1.Margin = new Padding(3, 2, 3, 2);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
@@ -129,7 +131,7 @@
             dataGridViewCellStyle2.SelectionBackColor = Color.White;
             dataGridViewCellStyle2.SelectionForeColor = Color.Black;
             dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Size = new Size(626, 138);
+            dataGridView1.Size = new Size(489, 161);
             dataGridView1.TabIndex = 7;
             // 
             // label2
@@ -137,7 +139,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.Brown;
-            label2.Location = new Point(26, 141);
+            label2.Location = new Point(26, 91);
             label2.Name = "label2";
             label2.Size = new Size(165, 15);
             label2.TabIndex = 8;
@@ -148,7 +150,7 @@
             lbl_scancount.AutoSize = true;
             lbl_scancount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_scancount.ForeColor = Color.Brown;
-            lbl_scancount.Location = new Point(218, 141);
+            lbl_scancount.Location = new Point(218, 91);
             lbl_scancount.Name = "lbl_scancount";
             lbl_scancount.Size = new Size(61, 15);
             lbl_scancount.TabIndex = 9;
@@ -159,7 +161,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.MediumAquamarine;
-            ClientSize = new Size(671, 305);
+            ClientSize = new Size(513, 282);
             Controls.Add(dataGridView1);
             Controls.Add(label2);
             Controls.Add(lbl_scancount);

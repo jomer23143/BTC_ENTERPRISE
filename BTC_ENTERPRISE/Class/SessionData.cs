@@ -37,6 +37,8 @@ namespace BTC_ENTERPRISE.Class
                 tbl_process_Session.Columns.Add("start_time", typeof(string));
                 tbl_process_Session.Columns.Add("end_time", typeof(string));
                 tbl_process_Session.Columns.Add("status", typeof(string));
+                tbl_process_Session.Columns.Add("is_quality", typeof(int));
+                tbl_process_Session.Columns.Add("quality_validated", typeof(int));
                 tbl_process_Session.Columns.Add("is_hold", typeof(int));
                 tbl_process_Session.Columns.Add("color", typeof(string));
                 tbl_process_Session.Columns.Add("remark", typeof(string));
